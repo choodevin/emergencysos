@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "824192075825",
+    "firebase_url": "https://fypsosalert.firebaseio.com",
+    "project_id": "fypsosalert",
+    "storage_bucket": "fypsosalert.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824192075825:android:4c53230ab0ddf2f0572d10",
+        "android_client_info": {
+          "package_name": "com.emergency.sosalert"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "824192075825-gg0vs0irlbgldm6o5mnf4vuf0av2nsei.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAC0Ip28uzjgtptqJoyhIihwVZKkHOgc-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "824192075825-gg0vs0irlbgldm6o5mnf4vuf0av2nsei.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

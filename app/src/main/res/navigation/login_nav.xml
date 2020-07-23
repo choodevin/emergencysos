@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_nav"
+    app:startDestination="@id/mainLogin">
+
+    <fragment
+        android:id="@+id/mainLogin"
+        android:name="com.emergency.sosalert.MainLogin"
+        android:label="fragment_main_login"
+        tools:layout="@layout/fragment_main_login" >
+        <action
+            android:id="@+id/action_mainLogin_to_registerEmail"
+            app:destination="@id/registerEmail"
+            app:enterAnim="@anim/enter"
+            app:exitAnim="@anim/exit"
+            app:popEnterAnim="@anim/enter"
+            app:popExitAnim="@anim/exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerEmail"
+        android:name="com.emergency.sosalert.RegisterEmail"
+        android:label="fragment_register_email"
+        tools:layout="@layout/fragment_register_email" >
+        <action
+            android:id="@+id/action_registerEmail_to_registerPassword"
+            app:destination="@id/registerPassword" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerPassword"
+        android:name="com.emergency.sosalert.RegisterPassword"
+        android:label="fragment_register_password"
+        tools:layout="@layout/fragment_register_password" />
+</navigation>

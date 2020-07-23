@@ -1,4 +1,4 @@
-package com.example.emergencysos
+package com.emergency.sosalert
 
 import org.junit.Test
 
