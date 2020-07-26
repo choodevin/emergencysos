@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">SOS</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_msg">Welcome to SOSAlert</string>
-    <string name="email_why">The purpose of providing the email is for you to login with your password, resetting your password if you had forgotten or receive extra helpful notifications from us!</string>
-    <string name="password_why">Setup a strong password but don\'t forget it, the password must contain one uppercase letter.</string>
+    <string name="email_why">The purpose of providing us your email is to let you login along with your password, or resetting your password if you had forgotten, or receive extra helpful notifications from us!</string>
+    <string name="password_why">Setup a strong password and don\'t forget it</string>
+    <string name="password_reg">The password must comply with:\n1. 8 to 20 characters\n2. At least one uppercase letter\n3. At least one lower case letter\n4. At least a digit\n5. At least a special character (Eg: !,@,#,$,_)</string>
+    <string name="name_why">Provide a name so that the others can recognize you! Maximum 30 characters.</string>
 </resources>

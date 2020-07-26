@@ -9,27 +9,75 @@
         android:id="@+id/mainLogin"
         android:name="com.emergency.sosalert.MainLogin"
         android:label="fragment_main_login"
-        tools:layout="@layout/fragment_main_login" >
+        tools:layout="@layout/fragment_main_login">
         <action
             android:id="@+id/action_mainLogin_to_registerEmail"
             app:destination="@id/registerEmail"
-            app:enterAnim="@anim/enter"
-            app:exitAnim="@anim/exit"
-            app:popEnterAnim="@anim/enter"
-            app:popExitAnim="@anim/exit" />
+            app:enterAnim="@anim/fadein"
+            app:exitAnim="@anim/fadeout"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fadein"
+            app:popExitAnim="@anim/fadeout" />
     </fragment>
     <fragment
         android:id="@+id/registerEmail"
-        android:name="com.emergency.sosalert.RegisterEmail"
+        android:name="com.emergency.sosalert.profile.RegisterEmail"
         android:label="fragment_register_email"
-        tools:layout="@layout/fragment_register_email" >
+        tools:layout="@layout/fragment_register_email">
         <action
             android:id="@+id/action_registerEmail_to_registerPassword"
-            app:destination="@id/registerPassword" />
+            app:destination="@id/registerPassword"
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_to_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_from_left"
+            app:popExitAnim="@anim/slide_to_right" />
     </fragment>
     <fragment
         android:id="@+id/registerPassword"
-        android:name="com.emergency.sosalert.RegisterPassword"
+        android:name="com.emergency.sosalert.profile.RegisterPassword"
         android:label="fragment_register_password"
-        tools:layout="@layout/fragment_register_password" />
+        tools:layout="@layout/fragment_register_password">
+        <action
+            android:id="@+id/action_registerPassword_to_registerName"
+            app:destination="@id/registerName"
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_to_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_from_left"
+            app:popExitAnim="@anim/slide_to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerName"
+        android:name="com.emergency.sosalert.profile.RegisterName"
+        android:label="RegisterName"
+        tools:layout="@layout/fragment_register_name">
+        <action
+            android:id="@+id/action_registerName_to_registerPicture"
+            app:destination="@id/registerPicture"
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_to_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_from_left"
+            app:popExitAnim="@anim/slide_to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerPicture"
+        android:name="com.emergency.sosalert.profile.RegisterPicture"
+        android:label="fragment_register_picture"
+        tools:layout="@layout/fragment_register_picture">
+        <action
+            android:id="@+id/action_registerPicture_to_registerGender"
+            app:destination="@id/registerGender"
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_to_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_from_left"
+            app:popExitAnim="@anim/slide_to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerGender"
+        android:name="com.emergency.sosalert.profile.RegisterGender"
+        android:label="fragment_register_gender"
+        tools:layout="@layout/fragment_register_gender" />
 </navigation>

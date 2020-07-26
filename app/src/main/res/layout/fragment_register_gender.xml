@@ -4,53 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".profile.RegisterPassword">
-
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:justificationMode="inter_word"
-        android:lineSpacingExtra="2sp"
-        android:text="@string/password_reg"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline9"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toBottomOf="@+id/textView7"
-        tools:ignore="UnusedAttribute" />
+    tools:context=".profile.RegisterGender">
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_bold"
-        android:text="Next,"
+        android:text="Lastly,"
         android:textColor="@color/colorPrimaryDarker"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="@+id/guideline8"
         app:layout_constraintTop_toTopOf="@+id/guideline7" />
-
-    <EditText
-        android:id="@+id/confirmPasswordInput"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/bg_register_input"
-        android:ems="10"
-        android:hint="confirm password"
-        android:includeFontPadding="false"
-        android:inputType="textPassword"
-        android:padding="10dp"
-        android:textAlignment="center"
-        android:textColor="@color/register_input"
-        android:textColorHint="@color/colorAccent"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline9"
-        app:layout_constraintStart_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toBottomOf="@+id/passwordInput" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline13"
@@ -105,57 +70,11 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set a password"
+        android:text="Are you a male or a female?"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="26sp"
         app:layout_constraintStart_toStartOf="@+id/guideline8"
         app:layout_constraintTop_toTopOf="@+id/guideline11" />
-
-    <EditText
-        android:id="@+id/passwordInput"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/bg_register_input"
-        android:ems="10"
-        android:hint="password"
-        android:includeFontPadding="false"
-        android:inputType="textPassword"
-        android:padding="10dp"
-        android:textAlignment="center"
-        android:textColor="@color/register_input"
-        android:textColorHint="@color/colorAccent"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline9"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Setting up a password"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toTopOf="@+id/guideline12" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:justificationMode="inter_word"
-        android:lineSpacingExtra="2sp"
-        android:text="@string/password_why"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline9"
-        app:layout_constraintStart_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
-        tools:ignore="UnusedAttribute" />
 
     <Button
         android:id="@+id/backBtn"
@@ -177,13 +96,37 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="@+id/guideline8" />
 
-    <CheckBox
-        android:id="@+id/showPass"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
-        android:button="@drawable/bg_show_pass"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/passwordInput"
-        app:layout_constraintEnd_toStartOf="@+id/guideline9" />
+    <RadioGroup
+        android:id="@+id/genderGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/guideline9"
+        app:layout_constraintStart_toStartOf="@+id/guideline8"
+        app:layout_constraintTop_toBottomOf="@+id/textView5">
+
+        <RadioButton
+            android:id="@+id/maleBtn"
+            android:layout_width="150dp"
+            android:layout_height="227dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/select_male"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/femaleBtn"
+            android:layout_width="150dp"
+            android:layout_height="227dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/select_female"
+            android:button="@null" />
+
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

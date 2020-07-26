@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_continue_width">149dp</dimen>
+    <dimen name="button_continue_height">48dp</dimen>
+    <dimen name="button_back_width">50dp</dimen>
+    <dimen name="button_back_height">50dp</dimen>
+    <dimen name="button_fx_width">64dp</dimen>
+    <dimen name="button_fx_height">64dp</dimen>
+</resources>
