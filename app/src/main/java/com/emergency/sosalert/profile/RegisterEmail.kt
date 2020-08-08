@@ -6,8 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.emergency.sosalert.R
+import com.emergency.sosalert.entity.User
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_register_email.*
 
 class RegisterEmail : Fragment() {
@@ -23,7 +27,12 @@ class RegisterEmail : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         continueBtn.setOnClickListener {
             if (Patterns.EMAIL_ADDRESS.matcher(inputEmail.text).matches()) {
-                findNavController().navigate(R.id.action_registerEmail_to_registerPassword)
+                val bundle = Bundle()
+                bundle.putString("email", inputEmail.text.toString())
+                findNavController().navigate(
+                    R.id.action_registerEmail_to_registerPassword,
+                    bundle
+                )
             } else {
                 inputEmail.error = "Invalid email"
             }

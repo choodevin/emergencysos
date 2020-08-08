@@ -1,34 +1,42 @@
 {
   "project_info": {
-    "project_number": "824192075825",
-    "firebase_url": "https://fypsosalert.firebaseio.com",
-    "project_id": "fypsosalert",
-    "storage_bucket": "fypsosalert.appspot.com"
+    "project_number": "283383699868",
+    "firebase_url": "https://sosalert-c0288.firebaseio.com",
+    "project_id": "sosalert-c0288",
+    "storage_bucket": "sosalert-c0288.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:824192075825:android:4c53230ab0ddf2f0572d10",
+        "mobilesdk_app_id": "1:283383699868:android:dc14265867356ade7ed059",
         "android_client_info": {
           "package_name": "com.emergency.sosalert"
         }
       },
       "oauth_client": [
         {
-          "client_id": "824192075825-gg0vs0irlbgldm6o5mnf4vuf0av2nsei.apps.googleusercontent.com",
+          "client_id": "283383699868-lv152uktluaa9pv1931hbhlngob7j0sd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.emergency.sosalert",
+            "certificate_hash": "d7867ee975e884f9b16a86ba74343be81506b1a2"
+          }
+        },
+        {
+          "client_id": "283383699868-d54ao7o5k54hhmfnhotbcrfjmln1eprb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAC0Ip28uzjgtptqJoyhIihwVZKkHOgc-A"
+          "current_key": "AIzaSyDuXB5gcDb5zW9L10qWxuyD9HkKMIIL-qU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "824192075825-gg0vs0irlbgldm6o5mnf4vuf0av2nsei.apps.googleusercontent.com",
+              "client_id": "283383699868-d54ao7o5k54hhmfnhotbcrfjmln1eprb.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

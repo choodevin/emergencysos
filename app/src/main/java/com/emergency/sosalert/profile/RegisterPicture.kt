@@ -48,7 +48,7 @@ class RegisterPicture : Fragment() {
             .setTitle("Are you sure?")
             .setMessage("Not setting a profile picture makes the others harder to recognize you!")
         dialogBuilder.setPositiveButton("Skip anyway") { _, _ ->
-            findNavController().navigate(R.id.action_registerPicture_to_registerGender)
+            toNext()
         }
         dialogBuilder.setNegativeButton("Return") { _, _ ->
         }
@@ -65,7 +65,7 @@ class RegisterPicture : Fragment() {
             if (PROFILE_SETTED == 0) {
                 dialog.show()
             } else {
-                findNavController().navigate(R.id.action_registerPicture_to_registerGender)
+                toNext()
             }
         }
 
@@ -119,5 +119,14 @@ class RegisterPicture : Fragment() {
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun toNext() {
+        if (PROFILE_SETTED == 1) {
+            arguments?.putString("photo", image.toString())
+        } else {
+            arguments?.putString("photo", "none")
+        }
+        findNavController().navigate(R.id.action_registerPicture_to_registerGender, arguments)
     }
 }

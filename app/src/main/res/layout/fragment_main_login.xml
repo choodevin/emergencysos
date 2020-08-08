@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/button_forgotpass"
         android:includeFontPadding="false"
         android:text="Forgot Password"
@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.7" />
+        app:layout_constraintGuide_percent="0.85" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
@@ -124,7 +124,7 @@
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/button_login"
         android:includeFontPadding="false"
         android:text="Login"
@@ -139,7 +139,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:text="or"
@@ -187,6 +187,20 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
         app:layout_constraintTop_toTopOf="@+id/resetpassbtn" />
+
+    <com.shobhitpuri.custombuttons.GoogleSignInButton
+        android:id="@+id/google_sign_in"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
+        android:includeFontPadding="false"
+        android:text="Sign in with Google"
+        app:isDarkTheme="true"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintStart_toStartOf="@+id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/registerbtn" />
 
     <TextView
         android:id="@+id/textView2"

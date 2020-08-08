@@ -22,7 +22,6 @@ class RegisterPassword : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         showPass.setOnClickListener {
             if (showPass.isChecked) {
                 passwordInput.transformationMethod = HideReturnsTransformationMethod.getInstance()
@@ -41,7 +40,11 @@ class RegisterPassword : Fragment() {
             val cpass = confirmPasswordInput.text.toString()
             if (pass == cpass) {
                 if (Pattern.matches(passwordPattern, pass)) {
-                    findNavController().navigate(R.id.action_registerPassword_to_registerName)
+                    arguments?.putString("password", passwordInput.text.toString())
+                    findNavController().navigate(
+                        R.id.action_registerPassword_to_registerName,
+                        arguments
+                    )
                 } else {
                     confirmPasswordInput.error = "Invalid password"
                 }
