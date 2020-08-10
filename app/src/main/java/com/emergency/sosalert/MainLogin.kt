@@ -17,12 +17,15 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_main_login.*
 
 
 class MainLogin : Fragment() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var auth: FirebaseAuth
+    private val TOGGLE_OFF = 0
+    private val TOGGLE_ON = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,35 +34,55 @@ class MainLogin : Fragment() {
         return inflater.inflate(R.layout.fragment_main_login, container, false)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                activity?.finish()
-            }
-        })
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (!isOnline()) {
-            Snackbar.make(view, "You are not connected to the internet", Snackbar.LENGTH_LONG)
-                .show()
-        }
+        auth = FirebaseAuth.getInstance()
+
         registerbtn.setOnClickListener {
             findNavController().navigate(R.id.action_mainLogin_to_registerEmail)
         }
 
         google_sign_in.setOnClickListener {
+            progressBarToggle(1)
+            allButtonToggle(0)
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail().build()
-            auth = FirebaseAuth.getInstance()
+                .requestEmail()
+                .build()
             googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, 1)
         }
+
+        loginbtn.setOnClickListener {
+            progressBarToggle(1)
+            allButtonToggle(0)
+            val email = inputEmail.text.toString()
+            val password = inputPass.text.toString()
+            if (email.isEmpty() || password.isEmpty()) {
+                invalidLogin()
+                progressBarToggle(0)
+                allButtonToggle(1)
+            } else {
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            startActivity(Intent(requireContext(), MainActivity::class.java))
+                            activity?.finish()
+                        } else {
+                            invalidLogin()
+                            progressBarToggle(0)
+                            allButtonToggle(1)
+                        }
+                    }
+            }
+        }
+
+        resetpassbtn.setOnClickListener {
+            findNavController().navigate(R.id.action_mainLogin_to_resetPassword)
+        }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -99,8 +122,36 @@ class MainLogin : Fragment() {
             }
     }
 
-    private fun isOnline(): Boolean {
-        return true
+    private fun progressBarToggle(mode: Int) {
+        if (mode == TOGGLE_ON) {
+            progressBar.visibility == View.VISIBLE
+        } else if (mode == TOGGLE_OFF) {
+            progressBar.visibility == View.GONE
+        }
+    }
+
+    private fun allButtonToggle(mode: Int) {
+        if (mode == TOGGLE_OFF) {
+            loginbtn.isEnabled = false
+            registerbtn.isEnabled = false
+            resetpassbtn.isEnabled = false
+            google_sign_in.isEnabled = false
+
+        } else if (mode == TOGGLE_ON) {
+            loginbtn.isEnabled = true
+            registerbtn.isEnabled = true
+            resetpassbtn.isEnabled = true
+            google_sign_in.isEnabled = true
+
+        }
+    }
+
+    private fun invalidLogin() {
+        Snackbar.make(
+            requireView(),
+            "Invalid login credentials, please try again",
+            Snackbar.LENGTH_LONG
+        ).show()
     }
 
 }

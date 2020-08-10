@@ -26,6 +26,14 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/fadein"
             app:popExitAnim="@anim/fadeout" />
+        <action
+            android:id="@+id/action_mainLogin_to_resetPassword"
+            app:destination="@id/resetPassword"
+            app:enterAnim="@anim/fadein"
+            app:exitAnim="@anim/fadeout"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fadein"
+            app:popExitAnim="@anim/fadeout" />
     </fragment>
     <fragment
         android:id="@+id/registerEmail"
@@ -88,4 +96,9 @@
         android:name="com.emergency.sosalert.profile.RegisterGender"
         android:label="fragment_register_gender"
         tools:layout="@layout/fragment_register_gender" />
+    <fragment
+        android:id="@+id/resetPassword"
+        android:name="com.emergency.sosalert.profile.ResetPassword"
+        android:label="fragment_reset_password"
+        tools:layout="@layout/fragment_reset_password" />
 </navigation>

@@ -1,11 +1,12 @@
 package com.emergency.sosalert.profile
 
-import android.content.ContentValues.TAG
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
-import android.opengl.Visibility
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,14 +16,12 @@ import com.emergency.sosalert.R
 import com.emergency.sosalert.entity.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.shawnlin.numberpicker.NumberPicker
-import com.shawnlin.numberpicker.NumberPicker.OnScrollListener.SCROLL_STATE_IDLE
 import kotlinx.android.synthetic.main.fragment_register_gender.*
-import java.lang.Exception
+import kotlinx.android.synthetic.main.fragment_register_gender.backBtn
+import kotlinx.android.synthetic.main.fragment_register_gender.continueBtn
+import java.io.ByteArrayOutputStream
 
 class RegisterGender : Fragment() {
     private lateinit var auth: FirebaseAuth
@@ -40,6 +39,8 @@ class RegisterGender : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         continueBtn.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            backBtn.visibility = View.GONE
             auth = FirebaseAuth.getInstance()
             if (maleBtn.isChecked) {
                 gender = "male"
@@ -69,6 +70,8 @@ class RegisterGender : Fragment() {
                                 "Register failed, please check if the email is registered or try again.",
                                 Snackbar.LENGTH_LONG
                             ).show()
+                            progressBar.visibility = View.GONE
+                            backBtn.visibility = View.VISIBLE
                         } else {
                             insertDetails()
                             startActivity(Intent(requireActivity(), MainActivity::class.java))
@@ -100,7 +103,23 @@ class RegisterGender : Fragment() {
             val storageReference =
                 FirebaseStorage.getInstance().getReference("/profilepicture/$userId")
             val uri = Uri.parse(arguments?.getString("photo").toString())
-            storageReference.putFile(uri)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val source =
+                    ImageDecoder.createSource(requireActivity().contentResolver, uri)
+                var bitmap = ImageDecoder.decodeBitmap(source)
+                storageReference.putBytes(finalByteArray(bitmap))
+            } else {
+                var bitmap =
+                    MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, uri)
+                storageReference.putBytes(finalByteArray(bitmap))
+            }
         }
+    }
+
+    private fun finalByteArray(bitmap: Bitmap): ByteArray {
+        val baOS = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baOS)
+        return baOS.toByteArray()
     }
 }

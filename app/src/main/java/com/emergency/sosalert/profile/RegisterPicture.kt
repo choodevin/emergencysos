@@ -13,25 +13,33 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.emergency.sosalert.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.fragment_register_picture.*
+import kotlinx.coroutines.flow.callbackFlow
 import java.io.IOException
 
 
 class RegisterPicture : Fragment() {
     private var image: Uri? = null
     private var PROFILE_SETTED = 0
+    private var REGISTER_ABORT = false
+    private var GOOGLE_REGISTER = false
     private val PERM_REQUEST = 3
+    private lateinit var auth: FirebaseAuth
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,6 +50,10 @@ class RegisterPicture : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         profileImage.clipToOutline = true
+
+        if (arguments?.getString("email").isNullOrEmpty()) {
+            GOOGLE_REGISTER = true
+        }
 
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialogBuilder
@@ -54,10 +66,32 @@ class RegisterPicture : Fragment() {
         }
         val dialog = dialogBuilder.create()
 
+        val dialogBuilder2 = AlertDialog.Builder(requireContext())
+        dialogBuilder2
+            .setTitle("Cancel registration?")
+            .setMessage("Are you sure you want to stop right here?")
+        dialogBuilder2.setPositiveButton("Yes") { _, _ ->
+            val auth = FirebaseAuth.getInstance()
+            auth.currentUser?.delete()
+            REGISTER_ABORT = true
+            activity?.onBackPressed()
+        }
+        dialogBuilder2.setNegativeButton("Return") { _, _ ->
+        }
+
+        val dialog2 = dialogBuilder2.create()
+
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
                 .setTextColor(resources.getColor(R.color.colorPrimaryDark))
             dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(resources.getColor(R.color.colorPrimaryDark))
+        }
+
+        dialog2.setOnShowListener {
+            dialog2.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setTextColor(resources.getColor(R.color.colorPrimaryDark))
+            dialog2.getButton(AlertDialog.BUTTON_POSITIVE)
                 .setTextColor(resources.getColor(R.color.colorPrimaryDark))
         }
 
@@ -71,6 +105,21 @@ class RegisterPicture : Fragment() {
 
         backBtn.setOnClickListener {
             activity?.onBackPressed()
+        }
+
+        if (GOOGLE_REGISTER) {
+            activity?.onBackPressedDispatcher?.addCallback(
+                viewLifecycleOwner,
+                object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        if (REGISTER_ABORT) {
+                            super.remove()
+                            activity?.onBackPressed()
+                        } else {
+                            dialog2.show()
+                        }
+                    }
+                })
         }
 
         skipText.setOnClickListener {
@@ -88,14 +137,11 @@ class RegisterPicture : Fragment() {
                     arrayOf(android.Manifest.permission.CAMERA), PERM_REQUEST
                 )
             } else {
-                CropImage.activity()
-                    .setAspectRatio(1, 1)
-                    .setCropShape(CropImageView.CropShape.OVAL)
-                    .setFixAspectRatio(true)
-                    .start(requireContext(), this)
+                startCameraAndCrop()
             }
         }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
@@ -121,6 +167,19 @@ class RegisterPicture : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == PERM_REQUEST) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startCameraAndCrop()
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     private fun toNext() {
         if (PROFILE_SETTED == 1) {
             arguments?.putString("photo", image.toString())
@@ -128,5 +187,13 @@ class RegisterPicture : Fragment() {
             arguments?.putString("photo", "none")
         }
         findNavController().navigate(R.id.action_registerPicture_to_registerGender, arguments)
+    }
+
+    private fun startCameraAndCrop() {
+        CropImage.activity()
+            .setAspectRatio(1, 1)
+            .setCropShape(CropImageView.CropShape.OVAL)
+            .setFixAspectRatio(true)
+            .start(requireContext(), this)
     }
 }
