@@ -1,4 +1,4 @@
-package com.emergency.sosalert.profile
+package com.emergency.sosalert.login
 
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod

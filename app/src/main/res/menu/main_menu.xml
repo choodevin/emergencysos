@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/discussion_page"
+        android:enabled="true"
+        android:icon="@drawable/ic_discussion"
+        android:title="Discussion" />
+    <item
+        android:id="@+id/chat_page"
+        android:enabled="true"
+        android:icon="@drawable/ic_chat"
+        android:title="Chat" />
+    <item
+        android:id="@+id/sos_page"
+        android:enabled="true"
+        android:icon="@drawable/ic_sos"
+        android:title="SOS" />
+    <item
+        android:id="@+id/map_page"
+        android:enabled="true"
+        android:icon="@drawable/ic_map"
+        android:title="Map" />
+    <item
+        android:id="@+id/profile_page"
+        android:enabled="true"
+        android:icon="@drawable/ic_profile"
+        android:title="Profile" />
+</menu>

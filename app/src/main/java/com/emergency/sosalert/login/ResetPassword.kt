@@ -1,4 +1,4 @@
-package com.emergency.sosalert.profile
+package com.emergency.sosalert.login
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.fragment_register_email.*
 import kotlinx.android.synthetic.main.fragment_register_gender.*
 import kotlinx.android.synthetic.main.fragment_register_gender.backBtn
 import kotlinx.android.synthetic.main.fragment_register_gender.continueBtn
-import java.util.*
 import java.util.regex.Pattern
 
 class ResetPassword : Fragment() {

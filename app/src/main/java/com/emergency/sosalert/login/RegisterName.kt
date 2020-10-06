@@ -1,7 +1,6 @@
-package com.emergency.sosalert.profile
+package com.emergency.sosalert.login
 
 import android.os.Bundle
-import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View

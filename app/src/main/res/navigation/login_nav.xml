@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainLogin"
-        android:name="com.emergency.sosalert.MainLogin"
+        android:name="com.emergency.sosalert.login.MainLogin"
         android:label="fragment_main_login"
         tools:layout="@layout/fragment_main_login">
         <action
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerEmail"
-        android:name="com.emergency.sosalert.profile.RegisterEmail"
+        android:name="com.emergency.sosalert.login.RegisterEmail"
         android:label="fragment_register_email"
         tools:layout="@layout/fragment_register_email">
         <action
@@ -51,7 +51,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerPassword"
-        android:name="com.emergency.sosalert.profile.RegisterPassword"
+        android:name="com.emergency.sosalert.login.RegisterPassword"
         android:label="fragment_register_password"
         tools:layout="@layout/fragment_register_password">
         <action
@@ -65,7 +65,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerName"
-        android:name="com.emergency.sosalert.profile.RegisterName"
+        android:name="com.emergency.sosalert.login.RegisterName"
         android:label="RegisterName"
         tools:layout="@layout/fragment_register_name">
         <action
@@ -79,7 +79,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerPicture"
-        android:name="com.emergency.sosalert.profile.RegisterPicture"
+        android:name="com.emergency.sosalert.login.RegisterPicture"
         android:label="fragment_register_picture"
         tools:layout="@layout/fragment_register_picture">
         <action
@@ -93,12 +93,12 @@
     </fragment>
     <fragment
         android:id="@+id/registerGender"
-        android:name="com.emergency.sosalert.profile.RegisterGender"
+        android:name="com.emergency.sosalert.login.RegisterGender"
         android:label="fragment_register_gender"
         tools:layout="@layout/fragment_register_gender" />
     <fragment
         android:id="@+id/resetPassword"
-        android:name="com.emergency.sosalert.profile.ResetPassword"
+        android:name="com.emergency.sosalert.login.ResetPassword"
         android:label="fragment_reset_password"
         tools:layout="@layout/fragment_reset_password" />
 </navigation>

@@ -1,4 +1,4 @@
-package com.emergency.sosalert.profile
+package com.emergency.sosalert.login
 
 import android.os.Bundle
 import android.util.Patterns
@@ -6,12 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.emergency.sosalert.R
-import com.emergency.sosalert.entity.User
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_register_email.*
 
 class RegisterEmail : Fragment() {

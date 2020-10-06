@@ -1,15 +1,18 @@
-package com.emergency.sosalert
+package com.emergency.sosalert.login
 
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.emergency.sosalert.MainActivity
+import com.emergency.sosalert.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -17,9 +20,9 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.crashlytics.internal.common.CommonUtils.hideKeyboard
 import kotlinx.android.synthetic.main.fragment_main_login.*
-
+import kotlinx.android.synthetic.main.fragment_register_password.*
 
 class MainLogin : Fragment() {
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -52,6 +55,8 @@ class MainLogin : Fragment() {
             googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, 1)
+            allButtonToggle(1)
+            progressBarToggle(0)
         }
 
         loginbtn.setOnClickListener {
@@ -76,6 +81,17 @@ class MainLogin : Fragment() {
                         }
                     }
             }
+        }
+
+        inputPass.setOnEditorActionListener { view, action, keyEvent ->
+            if (action == EditorInfo.IME_ACTION_DONE) {
+                loginbtn.callOnClick()
+                hideKeyboard(requireContext(), requireView())
+                true
+            } else {
+                false
+            }
+
         }
 
         resetpassbtn.setOnClickListener {
@@ -124,9 +140,9 @@ class MainLogin : Fragment() {
 
     private fun progressBarToggle(mode: Int) {
         if (mode == TOGGLE_ON) {
-            progressBar.visibility == View.VISIBLE
+            progressBar.visibility = View.VISIBLE
         } else if (mode == TOGGLE_OFF) {
-            progressBar.visibility == View.GONE
+            progressBar.visibility = View.GONE
         }
     }
 
@@ -147,11 +163,7 @@ class MainLogin : Fragment() {
     }
 
     private fun invalidLogin() {
-        Snackbar.make(
-            requireView(),
-            "Invalid login credentials, please try again",
-            Snackbar.LENGTH_LONG
-        ).show()
+        inputPass.error = "Invalid login credentails, please try again."
     }
 
 }

@@ -1,4 +1,4 @@
-package com.emergency.sosalert.profile
+package com.emergency.sosalert.login
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.emergency.sosalert.MainActivity
 import com.emergency.sosalert.R
-import com.emergency.sosalert.entity.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,9 +38,11 @@ class RegisterGender : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         continueBtn.setOnClickListener {
+            buttonToggle(0)
             progressBar.visibility = View.VISIBLE
             backBtn.visibility = View.GONE
             auth = FirebaseAuth.getInstance()
+
             if (maleBtn.isChecked) {
                 gender = "male"
             } else if (femaleBtn.isChecked) {
@@ -70,6 +71,7 @@ class RegisterGender : Fragment() {
                                 "Register failed, please check if the email is registered or try again.",
                                 Snackbar.LENGTH_LONG
                             ).show()
+                            buttonToggle(1)
                             progressBar.visibility = View.GONE
                             backBtn.visibility = View.VISIBLE
                         } else {
@@ -83,6 +85,20 @@ class RegisterGender : Fragment() {
         }
         backBtn.setOnClickListener {
             activity?.onBackPressed()
+        }
+    }
+
+    private fun buttonToggle(mode: Int) {
+        if (mode == 1) {
+            continueBtn.isEnabled = true
+            maleBtn.isEnabled = true
+            femaleBtn.isEnabled = true
+            inputAge.isEnabled = true
+        } else if (mode == 0) {
+            continueBtn.isEnabled = false
+            maleBtn.isEnabled = false
+            femaleBtn.isEnabled = false
+            inputAge.isEnabled = false
         }
     }
 
