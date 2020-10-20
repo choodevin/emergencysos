@@ -42,7 +42,7 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.0"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.0"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
-    implementation 'com.google.firebase:firebase-messaging:20.0.1'
+    implementation 'com.google.firebase:firebase-messaging:20.3.0'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -61,8 +61,11 @@ dependencies {
 
     implementation 'com.mikhaellopez:circularimageview:4.2.0'
     implementation 'com.shobhitpuri.custombuttons:google-signin:1.0.0'
-
     implementation 'com.android.volley:volley:1.1.1'
+
+    implementation("com.github.bumptech.glide:glide:4.9.0") {
+        exclude group: "com.android.support"
+    }
 
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 

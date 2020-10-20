@@ -48,9 +48,17 @@ class RegisterGender : Fragment() {
             } else if (femaleBtn.isChecked) {
                 gender = "female"
             }
-
-            age = inputAge.text.toString().toInt()
-
+try {
+    age = inputAge.text.toString().toInt()
+}catch(e:Exception){
+    Snackbar.make(
+        requireView(),
+        "Please do not leave this empty/Only input numbers.",
+        Snackbar.LENGTH_LONG
+    ).show()
+    inputAge.requestFocus()
+    return@setOnClickListener
+}
             if (age >= 100 || age <= 0) {
                 inputAge.error = "Invalid age"
             } else {

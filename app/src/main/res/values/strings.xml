@@ -6,5 +6,6 @@
     <string name="password_why">Setup a strong password and don\'t forget it</string>
     <string name="password_reg">The password must comply with:\n1. 8 to 20 characters\n2. At least one uppercase letter\n3. At least one lower case letter\n4. At least a digit\n5. At least a special character (Eg: !,@,#,$,_)</string>
     <string name="name_why">Provide a name so that the others can recognize you! Maximum 30 characters.</string>
+    <string name="your_profile">Your Profile</string>
     <string name="sos_button">SOS</string>
 </resources>
