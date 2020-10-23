@@ -13,6 +13,7 @@ class Discussion() : Parcelable {
     var ownerUid: String = ""
     var latitude: String = ""
     var longitude: String = ""
+    var commentgroup: String = ""
 
     constructor(parcel: Parcel) : this() {
         title = parcel.readString()!!
@@ -22,6 +23,7 @@ class Discussion() : Parcelable {
         ownerUid = parcel.readString()!!
         latitude = parcel.readString()!!
         longitude = parcel.readString()!!
+        commentgroup = parcel.readString()!!
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -32,6 +34,7 @@ class Discussion() : Parcelable {
         parcel.writeString(ownerUid)
         parcel.writeString(latitude)
         parcel.writeString(longitude)
+        parcel.writeString(commentgroup)
     }
 
     override fun describeContents(): Int {

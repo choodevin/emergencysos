@@ -25,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_create_discussion.*
 import java.io.IOException
+import kotlin.random.Random
 
 class CreateDiscussion : AppCompatActivity() {
     private var IMAGE_SELECT = 0
@@ -76,6 +77,7 @@ class CreateDiscussion : AppCompatActivity() {
             discussion.ownerUid = auth.currentUser!!.uid
             discussion.latitude = location[0]
             discussion.longitude = location[1]
+            discussion.commentgroup = (0 until 99999999999999).random().toString()
 
             val discHashMap = hashMapOf(
                 "title" to discussion.title,
@@ -83,7 +85,8 @@ class CreateDiscussion : AppCompatActivity() {
                 "uploadtime" to discussion.uploadtime,
                 "ownerUid" to discussion.ownerUid,
                 "latitude" to discussion.latitude,
-                "longitude" to discussion.longitude
+                "longitude" to discussion.longitude,
+                "commentgroup" to discussion.commentgroup
             )
 
             firestore.collection("discussion").add(discHashMap).addOnSuccessListener { new ->

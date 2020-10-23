@@ -46,14 +46,14 @@ class UserProfile : Fragment() {
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val postReference = FirebaseFirestore.getInstance()
         postReference.collection("user").document(uid).get().addOnSuccessListener {
-                    if (it != null) {
-                        editTextName.setText(it.data?.get("name").toString())
-                        editTextAge.setText(it.data?.get("age").toString())
-                        genderData = it.data?.get("gender").toString()
-                        editTextName.isEnabled = false
-                        editTextAge.isEnabled = false
-                    }
-                }
+            if (it != null) {
+                editTextName.setText(it.data?.get("name").toString())
+                editTextAge.setText(it.data?.get("age").toString())
+                genderData = it.data?.get("gender").toString()
+                editTextName.isEnabled = false
+                editTextAge.isEnabled = false
+            }
+        }
 
         val storageRef = FirebaseStorage.getInstance().reference
         storageRef.child("profilepicture/$uid").downloadUrl.addOnSuccessListener {
@@ -68,10 +68,11 @@ class UserProfile : Fragment() {
                     startActivity(i)
                 }
             }
-    }
+        }
         editProfBtn.setOnClickListener { editProfile() }
 
-}
+    }
+
     private fun editProfile() {
         editTextName.isEnabled = true
         editTextAge.isEnabled = true
@@ -104,12 +105,17 @@ class UserProfile : Fragment() {
             editTextAge.isEnabled = false
         }
     }
+
     private fun submitData() {
         nameData = editTextName.text.toString()
         try {
             ageData = Integer.parseInt(editTextAge.text.toString())
-        }catch(e:Exception){
-            Toast.makeText(requireActivity(), "Please don't leave the age empty/ Only put integer value", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(
+                requireActivity(),
+                "Please don't leave the age empty/ Only put integer value",
+                Toast.LENGTH_SHORT
+            ).show()
         }
         when {
             nameData.isEmpty() -> {
@@ -129,7 +135,11 @@ class UserProfile : Fragment() {
                     "name", nameData,
                     "age", ageData
                 ).addOnSuccessListener {
-                    Toast.makeText(requireActivity(), "Info Successfully updated", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireActivity(),
+                        "Info Successfully updated",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
                 editProfBtn.visibility = View.VISIBLE
