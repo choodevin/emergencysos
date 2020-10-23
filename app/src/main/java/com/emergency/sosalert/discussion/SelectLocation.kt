@@ -3,10 +3,8 @@ package com.emergency.sosalert.discussion
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.emergency.sosalert.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -16,10 +14,12 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.activity_select_location.*
 
 class SelectLocation : AppCompatActivity(), OnMapReadyCallback {
     private val PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 1
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var selectedLocation: LatLng
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -29,9 +29,6 @@ class SelectLocation : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
-        val resultIntent = intent.putExtra("location", "abc")
-        setResult(1, resultIntent)
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -52,10 +49,22 @@ class SelectLocation : AppCompatActivity(), OnMapReadyCallback {
             return
         }
         fusedLocationClient.lastLocation.addOnSuccessListener {
-            val location = LatLng(it.latitude, it.longitude)
-            googleMap?.addMarker(MarkerOptions().position(location).title("You"))
-            googleMap?.moveCamera(CameraUpdateFactory.newLatLng(location))
+            val currentLocation = LatLng(it.latitude, it.longitude)
+            googleMap?.addMarker(MarkerOptions().position(currentLocation).title("You"))
+            googleMap?.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
             googleMap?.animateCamera(CameraUpdateFactory.zoomTo(17F))
+        }
+
+        googleMap?.setOnCameraIdleListener {
+            selectedLocation = googleMap.cameraPosition.target
+            val toDisplayLatLng = "${selectedLocation.latitude},${selectedLocation.longitude}"
+            confirmLocationButton.text = toDisplayLatLng
+
+            confirmLocationButton.setOnClickListener {
+                val resultIntent = intent.putExtra("selectedLocation", toDisplayLatLng)
+                setResult(RESULT_OK, resultIntent)
+                finish()
+            }
         }
     }
 

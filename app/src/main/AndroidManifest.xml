@@ -3,10 +3,9 @@
     package="com.emergency.sosalert">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -16,15 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <activity
-            android:name=".discussion.SelectLocation"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".discussion.CreateDiscussion"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".LoginActivity"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".MainActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -33,6 +23,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".discussion.DiscussionDetails"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".discussion.SelectLocation"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".discussion.CreateDiscussion"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />

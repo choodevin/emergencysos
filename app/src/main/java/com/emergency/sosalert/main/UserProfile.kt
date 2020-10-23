@@ -109,32 +109,36 @@ class UserProfile : Fragment() {
         try {
             ageData = Integer.parseInt(editTextAge.text.toString())
         }catch(e:Exception){
-            Toast.makeText(requireActivity(), "Please don't leave the age empty/ Only put integer value", Toast.LENGTH_SHORT)
+            Toast.makeText(requireActivity(), "Please don't leave the age empty/ Only put integer value", Toast.LENGTH_SHORT).show()
         }
-        if (nameData.isEmpty()) {
-            editTextName.setText("Please do not leave it empty")
-            editTextName.requestFocus()
-            return
-        } else if (ageData == 0) {
-            editTextAge.setText("Please do not leave it empty")
-            editTextAge.requestFocus()
-            return
-        } else {
-            val uid = FirebaseAuth.getInstance().uid ?: ""
-            val ref = FirebaseFirestore.getInstance().collection("user").document(uid)
-            ref.update(
-                "name", nameData,
-                "age", ageData
-            ).addOnSuccessListener {
-                Toast.makeText(requireActivity(), "Info Successfully updated", Toast.LENGTH_SHORT)
+        when {
+            nameData.isEmpty() -> {
+                editTextName.setText("Please do not leave it empty")
+                editTextName.requestFocus()
+                return
             }
+            ageData == 0 -> {
+                editTextAge.setText("Please do not leave it empty")
+                editTextAge.requestFocus()
+                return
+            }
+            else -> {
+                val uid = FirebaseAuth.getInstance().uid ?: ""
+                val ref = FirebaseFirestore.getInstance().collection("user").document(uid)
+                ref.update(
+                    "name", nameData,
+                    "age", ageData
+                ).addOnSuccessListener {
+                    Toast.makeText(requireActivity(), "Info Successfully updated", Toast.LENGTH_SHORT).show()
+                }
 
-            editProfBtn.visibility = View.VISIBLE
-            cancelBtn.visibility = View.GONE
-            cfmButton.visibility = View.GONE
-            logoutBtn.visibility = View.VISIBLE
-            editTextName.isEnabled = false
-            editTextAge.isEnabled = false
+                editProfBtn.visibility = View.VISIBLE
+                cancelBtn.visibility = View.GONE
+                cfmButton.visibility = View.GONE
+                logoutBtn.visibility = View.VISIBLE
+                editTextName.isEnabled = false
+                editTextAge.isEnabled = false
+            }
         }
 
     }
