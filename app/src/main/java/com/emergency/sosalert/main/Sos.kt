@@ -30,6 +30,7 @@ import com.google.android.gms.location.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.Constants.MessagePayloadKeys.SENDER_ID
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.RemoteMessage
@@ -44,15 +45,12 @@ import org.json.JSONObject
 
 
 class Sos : Fragment() {
-    private val FCM_API = "https://fcm.googleapis.com/fcm/send"
-    private val serverKey =
-        "key=" + "AAAAQfr8GZw:APA91bGNjK9wn8iSg1TAQq2RpNMYac6OwTCDXrpd64jGvB2rn8JZLXcazoXggVpTh9uyBW0OMEeIuldFAqq3JhLILFvFWxmnEumEwzj39UABRR3sn_YjVGzkKQrnp4EX3gRU_ztktoWZ"
-    private val contentType = "application/x-www-form-urlencoded"
+
     private var victim = ""
     private var latitude = ""
     private var longitude = ""
+    private val uid = FirebaseAuth.getInstance().uid ?: ""
     val PERMISSION_ID = 42
-    val SENDER_ID = 283383699868
     lateinit var mFusedLocationClient: FusedLocationProviderClient
 
     override fun onCreateView(
@@ -66,19 +64,18 @@ class Sos : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val uid = FirebaseAuth.getInstance().uid ?: ""
+
         val picref = FirebaseStorage.getInstance().reference.child("profilepicture").child(uid)
         var yeet = ""
+        val tokenyeet = ""
         FirebaseService.sharedPref = context?.getSharedPreferences("sharedPref", Context.MODE_PRIVATE)
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
             FirebaseService.token = it.token
-            testbtn.text = it.token
         }
+        FirebaseFirestore.getInstance().collection("user").document(uid).update("token",FirebaseService.token)
         mFusedLocationClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
-        FirebaseMessaging.getInstance().subscribeToTopic("help")
         getLastLocation()
-
         picref.downloadUrl.addOnSuccessListener {
             val uri = it
             yeet = uri.toString()
@@ -88,6 +85,7 @@ class Sos : Fragment() {
         }
 
         testbtn.setOnClickListener {
+
         }
 
         sosButton.setOnClickListener {
@@ -112,9 +110,6 @@ class Sos : Fragment() {
                 Toast.makeText(requireContext(), "Turn on network", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-            val topic = "/topics/help"
-            val notification = JSONObject()
-            val notificationBody = JSONObject()
 
             val ref = FirebaseFirestore.getInstance()
             ref.collection("user").document(uid).get().addOnSuccessListener { him ->
@@ -122,10 +117,9 @@ class Sos : Fragment() {
                 try {
                     PushNotification(
                         NotificationData(
-                            "Someone needs your help!","$victim is in danger, help him/her",latitude,longitude),testbtn.text.toString())
+                            "Someone needs your help!","$victim is in danger, help him/her",latitude,longitude,yeet),testbtn.text.toString())
                         .also {
                             sendNotification(it)
-                            textView14.text = "$it"
                         }
 
                     Log.e(TAG, "try")
@@ -202,12 +196,13 @@ class Sos : Fragment() {
             mLocationRequest, mLocationCallback,
             Looper.myLooper()
         )
+        FirebaseFirestore.getInstance().collection(
+            "user").document(uid).update("latitude",latitude,"longitude",longitude)
     }
     @SuppressLint("MissingPermission")
     private fun getLastLocation() {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
-
                 mFusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
                     var location: Location? = task.result
                     if (location == null) {
@@ -215,6 +210,8 @@ class Sos : Fragment() {
                     } else {
                         latitude = location.latitude.toString()
                         longitude = location.longitude.toString()
+                        FirebaseFirestore.getInstance().collection(
+                            "user").document(uid).update("latitude",latitude,"longitude",longitude)
                     }
                 }
             } else {
@@ -223,9 +220,6 @@ class Sos : Fragment() {
         } else {
             requestPermissions()
         }
-    }
-    private val requestQueue: RequestQueue by lazy {
-        Volley.newRequestQueue(context?.applicationContext)
     }
     private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
         try {
