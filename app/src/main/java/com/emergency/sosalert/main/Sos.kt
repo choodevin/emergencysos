@@ -68,10 +68,12 @@ class Sos : Fragment() {
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val picref = FirebaseStorage.getInstance().reference.child("profilepicture").child(uid)
         var yeet = ""
-        FirebaseService.sharedPref = context?.getSharedPreferences("sharedPref", Context.MODE_PRIVATE)
+        FirebaseService.sharedPref =
+            context?.getSharedPreferences("sharedPref", Context.MODE_PRIVATE)
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
             FirebaseService.token = it.token
             testbtn.text = it.token
+            Log.e(TAG, it.token)
         }
         mFusedLocationClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -121,7 +123,12 @@ class Sos : Fragment() {
                 try {
                     PushNotification(
                         NotificationData(
-                            "Someone needs your help!","$victim is in danger, help him/her",latitude,longitude),testbtn.text.toString())
+                            "Someone needs your help!",
+                            "$victim is in danger, help him/her",
+                            latitude,
+                            longitude
+                        ), testbtn.text.toString()
+                    )
                         .also {
                             sendNotification(it)
                             textView14.text = "$it"
@@ -133,7 +140,6 @@ class Sos : Fragment() {
                     Toast.makeText(requireContext(), e.toString(), Toast.LENGTH_LONG).show()
                 }
             }
-
 
 
         }
@@ -150,6 +156,7 @@ class Sos : Fragment() {
             }
         }
     }
+
     private fun requestPermissions() {
         ActivityCompat.requestPermissions(
             requireActivity(),
@@ -160,6 +167,7 @@ class Sos : Fragment() {
             PERMISSION_ID
         )
     }
+
     private fun checkPermissions(): Boolean {
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
@@ -174,6 +182,7 @@ class Sos : Fragment() {
         }
         return false
     }
+
     private fun isLocationEnabled(): Boolean {
         val locationManager: LocationManager =
             this.context?.getSystemService(LOCATION_SERVICE) as LocationManager
@@ -181,6 +190,7 @@ class Sos : Fragment() {
             LocationManager.NETWORK_PROVIDER
         )
     }
+
     private val mLocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             val mLastLocation: Location = locationResult.lastLocation
@@ -188,6 +198,7 @@ class Sos : Fragment() {
             longitude = mLastLocation.longitude.toString()
         }
     }
+
     @SuppressLint("MissingPermission")
     private fun requestNewLocationData() {
         val mLocationRequest = LocationRequest()
@@ -202,6 +213,7 @@ class Sos : Fragment() {
             Looper.myLooper()
         )
     }
+
     @SuppressLint("MissingPermission")
     private fun getLastLocation() {
         if (checkPermissions()) {
@@ -223,19 +235,22 @@ class Sos : Fragment() {
             requestPermissions()
         }
     }
+
     private val requestQueue: RequestQueue by lazy {
         Volley.newRequestQueue(context?.applicationContext)
     }
-    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
-        try {
-            val response = RetrofitInstance.api.postNotification(notification)
-            if(response.isSuccessful) {
-                Log.d(TAG, "Response: ${Gson().toJson(response)}")
-            } else {
-                Log.e(TAG, response.errorBody().toString())
+
+    private fun sendNotification(notification: PushNotification) =
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = RetrofitInstance.api.postNotification(notification)
+                if (response.isSuccessful) {
+                    Log.d(TAG, "Response: ${Gson().toJson(response)}")
+                } else {
+                    Log.e(TAG, response.errorBody().toString())
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, e.toString())
             }
-        } catch(e: Exception) {
-            Log.e(TAG, e.toString())
         }
-    }
 }
