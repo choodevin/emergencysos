@@ -4,8 +4,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_HIGH
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_ONE_SHOT
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -14,11 +12,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
-import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.emergency.sosalert.MainActivity
 import com.emergency.sosalert.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -50,18 +45,15 @@ class FirebaseService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
+        var latitude = ""
+        var longitude = ""
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationID = Random.nextInt()
 
-        if (message.data["latitude"]!!.toDouble() == 999.999) {
-
-        } else {
-            val intent = Intent(this, MainActivity::class.java)
-            val notificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val notificationID = Random.nextInt()
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                createNotificationChannel(notificationManager)
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel(notificationManager)
+        }
 
         val la = message.data["latitude"].toString().toDouble()
         val longi = message.data["longitude"].toString().toDouble()
@@ -99,5 +91,18 @@ class FirebaseService : FirebaseMessagingService() {
             lightColor = Color.GREEN
         }
         notificationManager.createNotificationChannel(channel)
+    }
+    private fun getBitmapfromUrl(imageUrl: String): Bitmap {
+        try {
+            val url = URL(imageUrl)
+            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input: InputStream = connection.inputStream
+            return BitmapFactory.decodeStream(input)
+
+        } catch (e: Exception) {
+            throw Exception(e)
+        }
     }
 }

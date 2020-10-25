@@ -111,8 +111,10 @@ try {
     }
 
     private fun insertDetails() {
-        val user =
-            User(name, gender, age)
+        val user = User()
+        user.name = name
+        user.gender = gender
+        user.age = age
         val userId = auth.uid ?: ""
         val fireStore = FirebaseFirestore.getInstance()
         val userHashMap = hashMapOf(
@@ -131,10 +133,10 @@ try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 val source =
                     ImageDecoder.createSource(requireActivity().contentResolver, uri)
-                var bitmap = ImageDecoder.decodeBitmap(source)
+                val bitmap = ImageDecoder.decodeBitmap(source)
                 storageReference.putBytes(finalByteArray(bitmap))
             } else {
-                var bitmap =
+                val bitmap =
                     MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, uri)
                 storageReference.putBytes(finalByteArray(bitmap))
             }

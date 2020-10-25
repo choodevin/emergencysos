@@ -117,7 +117,7 @@ class Sos : Fragment() {
                 try {
                     PushNotification(
                         NotificationData(
-                            "Someone needs your help!","$victim is in danger, help him/her",latitude,longitude,yeet),testbtn.text.toString())
+                            "Someone needs your help!","$victim is in danger, help him/her",latitude,longitude,yeet),"ey83GbK9Tp-9KKBWbLGlWG:APA91bG1CDSHkHWD6qQL5sVZ86mrxIbK7Ds0IOgKx_m0LJlm6sgzHfD4oU3cTDVxBVR--7I6voH1ZqEETEUTKDJptb9qI16cyuBC4bXOhi6Ky2sm3h4qkGtln-LCphwvSGmAsMkMfvR_")
                         .also {
                             sendNotification(it)
                         }

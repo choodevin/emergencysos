@@ -15,7 +15,8 @@ class ChatAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v =
-            LayoutInflater.from(parent.context).inflate(com.emergency.sosalert.R.layout.comment_list_item, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(com.emergency.sosalert.R.layout.friend_list_item, parent, false)
         return ViewHolder(v)
     }
 
