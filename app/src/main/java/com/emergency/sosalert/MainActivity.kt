@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         auth = FirebaseAuth.getInstance()
-        FirebaseMessaging.getInstance().subscribeToTopic("help")
         if (auth.currentUser == null) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()

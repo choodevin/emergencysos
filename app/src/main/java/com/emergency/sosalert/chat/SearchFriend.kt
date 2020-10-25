@@ -9,7 +9,6 @@ import com.emergency.sosalert.login.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_search_friend.*
-import kotlinx.android.synthetic.main.fragment_chat.*
 
 class SearchFriend : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,12 +21,14 @@ class SearchFriend : AppCompatActivity() {
                 .get().addOnSuccessListener {
                     val userList = ArrayList<User>()
                     for (user in it) {
-                        val tempUser = User()
-                        tempUser.uid = user.id
-                        tempUser.name = user["name"].toString()
-                        userList.add(tempUser)
+                        if (user.id != FirebaseAuth.getInstance().currentUser!!.uid) {
+                            val tempUser = User()
+                            tempUser.uid = user.id
+                            tempUser.name = user["name"].toString()
+                            userList.add(tempUser)
+                        }
                     }
-                    friendRecycler.adapter = UserAdapter(userList)
+                    friendRecycler.adapter = FriendListAdapter(userList)
                 }
 
         }
