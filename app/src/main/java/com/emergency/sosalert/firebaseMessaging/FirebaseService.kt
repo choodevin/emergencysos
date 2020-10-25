@@ -9,7 +9,10 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
@@ -19,6 +22,9 @@ import com.emergency.sosalert.MainActivity
 import com.emergency.sosalert.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 import kotlin.random.Random
 
 private const val CHANNEL_ID = "my_channel"
@@ -57,18 +63,31 @@ class FirebaseService : FirebaseMessagingService() {
                 createNotificationChannel(notificationManager)
             }
 
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            val pendingIntent = PendingIntent.getActivity(this, 0, intent, FLAG_ONE_SHOT)
-            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(message.data["title"])
-                .setContentText(message.data["message"])
-                .setSmallIcon(R.drawable.logo_sos)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
-                .build()
-
-            notificationManager.notify(notificationID, notification)
-        }
+        val la = message.data["latitude"].toString().toDouble()
+        val longi = message.data["longitude"].toString().toDouble()
+        val picurl = message.data["image"].toString()
+        val bitmap = getBitmapfromUrl(picurl)
+        val intentMaps = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("geo:$la,$longi?q=$la,$longi")
+        )
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0, intentMaps,
+            PendingIntent.FLAG_ONE_SHOT
+        )
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(message.data["title"])
+            .setLargeIcon(bitmap)
+            .setContentText(message.data["message"])
+            .setSmallIcon(R.drawable.logo_sos)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .setStyle(
+                NotificationCompat
+                    .BigPictureStyle().bigPicture(bitmap)
+            )
+            .build()
+        notificationManager.notify(notificationID, notification)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
