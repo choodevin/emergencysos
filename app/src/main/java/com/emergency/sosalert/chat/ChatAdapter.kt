@@ -1,5 +1,6 @@
 package com.emergency.sosalert.chat
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.sender_bubble.view.*
 import kotlinx.android.synthetic.main.sender_bubble.view.message_text
 import kotlinx.android.synthetic.main.target_bubble.view.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ChatAdapter(
     private val chatList: ArrayList<Chat>
@@ -20,16 +24,52 @@ class ChatAdapter(
 
     class SenderHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val message = itemView.message_text
+        val date = itemView.sender_time_text
         fun bind(chat: Chat) {
             message.text = chat.message
+            date.text = toDate(chat.timestamp)
+            message.setOnClickListener {
+                if (date.visibility == View.GONE) {
+                    message.setBackgroundResource(R.drawable.bg_sender_box_active)
+                    date.visibility = View.VISIBLE
+                } else {
+                    message.setBackgroundResource(R.drawable.bg_sender_box)
+                    date.visibility = View.GONE
+                }
+            }
         }
+
+        @SuppressLint("SimpleDateFormat")
+        fun toDate(long: Long): String {
+            val date = SimpleDateFormat("d MMM y hh':'mm")
+            return date.format(Date(long))
+        }
+
     }
 
     class TargetHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val message = itemView.message_text
+        val date = itemView.target_time_text
         fun bind(chat: Chat) {
             message.text = chat.message
+            date.text = toDate(chat.timestamp)
+            message.setOnClickListener {
+                if (date.visibility == View.GONE) {
+                    message.setBackgroundResource(R.drawable.bg_target_box_active)
+                    date.visibility = View.VISIBLE
+                } else {
+                    message.setBackgroundResource(R.drawable.bg_target_box)
+                    date.visibility = View.GONE
+                }
+            }
         }
+
+        @SuppressLint("SimpleDateFormat")
+        fun toDate(long: Long): String {
+            val date = SimpleDateFormat("d MMM y hh':'mm")
+            return date.format(Date(long))
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

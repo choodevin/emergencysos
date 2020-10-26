@@ -1,14 +1,13 @@
 package com.emergency.sosalert.firebaseMessaging
 
 import android.app.*
+import android.app.ActivityManager.RunningAppProcessInfo
 import android.app.NotificationManager.IMPORTANCE_HIGH
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
+import android.graphics.*
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -22,6 +21,7 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import kotlin.random.Random
+
 
 private const val CHANNEL_ID = "my_channel"
 
@@ -66,7 +66,7 @@ class FirebaseService : FirebaseMessagingService() {
         lateinit var notification: Notification
 
         if (la == 999.0 && longi == 0.0) {
-            Log.e(TAG,"MESSAGE NOTIF")
+            Log.e(TAG, "MESSAGE NOTIF")
             val titleArr = message.data["title"]!!.split("|")
             val chatIntent =
                 Intent(this, ChatDetails::class.java).putExtra("chatgroupid", titleArr[1])
@@ -76,14 +76,22 @@ class FirebaseService : FirebaseMessagingService() {
             }
             notification = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(titleArr[0])
-                .setLargeIcon(bitmap)
                 .setContentText(message.data["message"])
                 .setSmallIcon(R.drawable.logo_sos)
-                .setAutoCancel(true)
+                .setLargeIcon(getCircleBitmap(bitmap))
                 .setContentIntent(pendingChatIntent)
+                .setStyle(
+                    NotificationCompat.BigTextStyle().bigText(message.data["message"])
+                        .setBigContentTitle(titleArr[0])
+                )
+                .setAutoCancel(true)
                 .build()
+            startForeground(notificationID, notification)
+            if (!isAppForeground(this)) {
+                notificationManager.notify(notificationID, notification)
+            }
         } else {
-            Log.e(TAG,"SOS NOTIF")
+            Log.e(TAG, "SOS NOTIF")
             val pendingIntent = PendingIntent.getActivity(
                 this, 0, intentMaps,
                 PendingIntent.FLAG_ONE_SHOT
@@ -100,8 +108,8 @@ class FirebaseService : FirebaseMessagingService() {
                         .BigPictureStyle().bigPicture(bitmap)
                 )
                 .build()
+            notificationManager.notify(notificationID, notification)
         }
-        notificationManager.notify(notificationID, notification)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -128,4 +136,33 @@ class FirebaseService : FirebaseMessagingService() {
             throw Exception(e)
         }
     }
+
+    private fun getCircleBitmap(bitmap: Bitmap): Bitmap? {
+        val output = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(output)
+        val color = Color.RED
+        val paint = Paint()
+        val rect = Rect(0, 0, bitmap.width, bitmap.height)
+        val rectF = RectF(rect)
+        paint.isAntiAlias = true
+        canvas.drawARGB(0, 0, 0, 0)
+        paint.color = color
+        canvas.drawOval(rectF, paint)
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        canvas.drawBitmap(bitmap, rect, rect, paint)
+        bitmap.recycle()
+        return output
+    }
+
+    private fun isAppForeground(context: Context): Boolean {
+        val mActivityManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        val l = mActivityManager.runningAppProcesses
+        for (info in l) {
+            if (info.uid == context.applicationInfo.uid && info.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                return true
+            }
+        }
+        return false
+    }
+
 }

@@ -76,17 +76,17 @@ class ChatDetails : AppCompatActivity() {
                     .addOnSuccessListener { targetData ->
                         FirebaseFirestore.getInstance().collection("user").document(currentUid)
                             .get().addOnSuccessListener { senderData ->
-                                FirebaseStorage.getInstance().reference.child("profilepicture/$currentUid").downloadUrl.addOnSuccessListener {
+                                FirebaseStorage.getInstance().reference.child("profilepicture/${chat.sender}").downloadUrl.addOnSuccessListener {
                                     PushNotification(
                                         NotificationData(
                                             "${senderData.data!!["name"].toString()}|$chatgroupid",
-                                            inputMessage.text.toString(),
+                                            chat.message,
                                             "999", "0",
                                             it.toString()
                                         ),
                                         targetData.data!!["token"].toString()
-                                    ).also {
-                                        sendNotification(it)
+                                    ).also { notif ->
+                                        sendNotification(notif)
                                     }
 
                                 }
