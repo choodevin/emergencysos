@@ -77,7 +77,6 @@ class CreateDiscussion : AppCompatActivity() {
             discussion.ownerUid = auth.currentUser!!.uid
             discussion.latitude = location[0]
             discussion.longitude = location[1]
-            discussion.commentgroup = (0 until 99999999999999).random().toString()
 
             val discHashMap = hashMapOf(
                 "title" to discussion.title,
@@ -85,14 +84,15 @@ class CreateDiscussion : AppCompatActivity() {
                 "uploadtime" to discussion.uploadtime,
                 "ownerUid" to discussion.ownerUid,
                 "latitude" to discussion.latitude,
-                "longitude" to discussion.longitude,
-                "commentgroup" to discussion.commentgroup
+                "longitude" to discussion.longitude
             )
 
             firestore.collection("discussion").add(discHashMap).addOnSuccessListener { new ->
                 val storageReference =
                     FirebaseStorage.getInstance().getReference("/discussionPicture/${new.id}")
                 val uploadTask = storageReference.putFile(image)
+
+                firestore.collection("discussion").document(new.id).update("commentgroup", new.id)
 
                 uploadTask.continueWithTask { _ ->
                     storageReference.downloadUrl.addOnSuccessListener {

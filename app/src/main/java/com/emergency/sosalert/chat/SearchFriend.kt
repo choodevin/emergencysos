@@ -16,8 +16,8 @@ class SearchFriend : AppCompatActivity() {
         setContentView(R.layout.activity_search_friend)
         friendRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         applySearch.setOnClickListener {
-            val inputName = inputName.text.toString()
-            FirebaseFirestore.getInstance().collection("user").whereEqualTo("name", inputName)
+            val inputEmail = search_by_email.text.toString()
+            FirebaseFirestore.getInstance().collection("user").whereEqualTo("email", inputEmail)
                 .get().addOnSuccessListener {
                     val userList = ArrayList<User>()
                     for (user in it) {
@@ -30,7 +30,6 @@ class SearchFriend : AppCompatActivity() {
                     }
                     friendRecycler.adapter = FriendListAdapter(userList)
                 }
-
         }
     }
 }

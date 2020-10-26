@@ -22,15 +22,15 @@ class RegisterEmail : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         continueBtn.setOnClickListener {
-            if (Patterns.EMAIL_ADDRESS.matcher(inputEmail.text).matches()) {
+            if (Patterns.EMAIL_ADDRESS.matcher(search_by_email.text).matches()) {
                 val bundle = Bundle()
-                bundle.putString("email", inputEmail.text.toString())
+                bundle.putString("email", search_by_email.text.toString())
                 findNavController().navigate(
                     R.id.action_registerEmail_to_registerPassword,
                     bundle
                 )
             } else {
-                inputEmail.error = "Invalid email"
+                search_by_email.error = "Invalid email"
             }
         }
         backBtn.setOnClickListener {

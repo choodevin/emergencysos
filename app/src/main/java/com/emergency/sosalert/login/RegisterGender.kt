@@ -48,23 +48,23 @@ class RegisterGender : Fragment() {
             } else if (femaleBtn.isChecked) {
                 gender = "female"
             }
-try {
-    age = inputAge.text.toString().toInt()
-}catch(e:Exception){
-    Snackbar.make(
-        requireView(),
-        "Please do not leave this empty/Only input numbers.",
-        Snackbar.LENGTH_LONG
-    ).show()
-    inputAge.requestFocus()
-    return@setOnClickListener
-}
+            try {
+                age = inputAge.text.toString().toInt()
+            } catch (e: Exception) {
+                Snackbar.make(
+                    requireView(),
+                    "Please do not leave this empty/Only input numbers.",
+                    Snackbar.LENGTH_LONG
+                ).show()
+                inputAge.requestFocus()
+                return@setOnClickListener
+            }
             if (age >= 100 || age <= 0) {
                 inputAge.error = "Invalid age"
             } else {
                 if (arguments?.get("email") == null) {
                     name = auth.currentUser!!.displayName!!
-                    insertDetails()
+                    insertDetails(auth.currentUser!!.email.toString())
                     startActivity(Intent(requireActivity(), MainActivity::class.java))
                     activity?.finish()
                 } else {
@@ -83,7 +83,7 @@ try {
                             progressBar.visibility = View.GONE
                             backBtn.visibility = View.VISIBLE
                         } else {
-                            insertDetails()
+                            insertDetails(email)
                             startActivity(Intent(requireActivity(), MainActivity::class.java))
                             activity?.finish()
                         }
@@ -110,7 +110,7 @@ try {
         }
     }
 
-    private fun insertDetails() {
+    private fun insertDetails(email: String) {
         val user = User()
         user.name = name
         user.gender = gender
@@ -120,7 +120,8 @@ try {
         val userHashMap = hashMapOf(
             "name" to user.name,
             "gender" to user.gender,
-            "age" to user.age
+            "age" to user.age,
+            "email" to email
         )
 
         fireStore.collection("user").document(userId).set(userHashMap)

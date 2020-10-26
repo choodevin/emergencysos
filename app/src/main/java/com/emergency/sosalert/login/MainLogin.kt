@@ -4,7 +4,6 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.crashlytics.internal.common.CommonUtils.hideKeyboard
 import kotlinx.android.synthetic.main.fragment_main_login.*
-import kotlinx.android.synthetic.main.fragment_register_password.*
 
 class MainLogin : Fragment() {
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -62,7 +60,7 @@ class MainLogin : Fragment() {
         loginbtn.setOnClickListener {
             progressBarToggle(1)
             allButtonToggle(0)
-            val email = inputEmail.text.toString()
+            val email = search_by_email.text.toString()
             val password = inputPass.text.toString()
             if (email.isEmpty() || password.isEmpty()) {
                 invalidLogin()

@@ -67,9 +67,6 @@ class FriendListAdapter(
             val chatGroupid =
                 "${currentUserUid},${userList[position].uid}"
 
-            FirebaseDatabase.getInstance().reference.child("chatgroup").child("id")
-                .setValue(chatGroupid)
-
             currentUserRef.update("chatgroup", FieldValue.arrayUnion(chatGroupid))
             targetUserRef.update("chatgroup", FieldValue.arrayUnion(chatGroupid))
 
