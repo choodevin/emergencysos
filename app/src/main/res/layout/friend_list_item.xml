@@ -15,9 +15,9 @@
 
         <ImageView
             android:id="@+id/userImage"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:layout_marginStart="15dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:adjustViewBounds="false"
@@ -32,6 +32,8 @@
             android:id="@+id/userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="@+id/userImage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.05"
@@ -40,8 +42,8 @@
 
         <Button
             android:id="@+id/addFriendBtn"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_marginEnd="15dp"
             android:background="@drawable/button_add"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -50,8 +52,8 @@
 
         <ImageView
             android:id="@+id/addedFriend"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_marginEnd="15dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"

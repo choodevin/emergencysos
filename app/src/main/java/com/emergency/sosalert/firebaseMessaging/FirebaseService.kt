@@ -1,9 +1,8 @@
 package com.emergency.sosalert.firebaseMessaging
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.app.*
 import android.app.NotificationManager.IMPORTANCE_HIGH
-import android.app.PendingIntent
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -12,9 +11,11 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.emergency.sosalert.R
+import com.emergency.sosalert.chat.ChatDetails
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import java.io.InputStream
@@ -45,8 +46,6 @@ class FirebaseService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-        var latitude = ""
-        var longitude = ""
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
@@ -63,22 +62,45 @@ class FirebaseService : FirebaseMessagingService() {
             Intent.ACTION_VIEW,
             Uri.parse("geo:$la,$longi?q=$la,$longi")
         )
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0, intentMaps,
-            PendingIntent.FLAG_ONE_SHOT
-        )
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(message.data["title"])
-            .setLargeIcon(bitmap)
-            .setContentText(message.data["message"])
-            .setSmallIcon(R.drawable.logo_sos)
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
-            .setStyle(
-                NotificationCompat
-                    .BigPictureStyle().bigPicture(bitmap)
+
+        lateinit var notification: Notification
+
+        if (la == 999.0 && longi == 0.0) {
+            Log.e(TAG,"MESSAGE NOTIF")
+            val titleArr = message.data["title"]!!.split("|")
+            val chatIntent =
+                Intent(this, ChatDetails::class.java).putExtra("chatgroupid", titleArr[1])
+            val pendingChatIntent = TaskStackBuilder.create(this).run {
+                addNextIntentWithParentStack(chatIntent)
+                getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT)
+            }
+            notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(titleArr[0])
+                .setLargeIcon(bitmap)
+                .setContentText(message.data["message"])
+                .setSmallIcon(R.drawable.logo_sos)
+                .setAutoCancel(true)
+                .setContentIntent(pendingChatIntent)
+                .build()
+        } else {
+            Log.e(TAG,"SOS NOTIF")
+            val pendingIntent = PendingIntent.getActivity(
+                this, 0, intentMaps,
+                PendingIntent.FLAG_ONE_SHOT
             )
-            .build()
+            notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(message.data["title"])
+                .setLargeIcon(bitmap)
+                .setContentText(message.data["message"])
+                .setSmallIcon(R.drawable.logo_sos)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setStyle(
+                    NotificationCompat
+                        .BigPictureStyle().bigPicture(bitmap)
+                )
+                .build()
+        }
         notificationManager.notify(notificationID, notification)
     }
 
@@ -92,6 +114,7 @@ class FirebaseService : FirebaseMessagingService() {
         }
         notificationManager.createNotificationChannel(channel)
     }
+
     private fun getBitmapfromUrl(imageUrl: String): Bitmap {
         try {
             val url = URL(imageUrl)

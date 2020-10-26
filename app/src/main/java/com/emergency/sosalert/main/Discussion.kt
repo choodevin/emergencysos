@@ -86,8 +86,13 @@ class Discussion : Fragment() {
                 discussion: Discussion
             ) {
                 holder.bind(discussion)
-                holder.itemView.setOnClickListener{
-                    startActivity(Intent(context, DiscussionDetails::class.java).putExtra("discussiondetails",discussion))
+                holder.itemView.setOnClickListener {
+                    startActivity(
+                        Intent(
+                            context,
+                            DiscussionDetails::class.java
+                        ).putExtra("discussiondetails", discussion)
+                    )
                 }
             }
 

@@ -2,23 +2,22 @@ package com.emergency.sosalert.chat
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.google.firebase.Timestamp
 
 class Chat() : Parcelable {
     var message: String = ""
-    var owner: String = ""
-    lateinit var timestamp: Timestamp
+    var sender: String = ""
+    var timestamp: Long = 0
 
     constructor(parcel: Parcel) : this() {
         message = parcel.readString().toString()
-        owner = parcel.readString().toString()
-        timestamp = parcel.readParcelable(Timestamp::class.java.classLoader)!!
+        sender = parcel.readString().toString()
+        timestamp = parcel.readLong()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(message)
-        parcel.writeString(owner)
-        parcel.writeParcelable(timestamp, flags)
+        parcel.writeString(sender)
+        parcel.writeLong(timestamp)
     }
 
     override fun describeContents(): Int {
