@@ -72,7 +72,7 @@ class FirebaseService : FirebaseMessagingService() {
                 Intent(this, ChatDetails::class.java).putExtra("chatgroupid", titleArr[1])
             val pendingChatIntent = TaskStackBuilder.create(this).run {
                 addNextIntentWithParentStack(chatIntent)
-                getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT)
+                getPendingIntent(1, PendingIntent.FLAG_ONE_SHOT)
             }
             notification = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(titleArr[0])
@@ -85,6 +85,7 @@ class FirebaseService : FirebaseMessagingService() {
                         .setBigContentTitle(titleArr[0])
                 )
                 .setAutoCancel(true)
+                .setOngoing(false)
                 .build()
             startForeground(notificationID, notification)
             if (!isAppForeground(this)) {
