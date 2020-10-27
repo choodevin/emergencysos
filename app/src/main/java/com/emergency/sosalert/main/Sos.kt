@@ -22,6 +22,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.emergency.sosalert.R
+import com.emergency.sosalert.discussion.Discussion
 import com.emergency.sosalert.firebaseMessaging.FirebaseService
 import com.emergency.sosalert.firebaseMessaging.NotificationData
 import com.emergency.sosalert.firebaseMessaging.PushNotification
@@ -36,6 +37,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.RemoteMessage
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.fragment_main_login.*
 import kotlinx.android.synthetic.main.fragment_sos.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,7 +60,6 @@ class Sos : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_sos, container, false)
     }
 
@@ -67,12 +68,14 @@ class Sos : Fragment() {
 
         val picref = FirebaseStorage.getInstance().reference.child("profilepicture").child(uid)
         var yeet = ""
-        val tokenyeet = ""
-        FirebaseService.sharedPref = context?.getSharedPreferences("sharedPref", Context.MODE_PRIVATE)
+        var tokenyeet = ""
+        FirebaseService.sharedPref =
+            context?.getSharedPreferences("sharedPref", Context.MODE_PRIVATE)
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
             FirebaseService.token = it.token
         }
-        FirebaseFirestore.getInstance().collection("user").document(uid).update("token",FirebaseService.token)
+        FirebaseFirestore.getInstance().collection("user").document(uid)
+            .update("token", FirebaseService.token)
         mFusedLocationClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
         getLastLocation()
@@ -83,154 +86,207 @@ class Sos : Fragment() {
                 sosButton.isEnabled = true
             }
         }
-
         testbtn.setOnClickListener {
-
         }
 
-        sosButton.setOnClickListener {
-            val lm: LocationManager =
-                context?.getSystemService(LOCATION_SERVICE) as LocationManager
-            var gpsOn = false
-            var networkOn = false
-            try {
-                gpsOn = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
-            } catch (ex: Exception) {
-            }
-            try {
-                networkOn = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-            } catch (ex: Exception) {
-            }
-
-            if (!gpsOn) {
-                Toast.makeText(requireContext(), "Turn on GPS", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
-            if (!networkOn) {
-                Toast.makeText(requireContext(), "Turn on network", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
-
-            val ref = FirebaseFirestore.getInstance()
-            ref.collection("user").document(uid).get().addOnSuccessListener { him ->
-                victim = him.data?.get("name").toString()
+            sosButton.setOnClickListener {
+                val lm: LocationManager =
+                    context?.getSystemService(LOCATION_SERVICE) as LocationManager
+                var gpsOn = false
+                var networkOn = false
                 try {
-                    PushNotification(
-                        NotificationData(
-                            "Someone needs your help!","$victim is in danger, help him/her",latitude,longitude,yeet),testbtn.text.toString())
-                        .also {
-                            sendNotification(it)
-                        }
-
-                    Log.e(TAG, "try")
-                } catch (e: JSONException) {
-                    Log.e("TAG", "onCreate: " + e.message)
-                    Toast.makeText(requireContext(), e.toString(), Toast.LENGTH_LONG).show()
+                    gpsOn = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                } catch (ex: Exception) {
                 }
-            }
+                try {
+                    networkOn = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+                } catch (ex: Exception) {
+                }
+
+                if (!gpsOn) {
+                    Toast.makeText(requireContext(), "Turn on GPS", Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
+                if (!networkOn) {
+                    Toast.makeText(requireContext(), "Turn on network", Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
+
+                val ref = FirebaseFirestore.getInstance()
 
 
-
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == PERMISSION_ID) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                getLastLocation()
-            }
-        }
-    }
-    private fun requestPermissions() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(
-                android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ),
-            PERMISSION_ID
-        )
-    }
-    private fun checkPermissions(): Boolean {
-        if (ActivityCompat.checkSelfPermission(
-                requireActivity(),
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
-                requireActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            return true
-        }
-        return false
-    }
-    private fun isLocationEnabled(): Boolean {
-        var locationManager: LocationManager =
-            this.context?.getSystemService(LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
-    }
-    private val mLocationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            var mLastLocation: Location = locationResult.lastLocation
-            latitude = mLastLocation.latitude.toString()
-            longitude = mLastLocation.longitude.toString()
-        }
-    }
-    @SuppressLint("MissingPermission")
-    private fun requestNewLocationData() {
-        var mLocationRequest = LocationRequest()
-        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        mLocationRequest.interval = 5000
-        mLocationRequest.fastestInterval = 2500
-        mLocationRequest.numUpdates = 1
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        mFusedLocationClient!!.requestLocationUpdates(
-            mLocationRequest, mLocationCallback,
-            Looper.myLooper()
-        )
-        FirebaseFirestore.getInstance().collection(
-            "user").document(uid).update("latitude",latitude,"longitude",longitude)
-    }
-    @SuppressLint("MissingPermission")
-    private fun getLastLocation() {
-        if (checkPermissions()) {
-            if (isLocationEnabled()) {
-                mFusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
-                    var location: Location? = task.result
-                    if (location == null) {
-                        requestNewLocationData()
-                    } else {
-                        latitude = location.latitude.toString()
-                        longitude = location.longitude.toString()
-                        FirebaseFirestore.getInstance().collection(
-                            "user").document(uid).update("latitude",latitude,"longitude",longitude)
+                ref.collection("user").document(uid).get().addOnSuccessListener { him ->
+                    victim = him.data?.get("name").toString()
+                    var tempLatitude: Double
+                    var tempLongitude: Double
+                    var resultGet: Double
+                    var userlocation = Location("")
+                    var testing = ""
+                    userlocation.latitude = latitude.toDouble()
+                    userlocation.longitude = longitude.toDouble()
+                    var targetlocation = Location("")
+                    try {
+                        //pull all user, check geo, pull token send
+                        ref.collection("user").get().addOnSuccessListener { main ->
+                            var j = 0
+                            var maxRange = 100
+                            while(j < 1){
+                                var i = 0
+                            for (document in main) {
+                                if (main.documents[i]["token"].toString()
+                                        .compareTo(FirebaseService.token.toString()) != 0
+                                ) {
+                                    tempLatitude =
+                                        main.documents[i]["latitude"].toString().toDouble()
+                                    tempLongitude =
+                                        main.documents[i]["longitude"].toString().toDouble()
+                                    var targetName: String = main.documents[i]["name"].toString()
+                                    tokenyeet = main.documents[i]["token"].toString()
+                                    targetlocation.latitude = tempLatitude
+                                    targetlocation.longitude = tempLongitude
+                                    i++
+                                    if (userlocation.distanceTo(targetlocation) <= maxRange && userlocation.distanceTo(
+                                            targetlocation
+                                        ) > 0) {
+                                        var distanceboi = userlocation.distanceTo(targetlocation)
+                                        PushNotification(
+                                            NotificationData(
+                                                "Someone is in danger!",
+                                                "$targetName ,$victim is in danger!, $distanceboi",
+                                                "$latitude",
+                                                "$longitude",
+                                                "$yeet"
+                                            ),
+                                            tokenyeet
+                                        ).also {
+                                            sendNotification(it)
+                                            j += 1
+                                        }
+                                    }
+                                }
+                            }
+                                if(j < 1){
+                                    maxRange += 1000
+                                }
+                        }
+                        }
+                        Log.e(TAG, "try")
+                    } catch (e: java.lang.Exception) {
+                        Log.e("TAG", "onCreate: " + e.message)
+                        Toast.makeText(requireContext(), e.toString(), Toast.LENGTH_LONG).show()
                     }
                 }
-            } else {
-                Toast.makeText(requireActivity(), "Turn on location", Toast.LENGTH_LONG).show()
             }
-        } else {
-            requestPermissions()
         }
-    }
-    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
-        try {
-            val response = RetrofitInstance.api.postNotification(notification)
-            if(response.isSuccessful) {
-                Log.d(TAG, "Response: ${Gson().toJson(response)}")
-            } else {
-                Log.e(TAG, response.errorBody().toString())
+
+        override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
+        ) {
+            if (requestCode == PERMISSION_ID) {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    getLastLocation()
+                }
             }
-        } catch(e: Exception) {
-            Log.e(TAG, e.toString())
         }
+
+        private fun requestPermissions() {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ),
+                PERMISSION_ID
+            )
+        }
+
+        private fun checkPermissions(): Boolean {
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                return true
+            }
+            return false
+        }
+
+        private fun isLocationEnabled(): Boolean {
+            var locationManager: LocationManager =
+                this.context?.getSystemService(LOCATION_SERVICE) as LocationManager
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+                LocationManager.NETWORK_PROVIDER
+            )
+        }
+
+        private val mLocationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                var mLastLocation: Location = locationResult.lastLocation
+                latitude = mLastLocation.latitude.toString()
+                longitude = mLastLocation.longitude.toString()
+            }
+        }
+
+        @SuppressLint("MissingPermission")
+        private fun requestNewLocationData() {
+            var mLocationRequest = LocationRequest()
+            mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            mLocationRequest.interval = 5000
+            mLocationRequest.fastestInterval = 2500
+            mLocationRequest.numUpdates = 1
+
+            mFusedLocationClient =
+                LocationServices.getFusedLocationProviderClient(requireActivity())
+            mFusedLocationClient!!.requestLocationUpdates(
+                mLocationRequest, mLocationCallback,
+                Looper.myLooper()
+            )
+            FirebaseFirestore.getInstance().collection(
+                "user"
+            ).document(uid).update("latitude", latitude, "longitude", longitude)
+        }
+
+        @SuppressLint("MissingPermission")
+        private fun getLastLocation() {
+            if (checkPermissions()) {
+                if (isLocationEnabled()) {
+                    mFusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
+                        var location: Location? = task.result
+                        if (location == null) {
+                            requestNewLocationData()
+                        } else {
+                            latitude = location.latitude.toString()
+                            longitude = location.longitude.toString()
+                            FirebaseFirestore.getInstance().collection(
+                                "user"
+                            ).document(uid).update("latitude", latitude, "longitude", longitude)
+                        }
+                    }
+                } else {
+                    Toast.makeText(requireActivity(), "Turn on location", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                requestPermissions()
+            }
+        }
+
+        private fun sendNotification(notification: PushNotification) =
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val response = RetrofitInstance.api.postNotification(notification)
+                    if (response.isSuccessful) {
+                        Log.d(TAG, "Response: ${Gson().toJson(response)}")
+                    } else {
+                        Log.e(TAG, response.errorBody().toString())
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, e.toString())
+                }
+            }
     }
-}
