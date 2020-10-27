@@ -126,12 +126,9 @@
 
         <Button
             android:id="@+id/editPictureBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="27dp"
-            android:layout_marginTop="102dp"
-            android:layout_marginEnd="17dp"
-            android:text="#yeet"
+            android:layout_width="@dimen/button_fx_width"
+            android:layout_height="@dimen/button_fx_height"
+            android:background="@drawable/button_attach"
             android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/profilepic"
             app:layout_constraintStart_toStartOf="parent"
