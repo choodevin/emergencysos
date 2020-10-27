@@ -45,6 +45,7 @@ class FirebaseService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
+        Log.e(TAG,"MESSAGE RECEIVED")
         super.onMessageReceived(message)
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

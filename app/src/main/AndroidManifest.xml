@@ -40,6 +40,9 @@
             android:name=".chat.SearchFriend"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".admin.AdminContainer"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".chat.ChatDetails"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />

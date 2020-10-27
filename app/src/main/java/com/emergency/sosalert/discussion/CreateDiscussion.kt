@@ -84,7 +84,8 @@ class CreateDiscussion : AppCompatActivity() {
                 "uploadtime" to discussion.uploadtime,
                 "ownerUid" to discussion.ownerUid,
                 "latitude" to discussion.latitude,
-                "longitude" to discussion.longitude
+                "longitude" to discussion.longitude,
+                "status" to "pending"
             )
 
             firestore.collection("discussion").add(discHashMap).addOnSuccessListener { new ->

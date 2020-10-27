@@ -1,4 +1,4 @@
-package com.emergency.sosalert.main
+package com.emergency.sosalert.admin
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -27,7 +27,7 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.discussion_list_item.view.*
 import kotlinx.android.synthetic.main.fragment_discussion.*
 
-class Discussion : Fragment() {
+class AllDiscussion : Fragment() {
 
     private lateinit var firestoreAdapter: FirestorePagingAdapter<Discussion, ViewHolder>
 
@@ -55,9 +55,10 @@ class Discussion : Fragment() {
     }
 
     private fun applyData() {
-        val basequery = FirebaseFirestore.getInstance().collection("discussion")
-            .whereEqualTo("status", "approved")
-            .orderBy("uploadtime", Query.Direction.DESCENDING)
+        val basequery =
+            FirebaseFirestore.getInstance().collection("discussion")
+                .whereEqualTo("status", "pending")
+                .orderBy("uploadtime", Query.Direction.DESCENDING)
 
         val config = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
@@ -160,4 +161,3 @@ class Discussion : Fragment() {
         }
     }
 }
-
