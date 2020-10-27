@@ -35,7 +35,7 @@ class ResetPassword : Fragment() {
             progressBar.visibility = View.VISIBLE
             backBtn.visibility = View.GONE
             auth = FirebaseAuth.getInstance()
-            val email = inputEmail.text.toString()
+            val email = search_by_email.text.toString()
             val emailRegex = Pattern.compile(
                 "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
                         "\\@" +
