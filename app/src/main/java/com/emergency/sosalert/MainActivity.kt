@@ -1,12 +1,18 @@
 package com.emergency.sosalert
 
 import android.content.Intent
+import android.location.Location
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
+import com.emergency.sosalert.locationTracking.LocationTrackingService
 import com.emergency.sosalert.main.*
+import com.emergency.sosalert.main.Map
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +34,8 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        startService(Intent(this, LocationTrackingService::class.java))
 
         main_bot_nav.selectedItemId = R.id.sos_page
         supportFragmentManager.beginTransaction().add(R.id.main_container, sosFragment).commit()
@@ -84,9 +92,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
-        main_bot_nav.setOnNavigationItemReselectedListener {
-        }
     }
 
     private fun hideAllFragment(fm: FragmentManager) {
@@ -95,5 +100,17 @@ class MainActivity : AppCompatActivity() {
         fm.beginTransaction().hide(mapFragment).commit()
         fm.beginTransaction().hide(profileFragment).commit()
         fm.beginTransaction().hide(chatFragment).commit()
+    }
+
+    companion object {
+        fun updateLocation(location: Location) {
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+            FirebaseDatabase.getInstance().reference.child("userlocation/$uid").setValue(
+                hashMapOf(
+                    "latitude" to location.latitude,
+                    "longitude" to location.longitude
+                )
+            )
+        }
     }
 }

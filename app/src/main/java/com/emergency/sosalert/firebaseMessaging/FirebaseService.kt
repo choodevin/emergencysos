@@ -116,9 +116,9 @@ class FirebaseService : FirebaseMessagingService() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(notificationManager: NotificationManager) {
-        val channelName = "channelName"
+        val channelName = "SOSAlert"
         val channel = NotificationChannel(CHANNEL_ID, channelName, IMPORTANCE_HIGH).apply {
-            description = "My channel description"
+            description = "SOSAlert Notification Channel"
             enableLights(true)
             lightColor = Color.GREEN
         }

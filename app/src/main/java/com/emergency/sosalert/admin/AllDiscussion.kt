@@ -35,7 +35,7 @@ class AllDiscussion : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_discussion, container, false)
+        return inflater.inflate(R.layout.fragment_all_discussion, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
