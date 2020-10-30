@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.emergency.sosalert.R
 import com.emergency.sosalert.chat.ChatDetails
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import java.io.InputStream
@@ -43,7 +44,6 @@ class FirebaseService : FirebaseMessagingService() {
         super.onNewToken(newToken)
         token = newToken
     }
-
     override fun onMessageReceived(message: RemoteMessage) {
         Log.e(TAG,"MESSAGE RECEIVED")
         super.onMessageReceived(message)
@@ -62,7 +62,13 @@ class FirebaseService : FirebaseMessagingService() {
         val intentMaps = Intent(
             Intent.ACTION_VIEW,
             Uri.parse("geo:$la,$longi?q=$la,$longi")
-        )
+        ).also{
+            FirebaseFirestore.getInstance().collection("report").document("count").get().addOnSuccessListener {
+                var count = it.get("intentpress").toString().toInt()
+                count += 1
+                FirebaseFirestore.getInstance().collection("report").document("count").update("intentpress",count)
+            }
+        }
 
         lateinit var notification: Notification
 

@@ -65,6 +65,11 @@ class UserProfile : Fragment() {
             if (it != null) {
                 editTextName.setText(it.data?.get("name").toString())
                 editTextAge.setText(it.data?.get("age").toString())
+                if(it.data?.get("isAdmin").toString().compareTo("yes")==0){
+                    toAdminButton.visibility = View.VISIBLE
+                }else{
+                    toAdminButton.visibility = View.INVISIBLE
+                }
                 genderData = it.data?.get("gender").toString()
                 editTextName.isEnabled = false
                 editTextAge.isEnabled = false
@@ -86,7 +91,7 @@ class UserProfile : Fragment() {
             }
         }
         editProfBtn.setOnClickListener { editProfile() }
-
+        if(postReference.collection("user").document(uid).toString().compareTo("yes")==0)
         toAdminButton.setOnClickListener {
             startActivity(Intent(context, AdminContainer::class.java))
         }
@@ -128,7 +133,7 @@ class UserProfile : Fragment() {
             editProfBtn.visibility = View.VISIBLE
             cancelBtn.visibility = View.GONE
             cfmButton.visibility = View.GONE
-            editPictureBtn.visibility = View.GONE
+            editPictureBtn.visibility = View.INVISIBLE
             logoutBtn.visibility = View.VISIBLE
             editTextName.isEnabled = false
             editTextAge.isEnabled = false
@@ -215,13 +220,12 @@ class UserProfile : Fragment() {
                 editProfBtn.visibility = View.VISIBLE
                 cancelBtn.visibility = View.GONE
                 cfmButton.visibility = View.GONE
-                editPictureBtn.visibility = View.GONE
+                editPictureBtn.visibility = View.INVISIBLE
                 logoutBtn.visibility = View.VISIBLE
                 editTextName.isEnabled = false
                 editTextAge.isEnabled = false
             }
         }
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

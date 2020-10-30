@@ -35,14 +35,11 @@ class AllDiscussion : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_discussion, container, false)
+        return inflater.inflate(R.layout.fragment_all_discussion, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        addDiscussion.setOnClickListener {
-            startActivity(Intent(context, CreateDiscussion::class.java))
-        }
 
         discussionRefresh.setOnRefreshListener {
             firestoreAdapter.refresh()
@@ -52,6 +49,11 @@ class AllDiscussion : Fragment() {
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         applyData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        firestoreAdapter.refresh()
     }
 
     private fun applyData() {
@@ -91,7 +93,7 @@ class AllDiscussion : Fragment() {
                     startActivity(
                         Intent(
                             context,
-                            DiscussionDetails::class.java
+                            AllDiscussionDetails::class.java
                         ).putExtra("discussiondetails", discussion)
                     )
                 }

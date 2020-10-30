@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
@@ -86,9 +87,6 @@ class Sos : Fragment() {
                 sosButton.isEnabled = true
             }
         }
-        testbtn.setOnClickListener {
-        }
-
             sosButton.setOnClickListener {
                 val lm: LocationManager =
                     context?.getSystemService(LOCATION_SERVICE) as LocationManager
@@ -171,11 +169,35 @@ class Sos : Fragment() {
                         }
                         }
                         Log.e(TAG, "try")
+                        FirebaseFirestore.getInstance().collection("report").document("count").get().addOnSuccessListener {
+                            var count = it.get("buttonpress").toString().toInt()
+                            count += 1
+                            FirebaseFirestore.getInstance().collection("report").document("count").update("buttonpress",count)
+                        }
                     } catch (e: java.lang.Exception) {
                         Log.e("TAG", "onCreate: " + e.message)
                         Toast.makeText(requireContext(), e.toString(), Toast.LENGTH_LONG).show()
                     }
                 }
+                sosButton.isEnabled = false
+                object : CountDownTimer(11000, 1000) {
+                    override fun onFinish() {
+                        if (sosButton != null) {
+                            sosButton.isEnabled = true
+                            timer_title.visibility = View.INVISIBLE
+                            countdown_timer.visibility = View.INVISIBLE
+                        }
+                    }
+
+                    override fun onTick(p0: Long) {
+                        if (timer_title != null) {
+                            timer_title.visibility = View.VISIBLE
+                            countdown_timer.visibility = View.VISIBLE
+                            countdown_timer.text = "${p0 / 1000}"
+                        }
+                    }
+
+                }.start()
             }
         }
 

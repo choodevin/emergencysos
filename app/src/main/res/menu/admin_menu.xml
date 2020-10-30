@@ -6,8 +6,8 @@
         android:icon="@drawable/ic_discussion"
         android:title="View All Discussion" />
     <item
-        android:id="@+id/what_you_want"
+        android:id="@+id/report_gen_page"
         android:enabled="true"
         android:icon="@drawable/ic_chat"
-        android:title="What you want" />
+        android:title="Report Page" />
 </menu>

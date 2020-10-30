@@ -5,19 +5,20 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import com.emergency.sosalert.R
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.function.ToDoubleBiFunction
 
 class AdminContainer : AppCompatActivity() {
     private val discussionFragment = AllDiscussion()
+    private val reportFragment = ReportGeneration()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin)
-
-        supportFragmentManager.beginTransaction().add(R.id.admin_container, AllDiscussion())
+        val fragmentManager = supportFragmentManager
+        fragmentManager.beginTransaction().add(R.id.admin_container, discussionFragment)
             .commit()
 
         main_bot_nav.setOnNavigationItemSelectedListener {
-            val fragmentManager = supportFragmentManager
             when (it.itemId) {
                 R.id.all_discussion_page -> {
                     hideAllFragment(fragmentManager)
@@ -28,10 +29,15 @@ class AdminContainer : AppCompatActivity() {
                     fragmentManager.beginTransaction().show(discussionFragment).commit()
                     true
                 }
-                R.id.what_you_want -> {
-                    TODO()
+                R.id.report_gen_page -> {
+                    hideAllFragment(fragmentManager)
+                    if (!reportFragment.isAdded) {
+                        supportFragmentManager.beginTransaction()
+                            .add(R.id.admin_container, reportFragment).commit()
+                    }
+                    fragmentManager.beginTransaction().show(reportFragment).commit()
+                    true
                 }
-
                 else -> false
             }
         }
@@ -39,5 +45,6 @@ class AdminContainer : AppCompatActivity() {
 
     private fun hideAllFragment(fm: FragmentManager) {
         fm.beginTransaction().hide(discussionFragment).commit()
+        fm.beginTransaction().hide(reportFragment).commit()
     }
 }
