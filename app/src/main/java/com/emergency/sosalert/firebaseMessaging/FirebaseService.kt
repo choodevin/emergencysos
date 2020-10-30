@@ -45,7 +45,7 @@ class FirebaseService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        Log.e(TAG,"MESSAGE RECEIVED")
+        Log.e(TAG, "MESSAGE RECEIVED")
         super.onMessageReceived(message)
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -88,7 +88,6 @@ class FirebaseService : FirebaseMessagingService() {
                 .setAutoCancel(true)
                 .setOngoing(false)
                 .build()
-            startForeground(notificationID, notification)
             if (!isAppForeground(this)) {
                 notificationManager.notify(notificationID, notification)
             }

@@ -121,7 +121,8 @@ class RegisterGender : Fragment() {
             "name" to user.name,
             "gender" to user.gender,
             "age" to user.age,
-            "email" to email
+            "email" to email,
+            "allowTracking" to false
         )
 
         fireStore.collection("user").document(userId).set(userHashMap)

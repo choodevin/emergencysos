@@ -1,6 +1,5 @@
 package com.emergency.sosalert.locationTracking
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
@@ -32,6 +31,8 @@ class LocationTrackingService : Service() {
     private val LOCATION_DISTANCE = 10f
     private val CHANNEL_ID: String = "9999"
 
+    private var toStop = false
+
     override fun onBind(p0: Intent?): IBinder? {
         return null
     }
@@ -39,6 +40,9 @@ class LocationTrackingService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         Log.e(TAG, "Service started")
+        if (intent?.extras?.get("stop") != null) {
+            toStop = true
+        }
         return START_STICKY
     }
 
@@ -88,10 +92,14 @@ class LocationTrackingService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        val broadcastIntent = Intent()
-        broadcastIntent.setAction("RestartLocationTrackingService")
-            .setClass(this, ServiceRestart::class.java)
-        sendBroadcast(broadcastIntent)
+        stopForeground(true)
+        stopSelf()
+        if(!toStop){
+            val broadcastIntent = Intent()
+            broadcastIntent.setAction("RestartLocationTrackingService")
+                .setClass(this, RestartTrackingService::class.java)
+            sendBroadcast(broadcastIntent)
+        }
     }
 
 
@@ -129,13 +137,13 @@ class LocationTrackingService : Service() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(notificationManager: NotificationManager) {
-        val channelName = "SOSAlertTrackingSystem"
+        val channelName = "Tracking System"
         val channel = NotificationChannel(
             CHANNEL_ID,
             channelName,
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = "SOSAlert Tracking Notification"
+            description = "Tracking Notification"
             enableLights(true)
             lightColor = Color.GREEN
         }

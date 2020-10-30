@@ -49,6 +49,13 @@
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".locationTracking.TrackerMap"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
 
@@ -58,20 +65,21 @@
 
         <service
             android:name=".firebaseMessaging.FirebaseService"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:directBootAware="true"
+            android:permission="com.google.android.c2dm.permission.SEND"
+            tools:targetApi="n">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-
         <service
             android:name=".locationTracking.LocationTrackingService"
-            android:process=":LocationTrackingService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:process=":LocationTrackingService" />
 
         <receiver
-            android:name=".locationTracking.ServiceRestart"
+            android:name=".locationTracking.RestartTrackingService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

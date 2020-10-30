@@ -1,3 +1,4 @@
+
 package com.emergency.sosalert.locationTracking
 
 import android.content.BroadcastReceiver
@@ -7,7 +8,7 @@ import android.location.Location
 import android.os.Build
 
 
-class ServiceRestart : BroadcastReceiver() {
+class RestartTrackingService : BroadcastReceiver() {
     override fun onReceive(context: Context?, p1: Intent?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context?.startForegroundService(Intent(context, LocationTrackingService::class.java))

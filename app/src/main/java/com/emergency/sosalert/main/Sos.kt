@@ -66,6 +66,7 @@ class Sos : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         val picref = FirebaseStorage.getInstance().reference.child("profilepicture").child(uid)
         var yeet = ""
         var tokenyeet = ""
@@ -85,6 +86,7 @@ class Sos : Fragment() {
                 sosButton.isEnabled = true
             }
         }
+        getLastLocation()
 
         sosButton.setOnClickListener {
             getLastLocation()

@@ -2,9 +2,12 @@ package com.emergency.sosalert.chat
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -12,6 +15,7 @@ import com.emergency.sosalert.R
 import com.emergency.sosalert.firebaseMessaging.NotificationData
 import com.emergency.sosalert.firebaseMessaging.PushNotification
 import com.emergency.sosalert.firebaseMessaging.RetrofitInstance
+import com.emergency.sosalert.locationTracking.TrackerMap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,6 +43,35 @@ class ChatDetails : AppCompatActivity() {
             temp[0]
         }
 
+        backBtn.setOnClickListener {
+            onBackPressed()
+        }
+
+        trackingButton.setOnClickListener {
+            FirebaseFirestore.getInstance().collection("user").document(targetUid).get()
+                .addOnSuccessListener {
+                    if (it != null) {
+                        if (it.data?.get("allowTracking") as Boolean) {
+                            startActivity(
+                                Intent(this, TrackerMap::class.java).putExtra(
+                                    "targetuid",
+                                    targetUid
+                                )
+                            )
+                        } else {
+                            val dialogBuilder = AlertDialog.Builder(this)
+                            dialogBuilder
+                                .setTitle("Unable to track")
+                                .setMessage("Your tracking target seems does not have tracking enabled, please tell him/her to enable it and try again.")
+                                .setPositiveButton("Ok") { _: DialogInterface, _: Int ->
+                                }
+                            val dialog = dialogBuilder.create()
+                            dialog.show()
+                        }
+                    }
+                }
+        }
+
         val layoutManager = LinearLayoutManager(this)
         layoutManager.reverseLayout = false
         layoutManager.stackFromEnd = true
@@ -58,6 +91,9 @@ class ChatDetails : AppCompatActivity() {
         sendButton.setOnClickListener {
             val messageContent = inputMessage.text.toString()
             val chat = Chat()
+            if (messageContent.isEmpty()) {
+                return@setOnClickListener
+            }
             chat.message = messageContent
             chat.sender = currentUid
 

@@ -1,0 +1,9 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory app:title="@string/general_header">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="enable_tracking"
+            android:title="Enable Tracking" />
+    </PreferenceCategory>
+</PreferenceScreen>

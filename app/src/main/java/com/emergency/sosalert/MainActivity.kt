@@ -1,19 +1,21 @@
 package com.emergency.sosalert
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
+import androidx.preference.PreferenceManager
+import com.emergency.sosalert.locationTracking.LatLong
 import com.emergency.sosalert.locationTracking.LocationTrackingService
 import com.emergency.sosalert.main.*
 import com.emergency.sosalert.main.Map
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -25,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     private val chatFragment = Chat()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        registerPreferences()
+
         auth = FirebaseAuth.getInstance()
         if (auth.currentUser == null) {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -34,8 +38,6 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        startService(Intent(this, LocationTrackingService::class.java))
 
         main_bot_nav.selectedItemId = R.id.sos_page
         supportFragmentManager.beginTransaction().add(R.id.main_container, sosFragment).commit()
@@ -90,7 +92,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> false
             }
-
         }
     }
 
@@ -106,11 +107,19 @@ class MainActivity : AppCompatActivity() {
         fun updateLocation(location: Location) {
             val uid = FirebaseAuth.getInstance().currentUser!!.uid
             FirebaseDatabase.getInstance().reference.child("userlocation/$uid").setValue(
-                hashMapOf(
-                    "latitude" to location.latitude,
-                    "longitude" to location.longitude
-                )
+                LatLong(location.latitude, location.longitude)
             )
         }
     }
+
+    private fun registerPreferences() {
+        val trackPref = PreferenceManager.getDefaultSharedPreferences(this)
+        val isTrackingOn = trackPref.getBoolean("enable_tracking", false)
+        if (isTrackingOn) {
+            startService(Intent(this, LocationTrackingService::class.java))
+        } else {
+            stopService(Intent(this, LocationTrackingService::class.java).putExtra("stop", true))
+        }
+    }
 }
+

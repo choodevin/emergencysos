@@ -9,6 +9,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceFragment
 import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -22,7 +23,9 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.emergency.sosalert.LoginActivity
 import com.emergency.sosalert.R
+import com.emergency.sosalert.SettingsActivity
 import com.emergency.sosalert.admin.AdminContainer
+import com.emergency.sosalert.locationTracking.LocationTrackingService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -50,12 +53,17 @@ class UserProfile : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        goToSettings.setOnClickListener {
+            startActivity(Intent(context, SettingsActivity::class.java))
+        }
+
         logoutBtn.setOnClickListener {
             FirebaseFirestore.getInstance().collection("user").document(uid)
                 .update("token", "empty")
             auth.signOut()
             activity?.finish()
-            startActivity(Intent(requireContext(), LoginActivity::class.java))
+            startActivity(Intent(context, LoginActivity::class.java))
         }
         (activity as AppCompatActivity).supportActionBar?.show()
 
