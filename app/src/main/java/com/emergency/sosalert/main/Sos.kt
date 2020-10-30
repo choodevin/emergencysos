@@ -69,7 +69,6 @@ class Sos : Fragment() {
 
         val picref = FirebaseStorage.getInstance().reference.child("profilepicture").child(uid)
         var yeet = ""
-        var tokenyeet = ""
         FirebaseService.sharedPref =
             context?.getSharedPreferences("sharedPref", Context.MODE_PRIVATE)
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
@@ -117,9 +116,7 @@ class Sos : Fragment() {
                     victim = him.data?.get("name").toString()
                     var tempLatitude: Double
                     var tempLongitude: Double
-                    var resultGet: Double
                     var userlocation = Location("")
-                    var testing = ""
                     userlocation.latitude = latitude.toDouble()
                     userlocation.longitude = longitude.toDouble()
                     var targetlocation = Location("")
@@ -139,7 +136,7 @@ class Sos : Fragment() {
                                     tempLongitude =
                                         main.documents[i]["longitude"].toString().toDouble()
                                     var targetName: String = main.documents[i]["name"].toString()
-                                    tokenyeet = main.documents[i]["token"].toString()
+                                    val tokenyeet = main.documents[i]["token"].toString()
                                     targetlocation.latitude = tempLatitude
                                     targetlocation.longitude = tempLongitude
                                     i++
