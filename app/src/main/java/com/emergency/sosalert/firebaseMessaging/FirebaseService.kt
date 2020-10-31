@@ -47,7 +47,7 @@ class FirebaseService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        Log.e(TAG,"MESSAGE RECEIVED")
+        Log.e(TAG, "MESSAGE RECEIVED")
         super.onMessageReceived(message)
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -64,12 +64,14 @@ class FirebaseService : FirebaseMessagingService() {
         val intentMaps = Intent(
             Intent.ACTION_VIEW,
             Uri.parse("geo:$la,$longi?q=$la,$longi")
-        ).also{
-            FirebaseFirestore.getInstance().collection("report").document("count").get().addOnSuccessListener {
-                var count = it.get("intentpress").toString().toInt()
-                count += 1
-                FirebaseFirestore.getInstance().collection("report").document("count").update("intentpress",count)
-            }
+        ).also {
+            FirebaseFirestore.getInstance().collection("report").document("count").get()
+                .addOnSuccessListener {
+                    var count = it.get("intentpress").toString().toInt()
+                    count += 1
+                    FirebaseFirestore.getInstance().collection("report").document("count")
+                        .update("intentpress", count)
+                }
         }
 
         lateinit var notification: Notification
@@ -116,7 +118,8 @@ class FirebaseService : FirebaseMessagingService() {
                 .setLargeIcon(getCircleBitmap(bitmap))
                 .setContentIntent(pendingChatIntent)
                 .setStyle(
-                    NotificationCompat.BigTextStyle().bigText("${message.data["message"]}\nPress into the notification to accept or decline.")
+                    NotificationCompat.BigTextStyle()
+                        .bigText("${message.data["message"]}\nPress into the notification to accept or decline.")
                         .setBigContentTitle(titleArr[0])
                 )
                 .setAutoCancel(true)

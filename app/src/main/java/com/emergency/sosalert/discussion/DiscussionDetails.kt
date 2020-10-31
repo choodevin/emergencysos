@@ -34,8 +34,6 @@ class DiscussionDetails : AppCompatActivity() {
                     }
                 }
             commentRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-            approveBtn.visibility = View.GONE
-            declineBtn.visibility = View.GONE
             viewCommentBtn.setOnClickListener {
                 viewCommentBtn.visibility = View.GONE
                 commentRecycler.visibility = View.VISIBLE

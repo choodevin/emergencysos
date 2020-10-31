@@ -93,7 +93,7 @@ class AllDiscussion : Fragment() {
                     startActivity(
                         Intent(
                             context,
-                            AllDiscussionDetails::class.java
+                            AdminDiscussionDetails::class.java
                         ).putExtra("discussiondetails", discussion)
                     )
                 }

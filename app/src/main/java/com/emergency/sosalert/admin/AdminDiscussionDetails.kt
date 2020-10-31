@@ -53,7 +53,6 @@ class AdminDiscussionDetails : AppCompatActivity() {
                 FirebaseFirestore.getInstance().collection("discussion").document(disc.commentgroup).update("status","declined")
                 finish()
             }
-            //maybe put dialog box
         } else {
             Toast.makeText(
                 this,
