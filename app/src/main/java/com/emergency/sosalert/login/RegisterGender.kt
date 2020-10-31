@@ -126,6 +126,7 @@ class RegisterGender : Fragment() {
         )
 
         fireStore.collection("user").document(userId).set(userHashMap)
+        fireStore.collection("user").document(userId).update("isAdmin","no")
 
         if (arguments?.getString("photo").toString() != "none") {
             val storageReference =
