@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.preference.PreferenceManager
@@ -107,7 +108,7 @@ class MainActivity : AppCompatActivity() {
         fun updateLocation(location: Location) {
             val uid = FirebaseAuth.getInstance().currentUser!!.uid
             FirebaseDatabase.getInstance().reference.child("userlocation/$uid").setValue(
-                LatLong(location.latitude, location.longitude)
+                LatLong(location.latitude.toString(), location.longitude.toString())
             )
         }
     }
@@ -117,8 +118,9 @@ class MainActivity : AppCompatActivity() {
         val isTrackingOn = trackPref.getBoolean("enable_tracking", false)
         if (isTrackingOn) {
             startService(Intent(this, LocationTrackingService::class.java))
+            Log.e("TRACKER STATUS: ", "tracker on")
         } else {
-            stopService(Intent(this, LocationTrackingService::class.java).putExtra("stop", true))
+            startService(Intent(this, LocationTrackingService::class.java).putExtra("stop", true))
         }
     }
 }

@@ -16,6 +16,7 @@ import com.emergency.sosalert.firebaseMessaging.NotificationData
 import com.emergency.sosalert.firebaseMessaging.PushNotification
 import com.emergency.sosalert.firebaseMessaging.RetrofitInstance
 import com.emergency.sosalert.locationTracking.TrackerMap
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,14 +30,15 @@ import org.json.JSONException
 
 
 class ChatDetails : AppCompatActivity() {
+    private var currentUid: String = ""
+    private var targetUid: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_details)
         targetUserImage.clipToOutline = true
         val chatgroupid = intent.extras?.get("chatgroupid") as String
         val temp = chatgroupid.split(",")
-        val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
-        var targetUid: String
+        currentUid = FirebaseAuth.getInstance().currentUser!!.uid
         targetUid = if (temp[0] == currentUid) {
             temp[1]
         } else {
@@ -52,12 +54,22 @@ class ChatDetails : AppCompatActivity() {
                 .addOnSuccessListener {
                     if (it != null) {
                         if (it.data?.get("allowTracking") as Boolean) {
-                            startActivity(
-                                Intent(this, TrackerMap::class.java).putExtra(
-                                    "targetuid",
-                                    targetUid
-                                )
-                            )
+                            if (it.data?.get("allowTrackingList") != null) {
+                                val allowTrackingList =
+                                    it.data?.get("allowTrackingList") as List<String>
+                                if (allowTrackingList.contains(currentUid)) {
+                                    startActivity(
+                                        Intent(this, TrackerMap::class.java).putExtra(
+                                            "targetuid",
+                                            targetUid
+                                        )
+                                    )
+                                } else {
+                                    requestTrackingPermission()
+                                }
+                            } else {
+                                requestTrackingPermission()
+                            }
                         } else {
                             val dialogBuilder = AlertDialog.Builder(this)
                             dialogBuilder
@@ -94,6 +106,7 @@ class ChatDetails : AppCompatActivity() {
             if (messageContent.isEmpty()) {
                 return@setOnClickListener
             }
+
             chat.message = messageContent
             chat.sender = currentUid
 
@@ -124,9 +137,7 @@ class ChatDetails : AppCompatActivity() {
                                     ).also { notif ->
                                         sendNotification(notif)
                                     }
-
                                 }
-
                             }
                     }
             } catch (e: JSONException) {
@@ -143,7 +154,7 @@ class ChatDetails : AppCompatActivity() {
         FirebaseDatabase.getInstance().reference.child("chatgroup/$chatgroupid")
             .orderByChild("timestamp").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    var messageList = ArrayList<Chat>()
+                    val messageList = ArrayList<Chat>()
                     snapshot.children.forEach { it ->
                         val tempChat = it.getValue(Chat::class.java)
                         messageList.add(tempChat!!)
@@ -179,4 +190,32 @@ class ChatDetails : AppCompatActivity() {
                 Log.e(ContentValues.TAG, e.toString())
             }
         }
+
+    private fun requestTrackingPermission() {
+        Snackbar.make(
+            findViewById(R.id.chat_details),
+            "Tracking permission requested.",
+            Snackbar.LENGTH_LONG
+        ).show()
+
+        FirebaseFirestore.getInstance().collection("user").document(targetUid).get()
+            .addOnSuccessListener { targetData ->
+                FirebaseFirestore.getInstance().collection("user").document(currentUid)
+                    .get().addOnSuccessListener { senderData ->
+                        FirebaseStorage.getInstance().reference.child("profilepicture/$currentUid").downloadUrl.addOnSuccessListener {
+                            PushNotification(
+                                NotificationData(
+                                    "Location tracking request|${currentUid}",
+                                    "${senderData.data!!["name"].toString()} wants to track your location!",
+                                    "888", "0",
+                                    it.toString()
+                                ),
+                                targetData.data!!["token"].toString()
+                            ).also { notif ->
+                                sendNotification(notif)
+                            }
+                        }
+                    }
+            }
+    }
 }

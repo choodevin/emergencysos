@@ -42,6 +42,7 @@ class LocationTrackingService : Service() {
         Log.e(TAG, "Service started")
         if (intent?.extras?.get("stop") != null) {
             toStop = true
+            stopSelf()
         }
         return START_STICKY
     }
@@ -93,12 +94,14 @@ class LocationTrackingService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         stopForeground(true)
-        stopSelf()
-        if(!toStop){
+        if (!toStop) {
+            Log.e(TAG, "Service Restart ...")
             val broadcastIntent = Intent()
             broadcastIntent.setAction("RestartLocationTrackingService")
                 .setClass(this, RestartTrackingService::class.java)
             sendBroadcast(broadcastIntent)
+        } else {
+            Log.e(TAG, "Service will be stopped.")
         }
     }
 

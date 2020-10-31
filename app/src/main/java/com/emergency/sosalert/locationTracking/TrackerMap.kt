@@ -81,8 +81,8 @@ class TrackerMap : AppCompatActivity(), OnMapReadyCallback {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val latlong = snapshot.getValue(LatLong::class.java)
                     val targetLocation = LatLng(
-                        latlong?.latitude!!,
-                        latlong.longitude
+                        latlong?.latitude!!.toDouble(),
+                        latlong.longitude.toDouble()
                     )
                     markerOpt?.position = targetLocation
                     markerOpt?.setIcon(

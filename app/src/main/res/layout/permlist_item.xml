@@ -14,10 +14,10 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/user_image"
+            android:id="@+id/perm_user_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:adjustViewBounds="false"
@@ -29,15 +29,25 @@
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/friend_name"
+            android:id="@+id/perm_friend_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="@+id/user_image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/perm_user_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonRemoveTracking"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/button_close"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.05"
-            app:layout_constraintStart_toEndOf="@+id/user_image"
-            app:layout_constraintTop_toTopOf="@+id/user_image" />
+            app:layout_constraintTop_toTopOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

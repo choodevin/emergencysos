@@ -3,7 +3,11 @@
     <PreferenceCategory app:title="@string/general_header">
         <SwitchPreference
             android:defaultValue="false"
+            android:icon="@drawable/ic_tracking"
             android:key="enable_tracking"
             android:title="Enable Tracking" />
+        <Preference
+            android:key="modify_tracking_permission"
+            android:title="Modify tracking permissions" />
     </PreferenceCategory>
 </PreferenceScreen>

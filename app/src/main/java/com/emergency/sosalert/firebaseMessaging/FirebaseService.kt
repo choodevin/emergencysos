@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.emergency.sosalert.R
 import com.emergency.sosalert.chat.ChatDetails
+import com.emergency.sosalert.locationTracking.TrackingRequest
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import java.io.InputStream
@@ -91,6 +92,30 @@ class FirebaseService : FirebaseMessagingService() {
             if (!isAppForeground(this)) {
                 notificationManager.notify(notificationID, notification)
             }
+        } else if (la == 888.0 && longi == 0.0) {
+            Log.e(TAG, "MESSAGE TRACK REQUEST")
+            val titleArr = message.data["title"]!!.split("|")
+            val permissionIntent =
+                Intent(this, TrackingRequest::class.java).putExtra("toallowid", titleArr[1])
+            val pendingChatIntent = TaskStackBuilder.create(this).run {
+                addNextIntentWithParentStack(permissionIntent)
+                getPendingIntent(2, PendingIntent.FLAG_ONE_SHOT)
+            }
+            notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(titleArr[0])
+                .setContentText(message.data["message"])
+                .setSmallIcon(R.drawable.logo_sos)
+                .setLargeIcon(getCircleBitmap(bitmap))
+                .setContentIntent(pendingChatIntent)
+                .setStyle(
+                    NotificationCompat.BigTextStyle().bigText("${message.data["message"]}\nPress into the notification to accept or decline.")
+                        .setBigContentTitle(titleArr[0])
+                )
+                .setAutoCancel(true)
+                .setOngoing(false)
+                .build()
+            notificationManager.notify(notificationID, notification)
+
         } else {
             Log.e(TAG, "SOS NOTIF")
             val pendingIntent = PendingIntent.getActivity(

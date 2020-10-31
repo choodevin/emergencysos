@@ -49,11 +49,19 @@
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
+            android:name=".locationTracking.TrackingRequest"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/SettingsTheme" />
+        <activity
             android:name=".locationTracking.TrackerMap"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".locationTracking.ModifyPermission"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
