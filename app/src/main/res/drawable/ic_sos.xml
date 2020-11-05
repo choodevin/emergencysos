@@ -10,12 +10,5 @@
       android:strokeColor="#000"/>
   <path
       android:fillColor="#FF000000"
-      android:pathData="M41,15.88a7.5,7.5 0,0 0,-7.5 7.5v12a7.5,7.5 0,0 0,15 0v-12A7.51,7.51 0,0 0,41 15.88ZM43.5,35.38a2.5,2.5 0,0 1,-5 0v-12a2.5,2.5 0,0 1,5 0Z"
-      android:strokeWidth="0.25"
-      android:strokeColor="#000"/>
-  <path
-      android:fillColor="#FF000000"
-      android:pathData="M41,47.88a7.5,7.5 0,1 0,7.5 7.5A7.5,7.5 0,0 0,41 47.88ZM41,57.88a2.5,2.5 0,1 1,2.5 -2.5A2.5,2.5 0,0 1,41 57.88Z"
-      android:strokeWidth="0.25"
-      android:strokeColor="#000"/>
+      android:pathData="M41,16A23,23 0,1 0,64 39,23.07 23.07,0 0,0 41,16ZM41,20.6a4.11,4.11 0,0 1,4.14 4.6l-1.84,18.4h-4.6l-1.84,-18.4A4.11,4.11 0,0 1,41 20.63ZM41,57.4a4.6,4.6 0,1 1,4.6 -4.6A4.61,4.61 0,0 1,41 57.43Z"/>
 </vector>

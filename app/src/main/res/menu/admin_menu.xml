@@ -8,6 +8,6 @@
     <item
         android:id="@+id/report_gen_page"
         android:enabled="true"
-        android:icon="@drawable/ic_chat"
+        android:icon="@drawable/ic_stats"
         android:title="Report Page" />
 </menu>

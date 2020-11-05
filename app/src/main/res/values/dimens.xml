@@ -6,4 +6,5 @@
     <dimen name="button_back_height">50dp</dimen>
     <dimen name="button_fx_width">64dp</dimen>
     <dimen name="button_fx_height">64dp</dimen>
+    <dimen name="stats_font_size">18sp</dimen>
 </resources>

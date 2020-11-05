@@ -30,7 +30,7 @@
             android:name=".discussion.DiscussionDetails"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".admin.AllDiscussionDetails"
+            android:name=".admin.AdminDiscussionDetails"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".discussion.SelectLocation"

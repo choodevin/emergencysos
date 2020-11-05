@@ -147,6 +147,7 @@ class AllDiscussion : Fragment() {
         val title = itemView.discussion_title
         val description = itemView.discussion_desc
         val image = itemView.discussionImage
+        val loading = itemView.image_loading_bar
 
         @SuppressLint("CheckResult")
         fun bind(discussion: Discussion) {
@@ -158,6 +159,7 @@ class AllDiscussion : Fragment() {
                         val reqOp = RequestOptions()
                         reqOp.optionalFitCenter()
                         Glide.with(itemView).load(it).apply(reqOp).into(image)
+                        loading.visibility = View.GONE
                     }
                 }
         }

@@ -3,6 +3,7 @@ package com.emergency.sosalert
 import android.content.Intent
 import android.content.SharedPreferences
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -117,10 +118,18 @@ class MainActivity : AppCompatActivity() {
         val trackPref = PreferenceManager.getDefaultSharedPreferences(this)
         val isTrackingOn = trackPref.getBoolean("enable_tracking", false)
         if (isTrackingOn) {
-            startService(Intent(this, LocationTrackingService::class.java))
-            Log.e("TRACKER STATUS: ", "tracker on")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(Intent(this, LocationTrackingService::class.java))
+                Log.e("TRACKER STATUS: ", "tracker on")
+            } else {
+                startService(Intent(this, LocationTrackingService::class.java))
+            }
         } else {
-            startService(Intent(this, LocationTrackingService::class.java).putExtra("stop", true))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(Intent(this, LocationTrackingService::class.java).putExtra("stop", true))
+            } else {
+                startService(Intent(this, LocationTrackingService::class.java).putExtra("stop", true))
+            }
         }
     }
 }

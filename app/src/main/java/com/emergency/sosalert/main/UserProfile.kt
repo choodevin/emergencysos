@@ -53,6 +53,7 @@ class UserProfile : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        profilepic.clipToOutline = true
 
         goToSettings.setOnClickListener {
             startActivity(Intent(context, SettingsActivity::class.java))
@@ -73,15 +74,23 @@ class UserProfile : Fragment() {
             if (it != null) {
                 editTextName.setText(it.data?.get("name").toString())
                 editTextAge.setText(it.data?.get("age").toString())
-                if(it.data?.get("isAdmin").toString().compareTo("yes")==0){
-                    toAdminButton.visibility = View.VISIBLE
-                }else{
-                    toAdminButton.visibility = View.INVISIBLE
+                if (it.data?.get("contact") != null) {
+                    editTextContact.setText(it.data?.get("contact").toString())
                 }
                 genderData = it.data?.get("gender").toString()
                 editTextName.isEnabled = false
                 editTextAge.isEnabled = false
+                editTextContact.isEnabled = false
+                if (it.data?.get("isAdmin").toString().compareTo("yes") == 0) {
+                    toAdminButton.visibility = View.VISIBLE
+                } else {
+                    toAdminButton.visibility = View.GONE
+                }
             }
+        }
+
+        toAdminButton.setOnClickListener {
+            startActivity(Intent(context, AdminContainer::class.java))
         }
 
         val storageRef = FirebaseStorage.getInstance().reference
@@ -98,8 +107,11 @@ class UserProfile : Fragment() {
                 }
             }
         }
+
         editProfBtn.setOnClickListener { editProfile() }
-        if(postReference.collection("user").document(uid).toString().compareTo("yes")==0)
+
+        if (postReference.collection("user").document(uid).toString().compareTo("yes") == 0)
+            toAdminButton.visibility = View.VISIBLE
         toAdminButton.setOnClickListener {
             startActivity(Intent(context, AdminContainer::class.java))
         }
@@ -107,10 +119,14 @@ class UserProfile : Fragment() {
     }
 
     private fun editProfile() {
+        profileTitle.text = "Edit"
         editTextName.isEnabled = true
         editTextAge.isEnabled = true
+        editTextContact.isEnabled = true
         editTextName.requestFocus()
 
+        goToSettings.visibility = View.GONE
+        toAdminButton.visibility = View.GONE
         editProfBtn.visibility = View.GONE
         cfmButton.visibility = View.VISIBLE
         cancelBtn.visibility = View.VISIBLE
@@ -126,6 +142,7 @@ class UserProfile : Fragment() {
                 if (it != null) {
                     editTextName.setText(it.data?.get("name").toString())
                     editTextAge.setText(it.data?.get("age").toString())
+                    editTextContact.setText(it.data?.get("contact").toString())
                     genderData = it.data?.get("gender").toString()
                     editTextName.isEnabled = false
                     editTextAge.isEnabled = false
@@ -138,13 +155,17 @@ class UserProfile : Fragment() {
                     Glide.with(requireContext()).load(it).into(profilepic)
                 }
             }
+            profileTitle.text = "Your Profile"
+            toAdminButton.visibility = View.VISIBLE
+            goToSettings.visibility = View.VISIBLE
             editProfBtn.visibility = View.VISIBLE
             cancelBtn.visibility = View.GONE
             cfmButton.visibility = View.GONE
-            editPictureBtn.visibility = View.INVISIBLE
+            editPictureBtn.visibility = View.GONE
             logoutBtn.visibility = View.VISIBLE
             editTextName.isEnabled = false
             editTextAge.isEnabled = false
+            editTextContact.isEnabled = false
         }
         editPictureBtn.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
@@ -164,6 +185,7 @@ class UserProfile : Fragment() {
 
     private fun submitData() {
         nameData = editTextName.text.toString()
+        var contact = editTextContact.text.toString()
         try {
             ageData = Integer.parseInt(editTextAge.text.toString())
         } catch (e: Exception) {
@@ -183,7 +205,7 @@ class UserProfile : Fragment() {
                 editTextName.requestFocus()
                 return
             }
-            ageData in 101 downTo 0 -> {
+            ageData !in 101 downTo 0 -> {
                 Toast.makeText(
                     requireActivity(),
                     "Please input a correct age range",
@@ -192,12 +214,22 @@ class UserProfile : Fragment() {
                 editTextAge.requestFocus()
                 return
             }
+            contact.isEmpty() -> {
+                Toast.makeText(
+                    requireActivity(),
+                    "Please do not leave it empty",
+                    Toast.LENGTH_SHORT
+                ).show()
+                editTextName.requestFocus()
+                return
+            }
             else -> {
                 val uid = FirebaseAuth.getInstance().uid ?: ""
                 val ref = FirebaseFirestore.getInstance().collection("user").document(uid)
                 ref.update(
                     "name", nameData,
-                    "age", ageData
+                    "age", ageData,
+                    "contact", contact
                 ).addOnSuccessListener {
                     Toast.makeText(
                         requireActivity(),
@@ -225,13 +257,17 @@ class UserProfile : Fragment() {
                         newStorageReference.putBytes(finalByteArray(bitmap))
                     }
                 }
+                profileTitle.text = "Your Profile"
+                toAdminButton.visibility = View.VISIBLE
+                goToSettings.visibility = View.VISIBLE
                 editProfBtn.visibility = View.VISIBLE
                 cancelBtn.visibility = View.GONE
                 cfmButton.visibility = View.GONE
-                editPictureBtn.visibility = View.INVISIBLE
+                editPictureBtn.visibility = View.GONE
                 logoutBtn.visibility = View.VISIBLE
                 editTextName.isEnabled = false
                 editTextAge.isEnabled = false
+                editTextContact.isEnabled = false
             }
         }
     }

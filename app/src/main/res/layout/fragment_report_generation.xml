@@ -3,164 +3,217 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".admin.ReportGeneration">
 
+    <TextView
+        android:id="@+id/textView13"
+        style="@style/ActionBarText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:text="Statistics"
+        app:layout_constraintBottom_toTopOf="@+id/guideline16"
+        app:layout_constraintStart_toStartOf="@+id/guideline18"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.08" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
     <TableLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintEnd_toStartOf="@+id/guideline19"
+        app:layout_constraintStart_toStartOf="@+id/guideline18"
+        app:layout_constraintTop_toTopOf="@+id/guideline16">
 
-        <TableRow android:background="#FFFFFF"
+        <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="1dp">
+            android:layout_margin="5dp"
+            android:background="#FFFFFF">
+
             <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Number of Users:"
-            android:textSize="25dp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:layout_weight="1"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Number of Users:"
+                android:textAlignment="viewStart"
+                android:textSize="@dimen/stats_font_size"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/user_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:textAlignment="textEnd"
                 android:text="1"
-                android:textSize="25dp"
+                android:textSize="@dimen/stats_font_size"
                 android:textStyle="bold" />
         </TableRow>
-        <TableRow android:background="#FFFFFF"
+
+        <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="1dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Number of Buttons pressed:"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_weight="1"/>
+            android:layout_margin="5dp"
+            android:background="#FFFFFF">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="viewStart"
+                android:textSize="@dimen/stats_font_size"
+                android:text="Number of Buttons pressed:"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/button_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:textAlignment="textEnd"
                 android:text="2"
-                android:textSize="25dp"
+                android:textSize="@dimen/stats_font_size"
                 android:textStyle="bold" />
         </TableRow>
-        <TableRow android:background="#FFFFFF"
+
+        <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="1dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Number of discussions made:"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_weight="1"/>
+            android:layout_margin="5dp"
+            android:background="#FFFFFF">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="viewStart"
+                android:textSize="@dimen/stats_font_size"
+                android:text="Number of discussions made:"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/discussion_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:textAlignment="textEnd"
                 android:text="3"
-                android:textSize="25dp"
+                android:textSize="@dimen/stats_font_size"
                 android:textStyle="bold" />
         </TableRow>
-        <TableRow android:background="#FFFFFF"
+
+        <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="1dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Number of discussions pending:"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_weight="1"/>
+            android:layout_margin="5dp"
+            android:background="#FFFFFF">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Number of discussions pending:"
+                android:textAlignment="viewStart"
+                android:textSize="@dimen/stats_font_size"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/d_pending_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:textAlignment="textEnd"
                 android:text="4"
-                android:textSize="25dp"
+                android:textSize="@dimen/stats_font_size"
                 android:textStyle="bold" />
         </TableRow>
-        <TableRow android:background="#FFFFFF"
+
+        <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="1dp">
+            android:layout_margin="5dp"
+            android:background="#FFFFFF">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Number of discussions approved:"
-                android:textSize="25dp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:layout_weight="1"/>
+                android:textSize="@dimen/stats_font_size"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/d_approved_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:textAlignment="textEnd"
                 android:text="5"
-                android:textSize="25dp"
+                android:textSize="@dimen/stats_font_size"
                 android:textStyle="bold" />
         </TableRow>
-        <TableRow android:background="#FFFFFF"
+
+        <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="1dp">
+            android:layout_margin="5dp"
+            android:background="#FFFFFF">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Number of discussions declined:"
-                android:textSize="25dp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:layout_weight="1"/>
+                android:textAlignment="viewStart"
+                android:textSize="@dimen/stats_font_size"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/d_declined_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:textAlignment="textEnd"
                 android:text="6"
-                android:textSize="25dp"
+                android:textSize="@dimen/stats_font_size"
                 android:textStyle="bold" />
         </TableRow>
-        <TableRow android:background="#FFFFFF"
+
+        <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="1dp">
+            android:layout_margin="5dp"
+            android:background="#FFFFFF">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:text="Number of sos successfully sent to user:"
-                android:textSize="25dp"
+                android:textAlignment="viewStart"
+                android:textSize="@dimen/stats_font_size"
                 android:textStyle="bold" />
 
             <TextView
@@ -168,9 +221,9 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:textAlignment="textEnd"
                 android:text="7"
-                android:textSize="25dp"
+                android:textSize="@dimen/stats_font_size"
                 android:textStyle="bold" />
         </TableRow>
     </TableLayout>

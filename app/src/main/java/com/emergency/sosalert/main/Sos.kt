@@ -8,7 +8,6 @@ import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Looper
@@ -29,14 +28,8 @@ import com.emergency.sosalert.firebaseMessaging.FirebaseService
 import com.emergency.sosalert.firebaseMessaging.NotificationData
 import com.emergency.sosalert.firebaseMessaging.PushNotification
 import com.emergency.sosalert.firebaseMessaging.RetrofitInstance
-import com.emergency.sosalert.locationTracking.LatLong
 import com.google.android.gms.location.*
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
@@ -60,9 +53,6 @@ class Sos : Fragment() {
     private var latitude = ""
     private var longitude = ""
     private val uid = FirebaseAuth.getInstance().uid ?: ""
-    private var maxRange = 100
-    private var j = 0
-    private var i = 0
     val PERMISSION_ID = 42
     lateinit var mFusedLocationClient: FusedLocationProviderClient
 
@@ -70,12 +60,13 @@ class Sos : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_sos, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        getLastLocation()
         val picref = FirebaseStorage.getInstance().reference.child("profilepicture").child(uid)
         var yeet = ""
         FirebaseService.sharedPref =
@@ -87,7 +78,6 @@ class Sos : Fragment() {
             .update("token", FirebaseService.token)
         mFusedLocationClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
-        getLastLocation()
         picref.downloadUrl.addOnSuccessListener {
             val uri = it
             yeet = uri.toString()
@@ -96,6 +86,7 @@ class Sos : Fragment() {
             }
         }
         sosButton.setOnClickListener {
+            getLastLocation()
             val lm: LocationManager =
                 context?.getSystemService(LOCATION_SERVICE) as LocationManager
             var gpsOn = false
@@ -123,25 +114,67 @@ class Sos : Fragment() {
 
             ref.collection("user").document(uid).get().addOnSuccessListener { him ->
                 victim = him.data?.get("name").toString()
-                val userlocation = Location("")
+                var tempLatitude: Double
+                var tempLongitude: Double
+                var userlocation = Location("")
                 userlocation.latitude = latitude.toDouble()
                 userlocation.longitude = longitude.toDouble()
-                sosFunction(userlocation, yeet)
+                var targetlocation = Location("")
                 try {
-                    Log.e(TAG, "try")
-                    FirebaseFirestore.getInstance().collection("report").document("count").get()
-                        .addOnSuccessListener {
-                            var count = it.get("buttonpress").toString().toInt()
-                            count += 1
-                            FirebaseFirestore.getInstance().collection("report").document("count")
-                                .update("buttonpress", count)
+                    ref.collection("user").get().addOnSuccessListener { main ->
+                        var j = 0
+                        var maxRange = 100
+                        while(j < 1){
+                            var i = 0
+                            for (document in main) {
+                                if (main.documents[i]["token"].toString()
+                                        .compareTo(FirebaseService.token.toString()) != 0
+                                ) {
+                                    tempLatitude =
+                                        main.documents[i]["latitude"].toString().toDouble()
+                                    tempLongitude =
+                                        main.documents[i]["longitude"].toString().toDouble()
+                                    var targetName: String = main.documents[i]["name"].toString()
+                                    val tokenyeet = main.documents[i]["token"].toString()
+                                    targetlocation.latitude = tempLatitude
+                                    targetlocation.longitude = tempLongitude
+                                    i++
+                                    if (userlocation.distanceTo(targetlocation) <= maxRange && userlocation.distanceTo(
+                                            targetlocation
+                                        ) > 0) {
+                                        var distanceboi = userlocation.distanceTo(targetlocation)
+                                        PushNotification(
+                                            NotificationData(
+                                                "Someone is in danger!",
+                                                "$targetName ,$victim is in danger!, $distanceboi",
+                                                "$latitude",
+                                                "$longitude",
+                                                "$yeet"
+                                            ),
+                                            tokenyeet
+                                        ).also {
+                                            sendNotification(it)
+                                            j += 1
+                                        }
+                                    }
+                                }
+                            }
+                            if(j < 1){
+                                maxRange += 1000
+                            }
                         }
+                    }
+                    Log.e(TAG, "try")
+                    FirebaseFirestore.getInstance().collection("report").document("count").get().addOnSuccessListener {
+                        var count = it.get("buttonpress").toString().toInt()
+                        count += 1
+                        FirebaseFirestore.getInstance().collection("report").document("count").update("buttonpress",count)
+                    }
                 } catch (e: java.lang.Exception) {
                     Log.e("TAG", "onCreate: " + e.message)
                     Toast.makeText(requireContext(), e.toString(), Toast.LENGTH_LONG).show()
                 }
             }
-
             sosButton.isEnabled = false
             object : CountDownTimer(11000, 1000) {
                 override fun onFinish() {
@@ -174,72 +207,6 @@ class Sos : Fragment() {
                 getLastLocation()
             }
         }
-    }
-
-    private fun sosFunction(userlocation: Location, yeet: String) {
-        var tempLatitude: Double
-        var tempLongitude: Double
-        FirebaseFirestore.getInstance().collection("user").get().addOnSuccessListener { main ->
-            for (document in main) {
-                if (main.documents[i]["token"].toString()
-                        .compareTo(FirebaseService.token.toString()) != 0
-                ) {
-                    FirebaseDatabase.getInstance().reference.child("userlocation/${document.id}")
-                        .addValueEventListener(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                val tempLatLong =
-                                    snapshot.getValue(LatLong::class.java)
-                                Toast.makeText(
-                                    context,
-                                    tempLatLong.toString(),
-                                    Toast.LENGTH_LONG
-                                )
-                                    .show()
-                                tempLatitude = tempLatLong?.latitude!!.toDouble()
-                                tempLongitude = tempLatLong.longitude.toDouble()
-                                val targetName: String =
-                                    document.data["name"].toString()
-                                val tokenyeet =
-                                    document.data["token"].toString()
-                                val targetlocation = Location("")
-                                targetlocation.latitude = tempLatitude
-                                targetlocation.longitude = tempLongitude
-                                if (userlocation.distanceTo(targetlocation) <= maxRange && userlocation.distanceTo(
-                                        targetlocation
-                                    ) > 0
-                                ) {
-                                    val distanceboi =
-                                        userlocation.distanceTo(targetlocation)
-                                    PushNotification(
-                                        NotificationData(
-                                            "Someone is in danger!",
-                                            "$targetName ,$victim is in danger!, $distanceboi",
-                                            latitude,
-                                            longitude,
-                                            yeet
-                                        ),
-                                        tokenyeet
-                                    ).also {
-                                        sendNotification(it)
-                                        j += 1
-                                    }
-                                }
-                                if (j < 1) {
-                                    maxRange += 1000
-                                    sosFunction(userlocation, yeet)
-                                }
-
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-                            }
-
-                        })
-                    i++
-                }
-            }
-        }
-
     }
 
     private fun requestPermissions() {

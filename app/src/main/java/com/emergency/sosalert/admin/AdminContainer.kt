@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import com.emergency.sosalert.R
+import kotlinx.android.synthetic.main.activity_admin.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.main_bot_nav
+import kotlinx.android.synthetic.main.activity_modify_permission.*
 import java.util.function.ToDoubleBiFunction
 
 class AdminContainer : AppCompatActivity() {
@@ -17,6 +20,10 @@ class AdminContainer : AppCompatActivity() {
         val fragmentManager = supportFragmentManager
         fragmentManager.beginTransaction().add(R.id.admin_container, discussionFragment)
             .commit()
+
+        backBtn3.setOnClickListener {
+            onBackPressed()
+        }
 
         main_bot_nav.setOnNavigationItemSelectedListener {
             when (it.itemId) {
