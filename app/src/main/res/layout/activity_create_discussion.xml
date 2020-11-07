@@ -10,26 +10,19 @@
         android:layout_height="wrap_content"
         tools:context=".discussion.CreateDiscussion">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline23"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.85" />
-
         <EditText
             android:id="@+id/inputDesc"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="7dp"
             android:background="#F2F2F2"
-            android:ems="10"
             android:gravity="top|start"
             android:hint="Provide a description"
             android:inputType="textCapSentences|textMultiLine"
-            android:lines="10"
-            android:overScrollMode="always"
-            android:padding="7dp"
+            android:paddingStart="10dp"
+            android:paddingTop="7dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="7dp"
             android:scrollbars="vertical"
             android:scrollHorizontally="false"
             android:textSize="15sp"
@@ -42,19 +35,32 @@
             android:id="@+id/closeButton"
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:layout_marginStart="15dp"
             android:background="@drawable/button_close"
             app:layout_constraintBottom_toTopOf="@+id/guideline20"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.05"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/createDiscussionProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/colorPrimaryDarker"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/guideline20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline20" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.06264775" />
+            app:layout_constraintGuide_percent="0.08" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline21"
@@ -70,23 +76,30 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.95" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
         <TextView
             android:id="@+id/textView12"
             style="@style/ActionBarText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:includeFontPadding="false"
             android:text="Create Discussion"
             app:layout_constraintBottom_toTopOf="@+id/guideline20"
-            app:layout_constraintEnd_toStartOf="@+id/guideline22"
-            app:layout_constraintStart_toStartOf="@+id/guideline21"
+            app:layout_constraintStart_toEndOf="@+id/closeButton"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/inputTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="7dp"
             android:backgroundTint="@color/colorPrimary"
             android:ems="10"
             android:hint="An interesting title"
@@ -100,63 +113,51 @@
 
         <Button
             android:id="@+id/locationBtn"
-            android:layout_width="@dimen/button_fx_width"
-            android:layout_height="@dimen/button_fx_height"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/button_pickloc"
-            app:layout_constraintEnd_toStartOf="@+id/cameraBtn"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:background="@drawable/button_pick_location"
+            app:layout_constraintBottom_toBottomOf="@+id/selectedImage"
+            app:layout_constraintEnd_toStartOf="@+id/guideline22"
+            app:layout_constraintStart_toStartOf="@+id/guideline24"
+            app:layout_constraintTop_toTopOf="@+id/selectedImage" />
+
+        <Button
+            android:id="@+id/cameraBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="1dp"
+            android:background="@drawable/button_add"
+            app:layout_constraintBottom_toBottomOf="@+id/selectedImage"
+            app:layout_constraintEnd_toEndOf="@+id/selectedImage"
+            app:layout_constraintStart_toStartOf="@+id/selectedImage"
+            app:layout_constraintTop_toTopOf="@+id/selectedImage" />
+
+        <ImageView
+            android:id="@+id/selectedImage"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_dotted_image"
+            android:contentDescription="Selected Image"
+            app:layout_constraintEnd_toStartOf="@+id/guideline24"
             app:layout_constraintStart_toStartOf="@+id/guideline21"
             app:layout_constraintTop_toBottomOf="@+id/inputDesc" />
 
         <Button
-            android:id="@+id/cameraBtn"
-            android:layout_width="@dimen/button_fx_width"
-            android:layout_height="@dimen/button_fx_height"
-            android:background="@drawable/button_attach"
-            app:layout_constraintBottom_toBottomOf="@+id/locationBtn"
-            app:layout_constraintEnd_toStartOf="@+id/guideline22"
-            app:layout_constraintStart_toEndOf="@+id/locationBtn" />
-
-        <ImageView
-            android:id="@+id/selectedImage"
-            android:layout_width="0dp"
-            android:layout_height="300dp"
-            android:layout_marginTop="20dp"
-            android:background="#f2f2f2"
-            android:contentDescription="Selected Image"
-            app:layout_constraintBottom_toTopOf="@+id/guideline23"
-            app:layout_constraintEnd_toStartOf="@+id/guideline22"
-            app:layout_constraintStart_toStartOf="@+id/guideline21"
-            app:layout_constraintTop_toBottomOf="@+id/locationBtn" />
-
-        <TextView
-            android:id="@+id/noImageText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="You haven't pick an image yet!"
-            app:layout_constraintBottom_toTopOf="@+id/guideline23"
-            app:layout_constraintEnd_toStartOf="@+id/guideline22"
-            app:layout_constraintStart_toStartOf="@+id/guideline21"
-            app:layout_constraintTop_toTopOf="@+id/selectedImage" />
-
-        <Button
             android:id="@+id/completeBtn"
-            android:layout_width="@dimen/button_fx_width"
-            android:layout_height="@dimen/button_fx_height"
-            android:background="@drawable/button_done"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline22"
-            app:layout_constraintStart_toStartOf="@+id/guideline21"
-            app:layout_constraintTop_toBottomOf="@+id/locationText" />
-
-        <TextView
-            android:id="@+id/locationText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Please select a location"
-            app:layout_constraintEnd_toStartOf="@+id/guideline22"
-            app:layout_constraintStart_toStartOf="@+id/guideline21"
-            app:layout_constraintTop_toTopOf="@+id/guideline23" />
+            android:layout_marginEnd="10dp"
+            android:background="@null"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="Create"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

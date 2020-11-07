@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/discussion_card"
+    app:cardElevation="0dp"
+    android:layout_marginBottom="6dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="2dp"
-    android:layout_marginBottom="2dp">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,34 +17,35 @@
             android:id="@+id/discussion_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginEnd="10dp"
-            android:ellipsize="end"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"
+            android:ellipsize="marquee"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:includeFontPadding="false"
             android:singleLine="true"
             android:textColor="@android:color/black"
-            android:textSize="14sp"
+            android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/ownerImage" />
 
         <TextView
             android:id="@+id/discussion_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="15dp"
             android:ellipsize="end"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:includeFontPadding="false"
             android:singleLine="true"
-            android:textSize="14sp"
+            android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/discussion_title"
             app:layout_constraintTop_toBottomOf="@+id/discussion_title" />
 
@@ -66,15 +67,50 @@
             android:id="@+id/image_loading_bar"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
-            android:indeterminateTint="@color/colorPrimaryDarker"
             android:layout_height="wrap_content"
             android:indeterminate="true"
+            android:indeterminateTint="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="@+id/discussionImage"
             app:layout_constraintEnd_toEndOf="@id/discussionImage"
             app:layout_constraintStart_toStartOf="@+id/discussionImage"
             app:layout_constraintTop_toTopOf="@+id/discussionImage" />
 
+        <ImageView
+            android:id="@+id/ownerImage"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_friend_list"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/bg_friend_list"
+            tools:srcCompat="@drawable/bg_image_loading" />
+
+        <TextView
+            android:id="@+id/ownerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:includeFontPadding="false"
+            android:textColor="@color/colorPrimaryDarker"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/ownerImage"
+            app:layout_constraintTop_toTopOf="@+id/ownerImage" />
+
+        <TextView
+            android:id="@+id/postDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:includeFontPadding="false"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ownerImage"
+            app:layout_constraintStart_toEndOf="@+id/ownerImage"
+            app:layout_constraintTop_toBottomOf="@+id/ownerName"
+            app:layout_constraintVertical_bias="1.0" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

@@ -45,7 +45,9 @@
         android:layout_width="92dp"
         android:layout_height="92dp"
         android:layout_marginTop="7dp"
-        android:background="@drawable/bg_profile"
+        android:background="@drawable/bg_friend_list"
+        android:src="@drawable/bg_image_loading"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
         app:layout_constraintTop_toTopOf="@+id/guideline16"
@@ -59,6 +61,7 @@
         android:text="Logout"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -71,12 +74,13 @@
         android:includeFontPadding="false"
         android:inputType="textPersonName"
         android:text="Name"
-        android:textColor="@drawable/color_profile_input"
+        android:textColor="@color/color_profile_input"
         android:textSize="16sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
-        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+        app:layout_constraintTop_toBottomOf="@+id/nameLabel" />
 
     <EditText
         android:id="@+id/editTextAge"
@@ -86,17 +90,19 @@
         android:includeFontPadding="false"
         android:inputType="textPersonName"
         android:text="Age"
-        android:textColor="@drawable/color_profile_input"
+        android:textColor="@color/color_profile_input"
         android:textSize="16sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
-        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+        app:layout_constraintTop_toBottomOf="@+id/ageLabel" />
 
     <Button
         android:id="@+id/editProfBtn"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@drawable/button_edit"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/guideline16"
         app:layout_constraintEnd_toStartOf="@+id/goToSettings"
         app:layout_constraintTop_toTopOf="parent" />
@@ -138,6 +144,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@drawable/button_admin"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/guideline16"
         app:layout_constraintEnd_toStartOf="@+id/editProfBtn"
         app:layout_constraintTop_toTopOf="parent"
@@ -149,34 +156,38 @@
         android:layout_height="48dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/button_settings"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/guideline16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/nameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Name"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
         app:layout_constraintTop_toBottomOf="@+id/profilepic" />
 
     <TextView
-        android:id="@+id/textView15"
+        android:id="@+id/ageLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Age"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
         app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
     <TextView
-        android:id="@+id/textView16"
+        android:id="@+id/contactLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Contact"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
         app:layout_constraintTop_toBottomOf="@+id/editTextAge" />
 
@@ -187,11 +198,23 @@
         android:ems="10"
         android:includeFontPadding="false"
         android:inputType="textPersonName"
-        android:text="Contact"
-        android:textColor="@drawable/color_profile_input"
+        android:textColor="@color/color_profile_input"
         android:textSize="16sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
-        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+        app:layout_constraintTop_toBottomOf="@+id/contactLabel" />
+
+    <ProgressBar
+        android:id="@+id/profileLoading"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline19"
+        app:layout_constraintStart_toStartOf="@+id/guideline18"
+        app:layout_constraintTop_toTopOf="@+id/guideline16" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

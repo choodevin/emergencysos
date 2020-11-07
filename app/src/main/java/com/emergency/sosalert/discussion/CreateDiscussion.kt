@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
-import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,22 +14,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.emergency.sosalert.R
-import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.Timestamp
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_create_discussion.*
+import kotlinx.android.synthetic.main.activity_discussion_details.*
 import java.io.IOException
-import kotlin.random.Random
 
 class CreateDiscussion : AppCompatActivity() {
     private var IMAGE_SELECT = 0
     private var SELECT_LOCATION = 1
     private var PERM_REQUEST = 3
+    private var photoExist = false
+    private var locationExist = false
     private lateinit var tempLocation: Any
     private lateinit var image: Uri
     private lateinit var auth: FirebaseAuth
@@ -63,17 +62,38 @@ class CreateDiscussion : AppCompatActivity() {
         }
 
         completeBtn.setOnClickListener {
+            createDiscussionProgressBar.visibility = View.VISIBLE
+            inputTitle.isEnabled = false
+            inputDesc.isEnabled = false
+            cameraBtn.isEnabled = false
+            locationBtn.isEnabled = false
+            completeBtn.isEnabled = false
             val title = inputTitle.text.toString()
-            val description = inputDesc.text.toString()
+            val descriptionText = inputDesc.text.toString()
             val discussion = Discussion()
             val firestore = FirebaseFirestore.getInstance()
+
+            if (title.isEmpty() || descriptionText.isEmpty() || !photoExist || !locationExist) {
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    "Everything must be filled in or selected!",
+                    Snackbar.LENGTH_LONG
+                ).show()
+                createDiscussionProgressBar.visibility = View.GONE
+                inputTitle.isEnabled = true
+                inputDesc.isEnabled = true
+                cameraBtn.isEnabled = true
+                locationBtn.isEnabled = true
+                completeBtn.isEnabled = true
+                return@setOnClickListener
+            }
 
             val temp1 = tempLocation.toString()
             val location = temp1.split(",").toTypedArray()
 
             auth = FirebaseAuth.getInstance()
             discussion.title = title
-            discussion.description = description
+            discussion.description = descriptionText
             discussion.ownerUid = auth.currentUser!!.uid
             discussion.latitude = location[0]
             discussion.longitude = location[1]
@@ -100,6 +120,7 @@ class CreateDiscussion : AppCompatActivity() {
                         val imageUrlHash = hashMapOf("imageUrl" to it.toString())
                         firestore.collection("discussion").document(new.id)
                             .set(imageUrlHash, SetOptions.merge())
+                        finish()
                     }
                 }
             }
@@ -137,14 +158,18 @@ class CreateDiscussion : AppCompatActivity() {
                     IMAGE_SELECT = 1
                     selectedImage.setImageBitmap(bitmap)
                     selectedImage.background = null
-                    noImageText.visibility = View.INVISIBLE
+                    cameraBtn.background =
+                        ContextCompat.getDrawable(this, R.drawable.button_edit_photo)
+                    photoExist = true
                 } else {
                     val bitmap =
                         MediaStore.Images.Media.getBitmap(this.contentResolver, image)
                     IMAGE_SELECT = 1
                     selectedImage.setImageBitmap(bitmap)
                     selectedImage.background = null
-                    noImageText.visibility = View.INVISIBLE
+                    cameraBtn.background =
+                        ContextCompat.getDrawable(this, R.drawable.button_edit_photo)
+                    photoExist = true
                 }
             } catch (v: IOException) {
                 Log.v(ContentValues.TAG, v.message.toString())
@@ -152,8 +177,9 @@ class CreateDiscussion : AppCompatActivity() {
         } else if (requestCode == SELECT_LOCATION && resultCode == RESULT_OK) {
             if (data!!.extras!!.get("selectedLocation") != null) {
                 tempLocation = data.extras!!.get("selectedLocation")!!
-                val locationTextString = "Location has been selected"
-                locationText.text = locationTextString
+                locationBtn.background =
+                    ContextCompat.getDrawable(this, R.drawable.button_edit_location)
+                locationExist = true
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

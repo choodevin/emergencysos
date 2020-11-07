@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
+import kotlinx.android.synthetic.main.fragment_register_picture.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -81,6 +82,7 @@ class UserProfile : Fragment() {
                 editTextName.isEnabled = false
                 editTextAge.isEnabled = false
                 editTextContact.isEnabled = false
+                displayViews()
                 if (it.data?.get("isAdmin").toString().compareTo("yes") == 0) {
                     toAdminButton.visibility = View.VISIBLE
                 } else {
@@ -236,25 +238,25 @@ class UserProfile : Fragment() {
                         "Info Successfully updated",
                         Toast.LENGTH_SHORT
                     ).show()
-                    val storageReference =
-                        FirebaseStorage.getInstance().getReference("/profilepicture/$uid")
-                    storageReference.delete()
-                    val newStorageReference =
-                        FirebaseStorage.getInstance().getReference("/profilepicture/$uid")
-                    val uri = Uri.parse(newimage.toString())
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        val source =
-                            ImageDecoder.createSource(requireActivity().contentResolver, uri)
-                        val bitmap = ImageDecoder.decodeBitmap(source)
-                        newStorageReference.putBytes(finalByteArray(bitmap))
-                    } else {
-                        val bitmap =
-                            MediaStore.Images.Media.getBitmap(
-                                requireActivity().contentResolver,
-                                uri
-                            )
-                        newStorageReference.putBytes(finalByteArray(bitmap))
+                    if (newimage != null) {
+                        val newStorageReference =
+                            FirebaseStorage.getInstance().getReference("/profilepicture/$uid")
+                        val uri = Uri.parse(newimage.toString())
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            val source =
+                                ImageDecoder.createSource(requireActivity().contentResolver, uri)
+                            val bitmap = ImageDecoder.decodeBitmap(source)
+                            newStorageReference.putBytes(finalByteArray(bitmap))
+                        } else {
+                            val bitmap =
+                                MediaStore.Images.Media.getBitmap(
+                                    requireActivity().contentResolver,
+                                    uri
+                                )
+                            newStorageReference.putBytes(finalByteArray(bitmap))
+                        }
                     }
                 }
                 profileTitle.text = "Your Profile"
@@ -322,6 +324,20 @@ class UserProfile : Fragment() {
         val baOS = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baOS)
         return baOS.toByteArray()
+    }
+
+    private fun displayViews() {
+        editProfBtn.visibility = View.VISIBLE
+        logoutBtn.visibility = View.VISIBLE
+        goToSettings.visibility = View.VISIBLE
+        profilepic.visibility = View.VISIBLE
+        ageLabel.visibility = View.VISIBLE
+        contactLabel.visibility = View.VISIBLE
+        nameLabel.visibility = View.VISIBLE
+        editTextName.visibility = View.VISIBLE
+        editTextContact.visibility = View.VISIBLE
+        editTextAge.visibility = View.VISIBLE
+        profileLoading.visibility = View.GONE
     }
 
 }

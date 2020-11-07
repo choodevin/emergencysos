@@ -51,6 +51,7 @@ class Chat : Fragment() {
                     tempChatList.target = targetUid
                     chatListList.add(tempChatList)
                 }
+                chatListLoading.visibility = View.GONE
                 chatListRecycler.adapter = ChatListAdapter(chatListList)
             }
 

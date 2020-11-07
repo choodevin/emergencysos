@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.paging.PagedList
@@ -21,11 +24,16 @@ import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.firebase.ui.firestore.paging.LoadingState
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.discussion_list_item.view.*
 import kotlinx.android.synthetic.main.fragment_discussion.*
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class Discussion : Fragment() {
 
@@ -141,15 +149,20 @@ class Discussion : Fragment() {
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val title = itemView.discussion_title
-        val description = itemView.discussion_desc
-        val image = itemView.discussionImage
-        val loading = itemView.image_loading_bar
+        private val title = itemView.discussion_title as TextView
+        private val description = itemView.discussion_desc as TextView
+        private val ownerName = itemView.ownerName as TextView
+        private val postDate = itemView.postDate as TextView
+        private val image = itemView.discussionImage as ImageView
+        private val ownerImage = itemView.ownerImage as ImageView
+        private val loading = itemView.image_loading_bar as ProgressBar
 
-        @SuppressLint("CheckResult")
+        @SuppressLint("CheckResult", "SimpleDateFormat")
         fun bind(discussion: Discussion) {
+            ownerImage.clipToOutline = true
             title.text = discussion.title
             description.text = discussion.description
+            postDate.text = discussion.uploadtime.toDate().toString()
             FirebaseStorage.getInstance()
                 .getReferenceFromUrl(discussion.imageUrl).downloadUrl.addOnSuccessListener {
                     if (it != null) {
@@ -157,6 +170,16 @@ class Discussion : Fragment() {
                         reqOp.optionalFitCenter()
                         Glide.with(itemView).load(it).apply(reqOp).into(image)
                         loading.visibility = View.GONE
+                    }
+                }
+            FirebaseFirestore.getInstance().collection("user").document(discussion.ownerUid).get()
+                .addOnSuccessListener {
+                    ownerName.text = it.get("name").toString()
+                }
+            FirebaseStorage.getInstance()
+                .getReference("profilepicture/${discussion.ownerUid}").downloadUrl.addOnSuccessListener {
+                    if (it != null) {
+                        Glide.with(itemView).load(it).into(ownerImage)
                     }
                 }
         }

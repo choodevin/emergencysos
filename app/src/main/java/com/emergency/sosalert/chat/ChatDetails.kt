@@ -4,11 +4,14 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.emergency.sosalert.R
@@ -78,6 +81,15 @@ class ChatDetails : AppCompatActivity() {
                                 .setPositiveButton("Ok") { _: DialogInterface, _: Int ->
                                 }
                             val dialog = dialogBuilder.create()
+                            dialog.setOnShowListener {
+                                dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                                    .setTextColor(
+                                        ContextCompat.getColor(
+                                            applicationContext,
+                                            R.color.colorPrimaryDark
+                                        )
+                                    )
+                            }
                             dialog.show()
                         }
                     }
@@ -159,6 +171,7 @@ class ChatDetails : AppCompatActivity() {
                         val tempChat = it.getValue(Chat::class.java)
                         messageList.add(tempChat!!)
                     }
+                    chatLoading.visibility = View.GONE
                     messagesRecycler.adapter = ChatAdapter(messageList)
                 }
 

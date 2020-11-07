@@ -60,13 +60,11 @@ class Sos : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_sos, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getLastLocation()
         val picref = FirebaseStorage.getInstance().reference.child("profilepicture").child(uid)
         var yeet = ""
         FirebaseService.sharedPref =
@@ -78,6 +76,7 @@ class Sos : Fragment() {
             .update("token", FirebaseService.token)
         mFusedLocationClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
+        getLastLocation()
         picref.downloadUrl.addOnSuccessListener {
             val uri = it
             yeet = uri.toString()
@@ -85,6 +84,7 @@ class Sos : Fragment() {
                 sosButton.isEnabled = true
             }
         }
+
         sosButton.setOnClickListener {
             getLastLocation()
             val lm: LocationManager =
@@ -124,7 +124,7 @@ class Sos : Fragment() {
                     ref.collection("user").get().addOnSuccessListener { main ->
                         var j = 0
                         var maxRange = 100
-                        while(j < 1){
+                        while (j < 1) {
                             var i = 0
                             for (document in main) {
                                 if (main.documents[i]["token"].toString()
@@ -141,7 +141,8 @@ class Sos : Fragment() {
                                     i++
                                     if (userlocation.distanceTo(targetlocation) <= maxRange && userlocation.distanceTo(
                                             targetlocation
-                                        ) > 0) {
+                                        ) > 0
+                                    ) {
                                         var distanceboi = userlocation.distanceTo(targetlocation)
                                         PushNotification(
                                             NotificationData(
@@ -159,35 +160,40 @@ class Sos : Fragment() {
                                     }
                                 }
                             }
-                            if(j < 1){
+                            if (j < 1) {
                                 maxRange += 1000
                             }
                         }
                     }
                     Log.e(TAG, "try")
-                    FirebaseFirestore.getInstance().collection("report").document("count").get().addOnSuccessListener {
-                        var count = it.get("buttonpress").toString().toInt()
-                        count += 1
-                        FirebaseFirestore.getInstance().collection("report").document("count").update("buttonpress",count)
-                    }
+                    FirebaseFirestore.getInstance().collection("report").document("count").get()
+                        .addOnSuccessListener {
+                            var count = it.get("buttonpress").toString().toInt()
+                            count += 1
+                            FirebaseFirestore.getInstance().collection("report").document("count")
+                                .update("buttonpress", count)
+                        }
                 } catch (e: java.lang.Exception) {
                     Log.e("TAG", "onCreate: " + e.message)
                     Toast.makeText(requireContext(), e.toString(), Toast.LENGTH_LONG).show()
                 }
             }
+
             sosButton.isEnabled = false
             object : CountDownTimer(11000, 1000) {
                 override fun onFinish() {
                     if (sosButton != null) {
                         sosButton.isEnabled = true
-                        timer_title.visibility = View.INVISIBLE
+                        val timerTitleEnable = getString(R.string.sosReady_text)
+                        timer_title.text = timerTitleEnable
                         countdown_timer.visibility = View.INVISIBLE
                     }
                 }
 
                 override fun onTick(p0: Long) {
                     if (timer_title != null) {
-                        timer_title.visibility = View.VISIBLE
+                        val timerTitleDisable = getString(R.string.disabled_button)
+                        timer_title.text = timerTitleDisable
                         countdown_timer.visibility = View.VISIBLE
                         countdown_timer.text = "${p0 / 1000}"
                     }

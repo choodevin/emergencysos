@@ -27,7 +27,7 @@ class SelectLocation : AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_select_location)
 
         val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
+            .findFragmentById(R.id.locationPreview) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
 

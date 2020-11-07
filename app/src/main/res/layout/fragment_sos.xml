@@ -7,40 +7,83 @@
     android:layout_height="match_parent"
     tools:context=".main.Sos">
 
-    <Button
-        android:id="@+id/sosButton"
+    <TextView
+        android:id="@+id/textView21"
+        style="@style/ActionBarText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sos_button"
+        android:includeFontPadding="false"
+        android:text="SOS"
+        app:layout_constraintBottom_toTopOf="@+id/guideline16"
+        app:layout_constraintStart_toStartOf="@+id/guideline18"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.08" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <Button
+        android:id="@+id/sosButton"
+        android:layout_width="310dp"
+        android:layout_height="310dp"
+        android:background="@drawable/button_sos_click_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/countdown_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_regular"
-        android:textSize="48sp"
+        android:layout_marginTop="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/sosButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timer_title"
-        app:layout_constraintVertical_bias="0.19" />
+        app:layout_constraintTop_toBottomOf="@+id/timer_title" />
 
     <TextView
         android:id="@+id/timer_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:text="@string/sosReady_text"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline19"
+        app:layout_constraintStart_toStartOf="@+id/guideline18"
+        app:layout_constraintTop_toTopOf="@+id/guideline16" />
+
+    <TextView
+        android:id="@+id/textView17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:fontFamily="@font/poppins_regular"
-        android:text="Button is disabled for:"
-        android:textColor="@color/colorAccent"
-        android:textSize="30sp"
-        android:visibility="invisible"
+        android:layout_marginBottom="10dp"
+        android:includeFontPadding="false"
+        android:text="Please note that button will be disabled for 10 seconds after pressing to prevent spamming"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
