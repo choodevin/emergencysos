@@ -125,7 +125,6 @@ class FirebaseService : FirebaseMessagingService() {
                 .setOngoing(false)
                 .build()
             notificationManager.notify(notificationID, notification)
-
         } else {
             Log.e(TAG, "SOS NOTIF")
             val pendingIntent = PendingIntent.getActivity(
