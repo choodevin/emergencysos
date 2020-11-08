@@ -10,40 +10,113 @@
         android:id="@+id/toallowProfile"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/bg_profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toTopOf="@+id/guideline31"
+        tools:srcCompat="@drawable/bg_image_loading" />
 
     <TextView
         android:id="@+id/toallowName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:textColor="@color/colorPrimaryDarker"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toallowProfile"
-        tools:text="preview" />
+        app:layout_constraintTop_toBottomOf="@+id/toallowProfile" />
 
     <Button
         android:id="@+id/allowButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="go"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_approve"
         app:layout_constraintEnd_toStartOf="@+id/declineButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toallowName" />
 
     <Button
         android:id="@+id/declineButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="no"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/button_decline"
         app:layout_constraintBottom_toBottomOf="@+id/allowButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/allowButton"
         app:layout_constraintTop_toTopOf="@+id/allowButton" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline31"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.08"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline37"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline38"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/trackRequestClose"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/button_close"
+        app:layout_constraintBottom_toTopOf="@+id/guideline31"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView15"
+        style="@style/ActionBarText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:includeFontPadding="false"
+        android:text="Tracking Request"
+        app:layout_constraintBottom_toTopOf="@+id/guideline31"
+        app:layout_constraintStart_toEndOf="@+id/trackRequestClose"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:includeFontPadding="false"
+        android:singleLine="false"
+        android:text="@string/tracking_note"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline38"
+        app:layout_constraintStart_toStartOf="@+id/guideline37" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please take note that:"
+        android:textColor="@color/colorPrimaryDarker"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/textView16"
+        app:layout_constraintStart_toStartOf="@+id/guideline37" />
 </androidx.constraintlayout.widget.ConstraintLayout>

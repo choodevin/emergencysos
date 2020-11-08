@@ -14,6 +14,9 @@ class TrackingRequest : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tracking_request)
+        trackRequestClose.setOnClickListener {
+            finish()
+        }
         val toallowid = intent.getStringExtra("toallowid")
         val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
         toallowProfile.clipToOutline = true

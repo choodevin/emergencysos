@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.fragment_user_profile.*
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
+@Suppress("DEPRECATION")
 class UserProfile : Fragment() {
     private var auth = FirebaseAuth.getInstance()
     private lateinit var nameData: String
@@ -152,7 +153,6 @@ class UserProfile : Fragment() {
             }
             val storageRef = FirebaseStorage.getInstance().reference
             storageRef.child("profilepicture/$uid").downloadUrl.addOnSuccessListener {
-                val uri = it
                 if (profilepic != null) {
                     Glide.with(requireContext()).load(it).into(profilepic)
                 }

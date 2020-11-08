@@ -81,7 +81,7 @@ class MainLogin : Fragment() {
             }
         }
 
-        inputPass.setOnEditorActionListener { view, action, keyEvent ->
+        inputPass.setOnEditorActionListener { _, action, _ ->
             if (action == EditorInfo.IME_ACTION_DONE) {
                 loginbtn.callOnClick()
                 hideKeyboard(requireContext(), requireView())

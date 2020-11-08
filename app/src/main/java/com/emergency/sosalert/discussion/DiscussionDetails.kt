@@ -1,6 +1,8 @@
 package com.emergency.sosalert.discussion
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -16,6 +18,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_discussion_details.*
 
@@ -24,54 +27,78 @@ class DiscussionDetails : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_discussion_details)
         val disc = intent.getParcelableExtra<Discussion>("discussiondetails")
+        backBtnDiscDet.setOnClickListener {
+            onBackPressed()
+        }
         if (disc != null) {
+            posterImage.clipToOutline = true
             titleText.text = disc.title
             description.text = disc.description
-            FirebaseStorage.getInstance()
-                .getReferenceFromUrl(disc.imageUrl).downloadUrl.addOnSuccessListener {
+            val firebaseStorage =
+                FirebaseStorage.getInstance()
+            firebaseStorage.getReferenceFromUrl(disc.imageUrl).downloadUrl.addOnSuccessListener {
+                if (it != null) {
+                    Glide.with(this).load(it).into(discImage)
+                    imageLoading.visibility = View.GONE
+                }
+            }
+            firebaseStorage.reference.child("profilepicture/${disc.ownerUid}").downloadUrl.addOnSuccessListener {
+                if (it != null) {
+                    Glide.with(this).load(it).into(posterImage)
+                }
+            }
+            FirebaseFirestore.getInstance().collection("user").document(disc.ownerUid).get()
+                .addOnSuccessListener {
                     if (it != null) {
-                        Glide.with(this).load(it).into(discImage)
+                        posterName.text = it.data!!["name"].toString()
                     }
                 }
             commentRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-            viewCommentBtn.setOnClickListener {
-                viewCommentBtn.visibility = View.GONE
-                commentRecycler.visibility = View.VISIBLE
-                commentInput.visibility = View.VISIBLE
-                sendCommentBtn.visibility = View.VISIBLE
 
-                val realtimeRef = FirebaseDatabase.getInstance().reference.child("comments")
-                    .child(disc.commentgroup)
-                realtimeRef.addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        val commentList = ArrayList<Comment>()
-                        snapshot.children.forEach {
-                            val tempComment = it.getValue(Comment::class.java)
-                            commentList.add(tempComment!!)
-                        }
-                        commentRecycler.adapter = CommentAdapter(commentList)
+            val realtimeRef = FirebaseDatabase.getInstance().reference.child("comments")
+                .child(disc.commentgroup)
+            realtimeRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val commentList = ArrayList<Comment>()
+                    snapshot.children.forEach {
+                        val tempComment = it.getValue(Comment::class.java)
+                        commentList.add(tempComment!!)
                     }
-                    override fun onCancelled(error: DatabaseError) {
+                    if (commentList.isEmpty()) {
+                        noCommentText.visibility = View.VISIBLE
                     }
-                })
-            }
+                    commentRecycler.adapter = CommentAdapter(commentList)
+                    commentLoading.visibility = View.GONE
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+            })
 
             sendCommentBtn.setOnClickListener {
                 if (commentInput.text.isNullOrEmpty()) {
                     Snackbar.make(it, "You did not enter any comment!", Snackbar.LENGTH_LONG).show()
                 } else {
-                    val realtimeRef = FirebaseDatabase.getInstance().reference.child("comments")
-                        .child(disc.commentgroup)
                     val c = Comment()
 
                     c.content = commentInput.text.toString()
                     c.owner = FirebaseAuth.getInstance().currentUser!!.uid
 
-                    realtimeRef.push().setValue(c)
+                    FirebaseDatabase.getInstance().reference.child("comments")
+                        .child(disc.commentgroup).push().setValue(c)
 
                     commentInput.text.clear()
                     closeKeyboard()
                 }
+            }
+
+            toMapBtn.setOnClickListener {
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("geo:${disc.latitude},${disc.longitude}?q=${disc.latitude},${disc.longitude}")
+                    )
+                )
             }
         } else {
             Toast.makeText(

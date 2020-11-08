@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.permlist_item.*
 import kotlinx.android.synthetic.main.permlist_item.view.*
 import java.security.Permission
 
+@Suppress("UNCHECKED_CAST")
 class ModifyPermission : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +31,12 @@ class ModifyPermission : AppCompatActivity() {
         modPermRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         FirebaseFirestore.getInstance().collection("user").document(currentUid!!).get()
             .addOnSuccessListener {
-                val enabledList = it.data!!["allowTrackingList"] as ArrayList<String>
-                modPermRecycler.adapter = PermissionAdapter(enabledList)
+                if (it.data!!["allowTrackingList"] != null) {
+                    val enabledList = it.data!!["allowTrackingList"] as ArrayList<String>
+                    modPermRecycler.adapter = PermissionAdapter(enabledList)
+                } else {
+                    noGrantText.visibility = View.VISIBLE
+                }
             }
 
         backBtnPerm.setOnClickListener {

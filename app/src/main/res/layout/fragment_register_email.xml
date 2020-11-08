@@ -126,7 +126,7 @@
         android:layout_width="@dimen/button_back_width"
         android:layout_height="@dimen/button_back_height"
         android:layout_marginStart="10dp"
-        android:background="@drawable/ic_back"
+        android:background="@drawable/button_back"
         app:layout_constraintBottom_toTopOf="@+id/guideline13"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

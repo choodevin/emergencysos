@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_chat.*
 
+@Suppress("UNCHECKED_CAST")
 class Chat : Fragment() {
 
     override fun onCreateView(
@@ -53,6 +54,8 @@ class Chat : Fragment() {
                 }
                 chatListLoading.visibility = View.GONE
                 chatListRecycler.adapter = ChatListAdapter(chatListList)
+            } else {
+                noFriendText.visibility = View.VISIBLE
             }
 
         }

@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_tracker_map.*
 
 
 class TrackerMap : AppCompatActivity(), OnMapReadyCallback {
@@ -41,6 +42,10 @@ class TrackerMap : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tracker_map)
+
+        trackingBackBtn.setOnClickListener {
+            onBackPressed()
+        }
 
         targetUid = intent.extras?.get("targetuid") as String
 

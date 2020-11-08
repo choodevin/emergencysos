@@ -47,6 +47,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 
+@Suppress("DEPRECATION")
 class Sos : Fragment() {
 
     private var victim = ""
@@ -267,7 +268,7 @@ class Sos : Fragment() {
 
         mFusedLocationClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
-        mFusedLocationClient!!.requestLocationUpdates(
+        mFusedLocationClient.requestLocationUpdates(
             mLocationRequest, mLocationCallback,
             Looper.myLooper()
         )

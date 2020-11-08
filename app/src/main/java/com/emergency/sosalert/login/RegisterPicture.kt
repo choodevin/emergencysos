@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.fragment_register_picture.*
 import java.io.IOException
 
 
+@Suppress("DEPRECATION")
 class RegisterPicture : Fragment() {
     private var image: Uri? = null
     private var PROFILE_SETTED = 0
@@ -52,11 +53,8 @@ class RegisterPicture : Fragment() {
 
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialogBuilder
-            .setTitle("Are you sure?")
-            .setMessage("Not setting a profile picture makes the others harder to recognize you!")
-        dialogBuilder.setPositiveButton("Skip anyway") { _, _ ->
-            toNext()
-        }
+            .setTitle("Profile picture not setted")
+            .setMessage("Not setting a profile picture makes it harder to recognize you!")
         dialogBuilder.setNegativeButton("Return") { _, _ ->
         }
         val dialog = dialogBuilder.create()
@@ -78,16 +76,14 @@ class RegisterPicture : Fragment() {
 
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-                .setTextColor(resources.getColor(R.color.colorPrimaryDark))
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                .setTextColor(resources.getColor(R.color.colorPrimaryDark))
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark))
         }
 
         dialog2.setOnShowListener {
             dialog2.getButton(AlertDialog.BUTTON_NEGATIVE)
-                .setTextColor(resources.getColor(R.color.colorPrimaryDark))
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark))
             dialog2.getButton(AlertDialog.BUTTON_POSITIVE)
-                .setTextColor(resources.getColor(R.color.colorPrimaryDark))
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark))
         }
 
         continueBtn.setOnClickListener {
@@ -115,10 +111,6 @@ class RegisterPicture : Fragment() {
                         }
                     }
                 })
-        }
-
-        skipText.setOnClickListener {
-            dialog.show()
         }
 
         cameraBtn.setOnClickListener {
@@ -178,8 +170,6 @@ class RegisterPicture : Fragment() {
     private fun toNext() {
         if (PROFILE_SETTED == 1) {
             arguments?.putString("photo", image.toString())
-        } else {
-            arguments?.putString("photo", "none")
         }
         findNavController().navigate(R.id.action_registerPicture_to_registerGender, arguments)
     }

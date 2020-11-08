@@ -27,4 +27,5 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="disabled_button">Button is disabled</string>
     <string name="sosReady_text">Press to send help to nearby users</string>
+    <string name="tracking_note">Permission granted can be removed in app settings.\nAfter providing tracking permission, allowed user can track you as long as your enable tracking feature is enabled</string>
 </resources>

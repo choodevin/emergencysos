@@ -14,6 +14,9 @@ class SearchFriend : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_friend)
+        closeButtonSearch.setOnClickListener {
+            finish()
+        }
         friendRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         applySearch.setOnClickListener {
             val inputEmail = search_by_email.text.toString()

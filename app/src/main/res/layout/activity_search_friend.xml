@@ -9,20 +9,24 @@
     <EditText
         android:id="@+id/search_by_email"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
+        android:background="@drawable/send_input"
+        android:ellipsize="start"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintBottom_toTopOf="@+id/guideline25"
+        android:includeFontPadding="false"
+        android:inputType="textEmailAddress"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:scrollHorizontally="true"
         app:layout_constraintEnd_toStartOf="@+id/applySearch"
         app:layout_constraintStart_toStartOf="@+id/guideline26"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/guideline25" />
 
     <Button
         android:id="@+id/applySearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/button_search"
         app:layout_constraintBottom_toBottomOf="@+id/search_by_email"
         app:layout_constraintEnd_toStartOf="@+id/guideline30"
         app:layout_constraintTop_toTopOf="@+id/search_by_email" />
@@ -52,8 +56,41 @@
         android:id="@+id/friendRecycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:includeFontPadding="false"
+        android:text="Search"
+        style="@style/ActionBarText"
+        app:layout_constraintBottom_toTopOf="@+id/guideline25"
+        app:layout_constraintStart_toEndOf="@+id/closeButtonSearch"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/closeButtonSearch"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/button_close"
+        app:layout_constraintBottom_toTopOf="@+id/guideline25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toStartOf="@+id/guideline30"
         app:layout_constraintStart_toStartOf="@+id/guideline26"
-        app:layout_constraintTop_toTopOf="@+id/guideline25" />
+        app:layout_constraintTop_toBottomOf="@+id/search_by_email" />
 </androidx.constraintlayout.widget.ConstraintLayout>

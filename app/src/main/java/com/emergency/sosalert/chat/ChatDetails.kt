@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONException
 
 
+@Suppress("UNCHECKED_CAST")
 class ChatDetails : AppCompatActivity() {
     private var currentUid: String = ""
     private var targetUid: String = ""

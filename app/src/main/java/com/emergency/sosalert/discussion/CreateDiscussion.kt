@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.activity_create_discussion.*
 import kotlinx.android.synthetic.main.activity_discussion_details.*
 import java.io.IOException
 
+@Suppress("DEPRECATION")
 class CreateDiscussion : AppCompatActivity() {
     private var IMAGE_SELECT = 0
     private var SELECT_LOCATION = 1

@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.friend_list_item.view.*
 
+@Suppress("UNCHECKED_CAST")
 class FriendListAdapter(
     private val userList: ArrayList<User>
 ) : RecyclerView.Adapter<FriendListAdapter.ViewHolder>() {
