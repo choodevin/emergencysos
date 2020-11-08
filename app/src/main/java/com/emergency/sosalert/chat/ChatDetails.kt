@@ -156,10 +156,7 @@ class ChatDetails : AppCompatActivity() {
             } catch (e: JSONException) {
 
             }
-
             inputMessage.text.clear()
-
-            closeKeyboard()
         }
     }
 
@@ -181,15 +178,6 @@ class ChatDetails : AppCompatActivity() {
 
             })
     }
-
-    private fun closeKeyboard() {
-        val view = this.currentFocus
-        if (view != null) {
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
-        }
-    }
-
 
     private fun sendNotification(notification: PushNotification) =
         CoroutineScope(Dispatchers.IO).launch {

@@ -64,6 +64,8 @@ class RegisterGender : Fragment() {
             }
             if (age >= 100 || age <= 0) {
                 inputAge.error = "Invalid age"
+                progressBar.visibility = View.GONE
+                backBtn.visibility = View.VISIBLE
             } else {
                 if (arguments?.get("email") == null) {
                     name = auth.currentUser!!.displayName!!
@@ -94,6 +96,7 @@ class RegisterGender : Fragment() {
                 }
             }
         }
+
         backBtn.setOnClickListener {
             activity?.onBackPressed()
         }
@@ -128,7 +131,8 @@ class RegisterGender : Fragment() {
             "allowTracking" to false,
             "isAdmin" to "no",
             "latitude" to 0,
-            "longitude" to 0
+            "longitude" to 0,
+            "contact" to ""
         )
 
         fireStore.collection("user").document(userId).set(userHashMap)

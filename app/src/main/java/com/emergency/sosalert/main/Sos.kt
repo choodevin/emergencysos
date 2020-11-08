@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.android.volley.RequestQueue
 import com.android.volley.Response
@@ -176,14 +177,14 @@ class Sos : Fragment() {
                 override fun onFinish() {
                     if (sosButton != null) {
                         sosButton.isEnabled = true
-                        timer_title.visibility = View.INVISIBLE
+                        timer_title.text = getString(R.string.sosReady_text)
                         countdown_timer.visibility = View.INVISIBLE
                     }
                 }
 
                 override fun onTick(p0: Long) {
                     if (timer_title != null) {
-                        timer_title.visibility = View.VISIBLE
+                        timer_title.text = "Button is disabled"
                         countdown_timer.visibility = View.VISIBLE
                         countdown_timer.text = "${p0 / 1000}"
                     }

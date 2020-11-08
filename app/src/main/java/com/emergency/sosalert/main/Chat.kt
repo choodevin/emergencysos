@@ -32,9 +32,22 @@ class Chat : Fragment() {
 
         chatListRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
+        applyData()
+
+        friendRefreshBtn.setOnClickListener {
+            chatListRecycler.adapter = null
+            applyData()
+        }
+
+        searchFriend.setOnClickListener {
+            startActivity(Intent(context, SearchFriend::class.java))
+        }
+
+    }
+
+    private fun applyData() {
         val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
         val currentUserRef = FirebaseFirestore.getInstance().collection("user").document(currentUid)
-
         currentUserRef.get().addOnSuccessListener {
             if (it.data!!["chatgroup"] != null) {
                 val tempList = it.data!!["chatgroup"] as List<String>
@@ -58,12 +71,8 @@ class Chat : Fragment() {
                 chatListLoading.visibility = View.GONE
                 noFriendText.visibility = View.VISIBLE
             }
-
         }
 
-        searchFriend.setOnClickListener {
-            startActivity(Intent(context, SearchFriend::class.java))
-        }
 
     }
 }

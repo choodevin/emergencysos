@@ -198,7 +198,7 @@ class UserProfile : Fragment() {
 
     private fun submitData() {
         nameData = editTextName.text.toString()
-        var contact = editTextContact.text.toString()
+        val contact = editTextContact.text.toString()
         try {
             ageData = Integer.parseInt(editTextAge.text.toString())
         } catch (e: Exception) {
@@ -207,6 +207,7 @@ class UserProfile : Fragment() {
                 "Please don't leave the age empty/ Only put integer value",
                 Toast.LENGTH_SHORT
             ).show()
+            return
         }
         when {
             nameData.isEmpty() -> {
@@ -218,7 +219,7 @@ class UserProfile : Fragment() {
                 editTextName.requestFocus()
                 return
             }
-            ageData !in 101 downTo 0 -> {
+            ageData < 0 || ageData > 101 -> {
                 Toast.makeText(
                     requireActivity(),
                     "Please input a correct age range",
@@ -271,7 +272,6 @@ class UserProfile : Fragment() {
                     }
                 }
                 profileTitle.text = "Your Profile"
-                toAdminButton.visibility = View.VISIBLE
                 goToSettings.visibility = View.VISIBLE
                 editProfBtn.visibility = View.VISIBLE
                 cancelBtn.visibility = View.GONE
@@ -282,6 +282,12 @@ class UserProfile : Fragment() {
                 editTextName.isEnabled = false
                 editTextAge.isEnabled = false
                 editTextContact.isEnabled = false
+                FirebaseFirestore.getInstance().collection("user").document(uid).get()
+                    .addOnSuccessListener {
+                        if (it.data!!["isAdmin"].toString() == "yes") {
+                            toAdminButton.visibility = View.VISIBLE
+                        }
+                    }
             }
         }
     }
