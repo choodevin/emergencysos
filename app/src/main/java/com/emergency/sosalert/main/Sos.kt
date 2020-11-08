@@ -121,7 +121,6 @@ class Sos : Fragment() {
                 userlocation.longitude = longitude.toDouble()
                 val targetlocation = Location("")
                 try {
-                    //pull all user, check geo, pull token send
                     ref.collection("user").get().addOnSuccessListener { main ->
                         val maxRange = 500
                         var i = 0

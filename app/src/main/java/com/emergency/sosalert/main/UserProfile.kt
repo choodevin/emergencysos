@@ -219,7 +219,7 @@ class UserProfile : Fragment() {
                 editTextName.requestFocus()
                 return
             }
-            ageData < 0 || ageData > 101 -> {
+            ageData < 0 && ageData > 101 -> {
                 Toast.makeText(
                     requireActivity(),
                     "Please input a correct age range",
