@@ -135,6 +135,13 @@ class Discussion : Fragment() {
                 }
             }
         }
+
+        if (firestoreAdapter.itemCount == 0) {
+            noDiscussionText.visibility = View.VISIBLE
+        } else {
+            noDiscussionText.visibility = View.GONE
+        }
+
         discussionRecycler.adapter = firestoreAdapter
     }
 

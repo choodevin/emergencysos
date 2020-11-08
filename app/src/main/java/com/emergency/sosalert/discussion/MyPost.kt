@@ -131,25 +131,27 @@ class MyPost : AppCompatActivity() {
                 }
             }
         }
+
+        if (firestoreAdapter.itemCount == 0) {
+            noPostText.visibility = View.VISIBLE
+        } else {
+            noPostText.visibility = View.GONE
+        }
+
         myPostRecycler.adapter = firestoreAdapter
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val title = itemView.discussion_title as TextView
         private val description = itemView.discussion_desc as TextView
-        private val ownerName = itemView.ownerName as TextView
-        private val postDate = itemView.postDate as TextView
         private val status = itemView.statusText as TextView
         private val image = itemView.discussionImage as ImageView
-        private val ownerImage = itemView.ownerImage as ImageView
         private val loading = itemView.image_loading_bar as ProgressBar
 
         @SuppressLint("CheckResult", "SimpleDateFormat")
         fun bind(discussion: Discussion) {
-            ownerImage.clipToOutline = true
             title.text = discussion.title
             description.text = discussion.description
-            postDate.text = discussion.uploadtime.toDate().toString()
             status.text = discussion.status
             FirebaseStorage.getInstance()
                 .getReferenceFromUrl(discussion.imageUrl).downloadUrl.addOnSuccessListener {
@@ -158,16 +160,6 @@ class MyPost : AppCompatActivity() {
                         reqOp.optionalFitCenter()
                         Glide.with(itemView).load(it).apply(reqOp).into(image)
                         loading.visibility = View.GONE
-                    }
-                }
-            FirebaseFirestore.getInstance().collection("user").document(discussion.ownerUid).get()
-                .addOnSuccessListener {
-                    ownerName.text = it.get("name").toString()
-                }
-            FirebaseStorage.getInstance()
-                .getReference("profilepicture/${discussion.ownerUid}").downloadUrl.addOnSuccessListener {
-                    if (it != null) {
-                        Glide.with(itemView).load(it).into(ownerImage)
                     }
                 }
         }

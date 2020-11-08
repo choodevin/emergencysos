@@ -1,13 +1,16 @@
 package com.emergency.sosalert.discussion
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -33,23 +36,53 @@ class MyPostDiscussionDetails : AppCompatActivity() {
         }
 
         deleteDisBtn.setOnClickListener {
-            if (disc?.id != null) {
-                val fs = FirebaseFirestore.getInstance()
-                fs.collection("discussion")
-                    .whereEqualTo("commentgroup", disc.commentgroup).get().addOnSuccessListener {
-                        for (doc in it) {
-                            if (doc != null) {
-                                fs.collection("discussion").document(doc.id).delete()
-                                FirebaseStorage.getInstance().reference.child("discussionPicture/${doc.id}")
-                                    .delete()
+            val dialogBuilder = AlertDialog.Builder(this)
+            dialogBuilder
+                .setTitle("There is no going back")
+                .setMessage("Confirm deleting will make your discussion disappear and will be irretrievable")
+                .setNegativeButton("Abort") { _: DialogInterface, _: Int ->
+                }
+                .setPositiveButton("Proceed") { _: DialogInterface, _: Int ->
+                    if (disc?.id != null) {
+                        val fs = FirebaseFirestore.getInstance()
+                        fs.collection("discussion")
+                            .whereEqualTo("commentgroup", disc.commentgroup).get()
+                            .addOnSuccessListener {
+                                for (doc in it) {
+                                    if (doc != null) {
+                                        fs.collection("discussion").document(doc.id).delete()
+                                        FirebaseStorage.getInstance().reference.child("discussionPicture/${doc.id}")
+                                            .delete()
+                                    }
+                                }
                             }
-                        }
+                        FirebaseDatabase.getInstance().reference.child("comments/${disc.commentgroup}")
+                            .removeValue()
+                        Toast.makeText(this, "Discussion has been removed.", Toast.LENGTH_LONG)
+                            .show()
+                        finish()
                     }
-                FirebaseDatabase.getInstance().reference.child("comments/${disc.commentgroup}")
-                    .removeValue()
-                Toast.makeText(this, "Discussion has been removed.", Toast.LENGTH_LONG).show()
-                finish()
+                }
+
+            val dialog = dialogBuilder.create()
+            dialog.setOnShowListener {
+                dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)
+                    .setTextColor(
+                        ContextCompat.getColor(
+                            applicationContext,
+                            R.color.colorPrimaryDark
+                        )
+                    )
+                dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(
+                        ContextCompat.getColor(
+                            applicationContext,
+                            R.color.colorPrimaryDark
+                        )
+                    )
             }
+
+            dialog.show()
         }
 
         if (disc != null) {

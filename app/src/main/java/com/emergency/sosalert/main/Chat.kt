@@ -55,6 +55,7 @@ class Chat : Fragment() {
                 chatListLoading.visibility = View.GONE
                 chatListRecycler.adapter = ChatListAdapter(chatListList)
             } else {
+                chatListLoading.visibility = View.GONE
                 noFriendText.visibility = View.VISIBLE
             }
 

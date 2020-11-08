@@ -35,7 +35,6 @@ class RegisterPicture : Fragment() {
     private var REGISTER_ABORT = false
     private var GOOGLE_REGISTER = false
     private val PERM_REQUEST = 3
-    private lateinit var auth: FirebaseAuth
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

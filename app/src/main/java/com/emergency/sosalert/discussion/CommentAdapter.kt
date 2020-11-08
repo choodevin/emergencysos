@@ -36,7 +36,7 @@ class CommentAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.image.clipToOutline = true
         holder.details.text = commentList[position].content
-        FirebaseStorage.getInstance().reference.child("profilepicture").downloadUrl.addOnSuccessListener {
+        FirebaseStorage.getInstance().reference.child("profilepicture/${commentList[position].owner}").downloadUrl.addOnSuccessListener {
             Glide.with(holder.itemView.context).load(it).into(holder.image)
         }
         FirebaseFirestore.getInstance().collection("user").document(commentList[position].owner)

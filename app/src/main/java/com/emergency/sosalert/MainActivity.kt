@@ -29,12 +29,13 @@ class MainActivity : AppCompatActivity() {
     private val chatFragment = Chat()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        registerPreferences()
 
         auth = FirebaseAuth.getInstance()
         if (auth.currentUser == null) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
+        } else {
+            registerPreferences()
         }
 
         setTheme(R.style.AppTheme)
