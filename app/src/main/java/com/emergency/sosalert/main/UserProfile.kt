@@ -25,12 +25,14 @@ import com.emergency.sosalert.LoginActivity
 import com.emergency.sosalert.R
 import com.emergency.sosalert.SettingsActivity
 import com.emergency.sosalert.admin.AdminContainer
+import com.emergency.sosalert.discussion.MyPost
 import com.emergency.sosalert.locationTracking.LocationTrackingService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
+import kotlinx.android.synthetic.main.activity_my_post.*
 import kotlinx.android.synthetic.main.fragment_register_picture.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import java.io.ByteArrayOutputStream
@@ -59,6 +61,10 @@ class UserProfile : Fragment() {
 
         goToSettings.setOnClickListener {
             startActivity(Intent(context, SettingsActivity::class.java))
+        }
+
+        viewMyPost.setOnClickListener {
+            startActivity(Intent(context, MyPost::class.java))
         }
 
         logoutBtn.setOnClickListener {
@@ -113,8 +119,6 @@ class UserProfile : Fragment() {
 
         editProfBtn.setOnClickListener { editProfile() }
 
-        if (postReference.collection("user").document(uid).toString().compareTo("yes") == 0)
-            toAdminButton.visibility = View.VISIBLE
         toAdminButton.setOnClickListener {
             startActivity(Intent(context, AdminContainer::class.java))
         }
@@ -129,6 +133,7 @@ class UserProfile : Fragment() {
         editTextName.requestFocus()
 
         goToSettings.visibility = View.GONE
+        viewMyPost.visibility = View.GONE
         toAdminButton.visibility = View.GONE
         editProfBtn.visibility = View.GONE
         cfmButton.visibility = View.VISIBLE
@@ -158,9 +163,15 @@ class UserProfile : Fragment() {
                 }
             }
             profileTitle.text = "Your Profile"
-            toAdminButton.visibility = View.VISIBLE
+            FirebaseFirestore.getInstance().collection("user").document(uid).get()
+                .addOnSuccessListener {
+                    if (it.data!!["isAdmin"].toString() == "yes") {
+                        toAdminButton.visibility = View.VISIBLE
+                    }
+                }
             goToSettings.visibility = View.VISIBLE
             editProfBtn.visibility = View.VISIBLE
+            viewMyPost.visibility = View.VISIBLE
             cancelBtn.visibility = View.GONE
             cfmButton.visibility = View.GONE
             editPictureBtn.visibility = View.GONE
@@ -266,6 +277,7 @@ class UserProfile : Fragment() {
                 cancelBtn.visibility = View.GONE
                 cfmButton.visibility = View.GONE
                 editPictureBtn.visibility = View.GONE
+                viewMyPost.visibility = View.VISIBLE
                 logoutBtn.visibility = View.VISIBLE
                 editTextName.isEnabled = false
                 editTextAge.isEnabled = false
@@ -337,7 +349,14 @@ class UserProfile : Fragment() {
         editTextName.visibility = View.VISIBLE
         editTextContact.visibility = View.VISIBLE
         editTextAge.visibility = View.VISIBLE
+        viewMyPost.visibility = View.VISIBLE
         profileLoading.visibility = View.GONE
+        FirebaseFirestore.getInstance().collection("user").document(uid).get()
+            .addOnSuccessListener {
+                if (it.data!!["isAdmin"].toString() == "yes") {
+                    toAdminButton.visibility = View.VISIBLE
+                }
+            }
     }
 
 }

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.emergency.sosalert.R
@@ -67,14 +68,24 @@ class Map : Fragment(), OnMapReadyCallback {
             )
             return
         }
+
         fusedLocationClient.lastLocation.addOnSuccessListener {
-            val location = LatLng(it.latitude, it.longitude)
-            googleMap?.addMarker(
-                MarkerOptions().position(location).title("You")
-                    .icon(bitmapDescriptorFromVector(requireContext(), R.drawable.ic_selfmarker))
-            )
-            googleMap?.moveCamera(CameraUpdateFactory.newLatLng(location))
-            googleMap?.animateCamera(CameraUpdateFactory.zoomTo(15F))
+            if (it != null) {
+                val location = LatLng(it.latitude, it.longitude)
+                googleMap?.addMarker(
+                    MarkerOptions().position(location).title("You")
+                        .icon(
+                            bitmapDescriptorFromVector(
+                                requireContext(),
+                                R.drawable.ic_selfmarker
+                            )
+                        )
+                )
+                googleMap?.moveCamera(CameraUpdateFactory.newLatLng(location))
+                googleMap?.animateCamera(CameraUpdateFactory.zoomTo(15F))
+            } else {
+                Toast.makeText(context, "Failed to get current location", Toast.LENGTH_LONG).show()
+            }
 
         }
 

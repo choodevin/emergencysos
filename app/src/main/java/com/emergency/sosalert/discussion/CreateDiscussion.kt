@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -109,6 +110,24 @@ class CreateDiscussion : AppCompatActivity() {
                 "status" to "pending"
             )
 
+            val dialogBuilder = AlertDialog.Builder(this)
+            dialogBuilder
+                .setTitle("Discussion created successfully!")
+                .setMessage("Your discussion will be pending for approval from admin")
+            dialogBuilder.setPositiveButton("Done") { _, _ ->
+                finish()
+            }
+            dialogBuilder.setOnDismissListener {
+                finish()
+            }
+
+            val dialog = dialogBuilder.create()
+
+            dialog.setOnShowListener {
+                dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
+            }
+
             firestore.collection("discussion").add(discHashMap).addOnSuccessListener { new ->
                 val storageReference =
                     FirebaseStorage.getInstance().getReference("/discussionPicture/${new.id}")
@@ -121,7 +140,7 @@ class CreateDiscussion : AppCompatActivity() {
                         val imageUrlHash = hashMapOf("imageUrl" to it.toString())
                         firestore.collection("discussion").document(new.id)
                             .set(imageUrlHash, SetOptions.merge())
-                        finish()
+                        dialog.show()
                     }
                 }
             }

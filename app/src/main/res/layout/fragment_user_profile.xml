@@ -51,7 +51,9 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
         app:layout_constraintTop_toTopOf="@+id/guideline16"
-        tools:src="@tools:sample/avatars" />
+        tools:src="@tools:sample/avatars"
+        android:contentDescription="profile picture"
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/logoutBtn"
@@ -64,7 +66,8 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/editTextName"
@@ -80,7 +83,8 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
-        app:layout_constraintTop_toBottomOf="@+id/nameLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/nameLabel"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/editTextAge"
@@ -95,7 +99,8 @@
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
-        app:layout_constraintTop_toBottomOf="@+id/ageLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/ageLabel"
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/editProfBtn"
@@ -169,7 +174,8 @@
         android:text="Name"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
-        app:layout_constraintTop_toBottomOf="@+id/profilepic" />
+        app:layout_constraintTop_toBottomOf="@+id/profilepic"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/ageLabel"
@@ -179,7 +185,8 @@
         android:text="Age"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
-        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextName"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/contactLabel"
@@ -189,7 +196,8 @@
         android:text="Contact"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
-        app:layout_constraintTop_toBottomOf="@+id/editTextAge" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextAge"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/editTextContact"
@@ -203,7 +211,8 @@
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
-        app:layout_constraintTop_toBottomOf="@+id/contactLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/contactLabel"
+        android:importantForAutofill="no" />
 
     <ProgressBar
         android:id="@+id/profileLoading"
@@ -216,5 +225,19 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
         app:layout_constraintTop_toTopOf="@+id/guideline16" />
+
+    <Button
+        android:id="@+id/viewMyPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:includeFontPadding="false"
+        android:text="View my posts"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toStartOf="@+id/guideline19"
+        app:layout_constraintTop_toBottomOf="@+id/editTextContact" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

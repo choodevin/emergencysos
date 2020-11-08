@@ -98,7 +98,6 @@ class FirebaseService : FirebaseMessagingService() {
                 .setAutoCancel(true)
                 .setOngoing(false)
                 .build()
-            startForeground(notificationID, notification)
             if (!isAppForeground(this)) {
                 notificationManager.notify(notificationID, notification)
             }

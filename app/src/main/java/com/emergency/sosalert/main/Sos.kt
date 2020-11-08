@@ -47,7 +47,6 @@ import org.json.JSONException
 import org.json.JSONObject
 
 
-@Suppress("DEPRECATION")
 class Sos : Fragment() {
 
     private var victim = ""
@@ -66,6 +65,7 @@ class Sos : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val picref = FirebaseStorage.getInstance().reference.child("profilepicture").child(uid)
         var yeet = ""
         FirebaseService.sharedPref =
@@ -85,9 +85,7 @@ class Sos : Fragment() {
                 sosButton.isEnabled = true
             }
         }
-
         sosButton.setOnClickListener {
-            getLastLocation()
             val lm: LocationManager =
                 context?.getSystemService(LOCATION_SERVICE) as LocationManager
             var gpsOn = false
@@ -117,52 +115,46 @@ class Sos : Fragment() {
                 victim = him.data?.get("name").toString()
                 var tempLatitude: Double
                 var tempLongitude: Double
-                var userlocation = Location("")
+                val userlocation = Location("")
                 userlocation.latitude = latitude.toDouble()
                 userlocation.longitude = longitude.toDouble()
-                var targetlocation = Location("")
+                val targetlocation = Location("")
                 try {
+                    //pull all user, check geo, pull token send
                     ref.collection("user").get().addOnSuccessListener { main ->
-                        var j = 0
-                        var maxRange = 100
-                        while (j < 1) {
-                            var i = 0
-                            for (document in main) {
-                                if (main.documents[i]["token"].toString()
-                                        .compareTo(FirebaseService.token.toString()) != 0
+                        val maxRange = 500
+                        var i = 0
+                        for (document in main) {
+                            if (main.documents[i]["token"].toString()
+                                    .compareTo(FirebaseService.token.toString()) != 0
+                            ) {
+                                tempLatitude =
+                                    main.documents[i]["latitude"].toString().toDouble()
+                                tempLongitude =
+                                    main.documents[i]["longitude"].toString().toDouble()
+                                val targetName: String = main.documents[i]["name"].toString()
+                                val tokenyeet = main.documents[i]["token"].toString()
+                                targetlocation.latitude = tempLatitude
+                                targetlocation.longitude = tempLongitude
+                                i++
+                                if (userlocation.distanceTo(targetlocation) <= maxRange && userlocation.distanceTo(
+                                        targetlocation
+                                    ) > 0
                                 ) {
-                                    tempLatitude =
-                                        main.documents[i]["latitude"].toString().toDouble()
-                                    tempLongitude =
-                                        main.documents[i]["longitude"].toString().toDouble()
-                                    var targetName: String = main.documents[i]["name"].toString()
-                                    val tokenyeet = main.documents[i]["token"].toString()
-                                    targetlocation.latitude = tempLatitude
-                                    targetlocation.longitude = tempLongitude
-                                    i++
-                                    if (userlocation.distanceTo(targetlocation) <= maxRange && userlocation.distanceTo(
-                                            targetlocation
-                                        ) > 0
-                                    ) {
-                                        var distanceboi = userlocation.distanceTo(targetlocation)
-                                        PushNotification(
-                                            NotificationData(
-                                                "Someone is in danger!",
-                                                "$targetName ,$victim is in danger!, $distanceboi",
-                                                "$latitude",
-                                                "$longitude",
-                                                "$yeet"
-                                            ),
-                                            tokenyeet
-                                        ).also {
-                                            sendNotification(it)
-                                            j += 1
-                                        }
+                                    val distanceboi = userlocation.distanceTo(targetlocation)
+                                    PushNotification(
+                                        NotificationData(
+                                            "Someone is in danger!",
+                                            "$targetName ,$victim is in danger!, $distanceboi",
+                                            latitude,
+                                            longitude,
+                                            yeet
+                                        ),
+                                        tokenyeet
+                                    ).also {
+                                        sendNotification(it)
                                     }
                                 }
-                            }
-                            if (j < 1) {
-                                maxRange += 1000
                             }
                         }
                     }
@@ -179,22 +171,19 @@ class Sos : Fragment() {
                     Toast.makeText(requireContext(), e.toString(), Toast.LENGTH_LONG).show()
                 }
             }
-
             sosButton.isEnabled = false
             object : CountDownTimer(11000, 1000) {
                 override fun onFinish() {
                     if (sosButton != null) {
                         sosButton.isEnabled = true
-                        val timerTitleEnable = getString(R.string.sosReady_text)
-                        timer_title.text = timerTitleEnable
+                        timer_title.visibility = View.INVISIBLE
                         countdown_timer.visibility = View.INVISIBLE
                     }
                 }
 
                 override fun onTick(p0: Long) {
                     if (timer_title != null) {
-                        val timerTitleDisable = getString(R.string.disabled_button)
-                        timer_title.text = timerTitleDisable
+                        timer_title.visibility = View.VISIBLE
                         countdown_timer.visibility = View.VISIBLE
                         countdown_timer.text = "${p0 / 1000}"
                     }
@@ -268,7 +257,7 @@ class Sos : Fragment() {
 
         mFusedLocationClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
-        mFusedLocationClient.requestLocationUpdates(
+        mFusedLocationClient!!.requestLocationUpdates(
             mLocationRequest, mLocationCallback,
             Looper.myLooper()
         )

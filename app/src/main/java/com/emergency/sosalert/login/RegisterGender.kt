@@ -126,7 +126,9 @@ class RegisterGender : Fragment() {
             "age" to user.age,
             "email" to email,
             "allowTracking" to false,
-            "isAdmin" to "no"
+            "isAdmin" to "no",
+            "latitude" to 0,
+            "longitude" to 0
         )
 
         fireStore.collection("user").document(userId).set(userHashMap)

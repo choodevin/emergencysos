@@ -27,7 +27,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".discussion.MyPostDiscussionDetails"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".discussion.DiscussionDetails"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".discussion.MyPost"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".admin.AdminDiscussionDetails"

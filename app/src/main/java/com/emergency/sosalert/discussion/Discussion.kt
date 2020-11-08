@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 
 class Discussion() : Parcelable {
+    var id: String = ""
     var title: String = ""
     var description: String = ""
     var imageUrl: String = ""

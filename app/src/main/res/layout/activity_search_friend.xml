@@ -13,6 +13,7 @@
         android:background="@drawable/send_input"
         android:ellipsize="start"
         android:ems="10"
+        android:hint="enter user email"
         android:includeFontPadding="false"
         android:inputType="textEmailAddress"
         android:paddingStart="15dp"
