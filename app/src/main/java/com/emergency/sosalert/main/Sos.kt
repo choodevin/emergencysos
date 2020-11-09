@@ -122,25 +122,18 @@ class Sos : Fragment() {
                 val targetlocation = Location("")
                 try {
                     ref.collection("user").get().addOnSuccessListener { main ->
-                        val maxRange = 500
-                        var i = 0
                         for (document in main) {
-                            if (main.documents[i]["token"].toString()
-                                    .compareTo(FirebaseService.token.toString()) != 0
-                            ) {
+                            if (document.data["token"].toString() != FirebaseService.token.toString()) {
+                                Log.e(TAG, "Found nearby user")
                                 tempLatitude =
-                                    main.documents[i]["latitude"].toString().toDouble()
+                                    document["latitude"].toString().toDouble()
                                 tempLongitude =
-                                    main.documents[i]["longitude"].toString().toDouble()
-                                val targetName: String = main.documents[i]["name"].toString()
-                                val tokenyeet = main.documents[i]["token"].toString()
+                                    document["longitude"].toString().toDouble()
+                                val targetName: String = document["name"].toString()
+                                val tokenyeet = document["token"].toString()
                                 targetlocation.latitude = tempLatitude
                                 targetlocation.longitude = tempLongitude
-                                i++
-                                if (userlocation.distanceTo(targetlocation) <= maxRange && userlocation.distanceTo(
-                                        targetlocation
-                                    ) > 0
-                                ) {
+                                if (userlocation.distanceTo(targetlocation) <= 500) {
                                     val distanceboi = userlocation.distanceTo(targetlocation)
                                     PushNotification(
                                         NotificationData(
@@ -184,6 +177,7 @@ class Sos : Fragment() {
                 override fun onTick(p0: Long) {
                     if (timer_title != null) {
                         timer_title.text = "Button is disabled"
+                        sosButton.isEnabled = false
                         countdown_timer.visibility = View.VISIBLE
                         countdown_timer.text = "${p0 / 1000}"
                     }
