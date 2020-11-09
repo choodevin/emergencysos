@@ -148,11 +148,16 @@ class AllDiscussion : Fragment() {
         val description = itemView.discussion_desc
         val image = itemView.discussionImage
         val loading = itemView.image_loading_bar
+        val postDate = itemView.postDate
+        val ownerName = itemView.ownerName
+        val ownerImage = itemView.ownerImage
 
         @SuppressLint("CheckResult")
         fun bind(discussion: Discussion) {
             title.text = discussion.title
             description.text = discussion.description
+            postDate.text = discussion.uploadtime.toDate().toString()
+            ownerImage.clipToOutline = true
             FirebaseStorage.getInstance()
                 .getReferenceFromUrl(discussion.imageUrl).downloadUrl.addOnSuccessListener {
                     if (it != null) {
@@ -160,6 +165,16 @@ class AllDiscussion : Fragment() {
                         reqOp.optionalFitCenter()
                         Glide.with(itemView).load(it).apply(reqOp).into(image)
                         loading.visibility = View.GONE
+                    }
+                }
+            FirebaseFirestore.getInstance().collection("user").document(discussion.ownerUid).get()
+                .addOnSuccessListener {
+                    ownerName.text = it.get("name").toString()
+                }
+            FirebaseStorage.getInstance()
+                .getReference("profilepicture/${discussion.ownerUid}").downloadUrl.addOnSuccessListener {
+                    if (it != null) {
+                        Glide.with(itemView).load(it).into(ownerImage)
                     }
                 }
         }
