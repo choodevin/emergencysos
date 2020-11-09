@@ -37,6 +37,7 @@ import kotlinx.android.synthetic.main.fragment_register_picture.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.util.regex.Pattern
 
 @Suppress("DEPRECATION")
 class UserProfile : Fragment() {
@@ -197,6 +198,7 @@ class UserProfile : Fragment() {
     }
 
     private fun submitData() {
+        val contactPattern = "^(\\+?6?01)[0-46-9]-*[0-9]{7,8}$"
         nameData = editTextName.text.toString()
         val contact = editTextContact.text.toString()
         try {
@@ -219,7 +221,7 @@ class UserProfile : Fragment() {
                 editTextName.requestFocus()
                 return
             }
-            ageData < 0 && ageData > 101 -> {
+            ageData < 1 || ageData > 101 -> {
                 Toast.makeText(
                     requireActivity(),
                     "Please input a correct age range",
@@ -235,6 +237,11 @@ class UserProfile : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
                 editTextName.requestFocus()
+                return
+            }
+            !Pattern.matches(contactPattern, contact) -> {
+                Toast.makeText(context, "Invalid contact number", Toast.LENGTH_SHORT).show()
+                editTextContact.requestFocus()
                 return
             }
             else -> {

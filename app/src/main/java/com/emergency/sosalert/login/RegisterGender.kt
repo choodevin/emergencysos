@@ -60,12 +60,17 @@ class RegisterGender : Fragment() {
                     Snackbar.LENGTH_LONG
                 ).show()
                 inputAge.requestFocus()
+                buttonToggle(1)
+                progressBar.visibility = View.GONE
+                backBtn.visibility = View.VISIBLE
                 return@setOnClickListener
             }
             if (age >= 100 || age <= 0) {
                 inputAge.error = "Invalid age"
+                buttonToggle(1)
                 progressBar.visibility = View.GONE
                 backBtn.visibility = View.VISIBLE
+                return@setOnClickListener
             } else {
                 if (arguments?.get("email") == null) {
                     name = auth.currentUser!!.displayName!!
