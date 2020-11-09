@@ -49,6 +49,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".chat.SearchFriend"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".admin.AdminContainer"
@@ -101,6 +102,14 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="RestartLocationTrackingService" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".firebaseMessaging.SOSRejectReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="SOSRejectService" />
             </intent-filter>
         </receiver>
     </application>

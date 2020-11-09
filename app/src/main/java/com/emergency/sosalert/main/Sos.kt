@@ -125,6 +125,7 @@ class Sos : Fragment() {
                         for (document in main) {
                             if (document.data["token"].toString() != FirebaseService.token.toString()) {
                                 Log.e(TAG, "Found nearby user")
+                                val targetContact = document["contact"].toString()
                                 tempLatitude =
                                     document["latitude"].toString().toDouble()
                                 tempLongitude =
@@ -137,8 +138,8 @@ class Sos : Fragment() {
                                     val distanceboi = userlocation.distanceTo(targetlocation)
                                     PushNotification(
                                         NotificationData(
-                                            "Someone is in danger!",
-                                            "$targetName ,$victim is in danger!, $distanceboi",
+                                            "Someone is in danger!,$uid,$targetContact",
+                                            "$targetName ,$victim is in danger!",
                                             latitude,
                                             longitude,
                                             yeet

@@ -10,11 +10,14 @@ import android.content.SharedPreferences
 import android.graphics.*
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.emergency.sosalert.R
 import com.emergency.sosalert.chat.ChatDetails
+import com.emergency.sosalert.chat.SearchFriend
 import com.emergency.sosalert.locationTracking.TrackingRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -131,8 +134,32 @@ class FirebaseService : FirebaseMessagingService() {
                 this, 0, intentMaps,
                 PendingIntent.FLAG_ONE_SHOT
             )
+            val titleArr = message.data["title"]!!.split(",")
+
+            val findFriendIntent =
+                Intent(this, SearchFriend::class.java).putExtra("predetermine", titleArr[1])
+            val findFriendPendingIntent = TaskStackBuilder.create(this).run {
+                addNextIntentWithParentStack(findFriendIntent)
+                getPendingIntent(0, PendingIntent.FLAG_ONE_SHOT)
+            }
+
+            val callIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${titleArr[2]}"))
+            val callIntentPendingIntent = TaskStackBuilder.create(this).run {
+                addNextIntent(callIntent)
+                getPendingIntent(0, PendingIntent.FLAG_ONE_SHOT)
+            }
+
+            val rejectIntent = Intent("SOSRejectService")
+            rejectIntent.setClass(this, SOSRejectReceiver::class.java)
+            val b = Bundle()
+            b.putBoolean("reject", true) //add data like this
+            b.putInt("notificationid", notificationID)
+            rejectIntent.putExtras(b)
+            val rejectPendingIntent =
+                PendingIntent.getBroadcast(this, 0, rejectIntent, PendingIntent.FLAG_ONE_SHOT)
+
             notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(message.data["title"])
+                .setContentTitle(titleArr[0])
                 .setLargeIcon(bitmap)
                 .setContentText(message.data["message"])
                 .setSmallIcon(R.drawable.logo_sos)
@@ -142,6 +169,10 @@ class FirebaseService : FirebaseMessagingService() {
                     NotificationCompat
                         .BigPictureStyle().bigPicture(bitmap)
                 )
+                .addAction(0, "Message", findFriendPendingIntent)
+                .addAction(0, "Call", callIntentPendingIntent)
+                .addAction(0, "Reject Help", rejectPendingIntent)
+                .setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
                 .build()
             notificationManager.notify(notificationID, notification)
         }
