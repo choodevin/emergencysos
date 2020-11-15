@@ -15,14 +15,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.emergency.sosalert.R
+import com.emergency.sosalert.firebaseMessaging.NotificationData
+import com.emergency.sosalert.firebaseMessaging.PushNotification
+import com.emergency.sosalert.firebaseMessaging.RetrofitInstance
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
+import com.google.gson.Gson
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_create_discussion.*
 import kotlinx.android.synthetic.main.activity_discussion_details.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 @Suppress("DEPRECATION")
@@ -141,6 +148,26 @@ class CreateDiscussion : AppCompatActivity() {
                         firestore.collection("discussion").document(new.id)
                             .set(imageUrlHash, SetOptions.merge())
                         dialog.show()
+
+                        FirebaseFirestore.getInstance().collection("user")
+                            .whereEqualTo("isAdmin", "yes").get().addOnSuccessListener { admin ->
+                                for (a in admin) {
+                                    Log.e("SEND NOTIF", "ADMIN FOUND")
+                                    PushNotification(
+                                        NotificationData(
+                                            "Discussion Apporval",
+                                            "New dicussion(s) are ready to be reviewed!",
+                                            "222",
+                                            "222",
+                                            "no"
+                                        ),
+                                        a.data["token"].toString()
+                                    ).also { notif ->
+                                        sendNotification(notif)
+                                    }
+
+                                }
+                            }
                     }
                 }
             }
@@ -204,4 +231,18 @@ class CreateDiscussion : AppCompatActivity() {
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
+
+    private fun sendNotification(notification: PushNotification) =
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = RetrofitInstance.api.postNotification(notification)
+                if (response.isSuccessful) {
+                    Log.d(ContentValues.TAG, "Response: ${Gson().toJson(response)}")
+                } else {
+                    Log.e(ContentValues.TAG, response.errorBody().toString())
+                }
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, e.toString())
+            }
+        }
 }

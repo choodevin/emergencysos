@@ -34,6 +34,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".discussion.MyPost"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".admin.AdminDiscussionDetails"
@@ -53,6 +54,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".admin.AdminContainer"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".chat.ChatDetails"

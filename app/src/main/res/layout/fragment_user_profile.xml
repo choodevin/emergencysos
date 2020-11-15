@@ -55,20 +55,6 @@
         android:contentDescription="profile picture"
         tools:ignore="HardcodedText" />
 
-    <Button
-        android:id="@+id/logoutBtn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/black"
-        android:text="Logout"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="HardcodedText" />
-
     <EditText
         android:id="@+id/editTextName"
         android:layout_width="0dp"

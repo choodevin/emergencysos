@@ -2,7 +2,6 @@ package com.emergency.sosalert.discussion
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,30 +10,25 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.emergency.sosalert.R
-import com.firebase.ui.firestore.SnapshotParser
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.firebase.ui.firestore.paging.LoadingState
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_my_post.*
 import kotlinx.android.synthetic.main.discussion_list_item.view.discussionImage
-import kotlinx.android.synthetic.main.discussion_list_item.view.discussion_desc
 import kotlinx.android.synthetic.main.discussion_list_item.view.discussion_title
 import kotlinx.android.synthetic.main.discussion_list_item.view.image_loading_bar
-import kotlinx.android.synthetic.main.discussion_list_item.view.ownerImage
-import kotlinx.android.synthetic.main.discussion_list_item.view.ownerName
-import kotlinx.android.synthetic.main.discussion_list_item.view.postDate
 import kotlinx.android.synthetic.main.my_post_list_item.view.*
 
 class MyPost : AppCompatActivity() {

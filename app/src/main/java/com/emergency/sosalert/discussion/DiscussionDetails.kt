@@ -18,11 +18,14 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_discussion_details.*
 
+@Suppress("UNCHECKED_CAST")
 class DiscussionDetails : AppCompatActivity() {
+    private val currentId = FirebaseAuth.getInstance().currentUser!!.uid
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_discussion_details)
@@ -53,6 +56,7 @@ class DiscussionDetails : AppCompatActivity() {
                         posterName.text = it.data!!["name"].toString()
                     }
                 }
+
             commentRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
             val realtimeRef = FirebaseDatabase.getInstance().reference.child("comments")
@@ -87,7 +91,21 @@ class DiscussionDetails : AppCompatActivity() {
                     FirebaseDatabase.getInstance().reference.child("comments")
                         .child(disc.commentgroup).push().setValue(c)
 
+                    val fs = FirebaseFirestore.getInstance()
+                    fs.collection("discussion")
+                        .whereEqualTo("commentgroup", disc.commentgroup).get()
+                        .addOnSuccessListener { ds ->
+                            if (ds != null) {
+                                for (dis in ds) {
+                                    fs.collection("discussion").document(dis.id)
+                                        .update("commentcount", FieldValue.increment(1))
+                                    break
+                                }
+                            }
+                        }
+
                     commentInput.text.clear()
+                    noCommentText.visibility = View.GONE
                     closeKeyboard()
                 }
             }

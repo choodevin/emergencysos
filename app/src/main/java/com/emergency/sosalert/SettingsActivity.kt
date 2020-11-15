@@ -34,6 +34,7 @@ class SettingsActivity : AppCompatActivity() {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
             val trackingPref = findPreference<SwitchPreference>("enable_tracking")
             val modPerm = findPreference<Preference>("modify_tracking_permission")
+            val logout = findPreference<Preference>("logout")
             trackingPref?.setOnPreferenceClickListener {
                 Toast.makeText(
                     context,
@@ -62,6 +63,16 @@ class SettingsActivity : AppCompatActivity() {
                 )
                 return@setOnPreferenceClickListener false
             }
+
+            logout?.setOnPreferenceClickListener {
+                FirebaseFirestore.getInstance().collection("user")
+                    .document(FirebaseAuth.getInstance().currentUser!!.uid)
+                    .update("token", "empty")
+                FirebaseAuth.getInstance().signOut()
+                startActivity(Intent(context, LoginActivity::class.java))
+                return@setOnPreferenceClickListener false
+            }
+
 
         }
     }

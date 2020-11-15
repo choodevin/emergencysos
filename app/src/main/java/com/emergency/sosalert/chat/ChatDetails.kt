@@ -154,7 +154,6 @@ class ChatDetails : AppCompatActivity() {
                             }
                     }
             } catch (e: JSONException) {
-
             }
             inputMessage.text.clear()
         }

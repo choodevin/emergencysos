@@ -68,15 +68,6 @@ class UserProfile : Fragment() {
             startActivity(Intent(context, MyPost::class.java))
         }
 
-        logoutBtn.setOnClickListener {
-            FirebaseFirestore.getInstance().collection("user").document(uid)
-                .update("token", "empty")
-            auth.signOut()
-            activity?.finish()
-            startActivity(Intent(context, LoginActivity::class.java))
-        }
-        (activity as AppCompatActivity).supportActionBar?.show()
-
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val postReference = FirebaseFirestore.getInstance()
         postReference.collection("user").document(uid).get().addOnSuccessListener {
@@ -140,7 +131,6 @@ class UserProfile : Fragment() {
         cfmButton.visibility = View.VISIBLE
         cancelBtn.visibility = View.VISIBLE
         editPictureBtn.visibility = View.VISIBLE
-        logoutBtn.visibility = View.GONE
 
         cfmButton.setOnClickListener { submitData() }
 
@@ -176,7 +166,6 @@ class UserProfile : Fragment() {
             cancelBtn.visibility = View.GONE
             cfmButton.visibility = View.GONE
             editPictureBtn.visibility = View.GONE
-            logoutBtn.visibility = View.VISIBLE
             editTextName.isEnabled = false
             editTextAge.isEnabled = false
             editTextContact.isEnabled = false
@@ -285,7 +274,6 @@ class UserProfile : Fragment() {
                 cfmButton.visibility = View.GONE
                 editPictureBtn.visibility = View.GONE
                 viewMyPost.visibility = View.VISIBLE
-                logoutBtn.visibility = View.VISIBLE
                 editTextName.isEnabled = false
                 editTextAge.isEnabled = false
                 editTextContact.isEnabled = false
@@ -353,7 +341,6 @@ class UserProfile : Fragment() {
 
     private fun displayViews() {
         editProfBtn.visibility = View.VISIBLE
-        logoutBtn.visibility = View.VISIBLE
         goToSettings.visibility = View.VISIBLE
         profilepic.visibility = View.VISIBLE
         ageLabel.visibility = View.VISIBLE

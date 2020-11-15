@@ -16,8 +16,10 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.emergency.sosalert.R
+import com.emergency.sosalert.admin.AdminContainer
 import com.emergency.sosalert.chat.ChatDetails
 import com.emergency.sosalert.chat.SearchFriend
+import com.emergency.sosalert.discussion.MyPost
 import com.emergency.sosalert.locationTracking.TrackingRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -63,7 +65,6 @@ class FirebaseService : FirebaseMessagingService() {
         val la = message.data["latitude"].toString().toDouble()
         val longi = message.data["longitude"].toString().toDouble()
         val picurl = message.data["image"].toString()
-        val bitmap = getBitmapfromUrl(picurl)
         val intentMaps = Intent(
             Intent.ACTION_VIEW,
             Uri.parse("geo:$la,$longi?q=$la,$longi")
@@ -88,6 +89,7 @@ class FirebaseService : FirebaseMessagingService() {
                 addNextIntentWithParentStack(chatIntent)
                 getPendingIntent(1, PendingIntent.FLAG_ONE_SHOT)
             }
+            val bitmap = getBitmapfromUrl(picurl)
             notification = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(titleArr[0])
                 .setContentText(message.data["message"])
@@ -113,6 +115,7 @@ class FirebaseService : FirebaseMessagingService() {
                 addNextIntentWithParentStack(permissionIntent)
                 getPendingIntent(2, PendingIntent.FLAG_ONE_SHOT)
             }
+            val bitmap = getBitmapfromUrl(picurl)
             notification = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(titleArr[0])
                 .setContentText(message.data["message"])
@@ -128,6 +131,39 @@ class FirebaseService : FirebaseMessagingService() {
                 .setOngoing(false)
                 .build()
             notificationManager.notify(notificationID, notification)
+        } else if (la == 222.0 && longi == 222.0) {
+            Log.e(TAG, "APPROVAL REQUEST")
+            val toAdminPageIntent = Intent(this, AdminContainer::class.java)
+            val pendingToAdminIntent = TaskStackBuilder.create(this).run {
+                addNextIntentWithParentStack(toAdminPageIntent)
+                getPendingIntent(0, PendingIntent.FLAG_ONE_SHOT)
+            }
+
+            notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(message.data["title"])
+                .setContentText(message.data["message"])
+                .setSmallIcon(R.drawable.logo_sos)
+                .setContentIntent(pendingToAdminIntent)
+                .setAutoCancel(true)
+                .setOngoing(false)
+                .build()
+            notificationManager.notify(notificationID, notification)
+        } else if (la == 125.0 && longi == 125.0) {
+            Log.e(TAG, "DECLINE POST")
+            val toMyPostIntent = Intent(this, MyPost::class.java)
+            val pendingToMyPostIntent = TaskStackBuilder.create(this).run {
+                addNextIntentWithParentStack(toMyPostIntent)
+                getPendingIntent(0, PendingIntent.FLAG_ONE_SHOT)
+            }
+
+            notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(message.data["title"])
+                .setContentText(message.data["message"])
+                .setContentIntent(pendingToMyPostIntent)
+                .setOngoing(false)
+                .setSmallIcon(R.drawable.logo_sos)
+                .build()
+            notificationManager.notify(notificationID, notification)
         } else {
             Log.e(TAG, "SOS NOTIF")
             val pendingIntent = PendingIntent.getActivity(
@@ -135,6 +171,7 @@ class FirebaseService : FirebaseMessagingService() {
                 PendingIntent.FLAG_ONE_SHOT
             )
             val titleArr = message.data["title"]!!.split(",")
+            val bitmap = getBitmapfromUrl(picurl)
 
             val findFriendIntent =
                 Intent(this, SearchFriend::class.java).putExtra("predetermine", titleArr[1])

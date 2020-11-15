@@ -9,5 +9,8 @@
         <Preference
             android:key="modify_tracking_permission"
             android:title="Modify tracking permissions" />
+        <Preference
+            android:key="logout"
+            android:title="Sign Out" />
     </PreferenceCategory>
 </PreferenceScreen>

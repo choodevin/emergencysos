@@ -28,4 +28,16 @@
     <string name="disabled_button">Button is disabled</string>
     <string name="sosReady_text">Press to send help to nearby users</string>
     <string name="tracking_note">Permission granted can be removed in app settings.\nAfter providing tracking permission, allowed user can track you as long as your enable tracking feature is enabled</string>
+    
+    <!-- Filter Dropdowns -->
+    <string-array name="sortby">
+        <item>Upload date</item>
+        <item>Alphabetical</item>
+        <item>Comment count</item>
+    </string-array>
+
+    <string-array name="order">
+        <item>Ascending</item>
+        <item>Descending</item>
+    </string-array>
 </resources>

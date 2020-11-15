@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="60dp"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="55dp"/>
+                app:layout_constraintGuide_begin="55dp" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline28"
@@ -116,12 +116,12 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="2dp"
                 android:indeterminate="true"
                 android:indeterminateTint="@color/colorPrimaryDark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/discImage" />
+                app:layout_constraintTop_toBottomOf="@+id/discImage" />
 
             <TextView
                 android:id="@+id/textiewasd"
@@ -195,7 +195,7 @@
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="7dp"
+        android:background="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

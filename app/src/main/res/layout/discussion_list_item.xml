@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/discussion_card"
     app:cardElevation="0dp"
-    android:layout_marginBottom="6dp"
+    android:layout_marginBottom="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -32,36 +32,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ownerImage" />
 
-        <TextView
-            android:id="@+id/discussion_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="15dp"
-            android:ellipsize="end"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:includeFontPadding="false"
-            android:singleLine="true"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/discussion_title"
-            app:layout_constraintTop_toBottomOf="@+id/discussion_title" />
-
         <ImageView
             android:id="@+id/discussionImage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="10dp"
             android:adjustViewBounds="true"
-            android:maxHeight="400dp"
+            android:maxHeight="350dp"
             android:scaleType="fitCenter"
             android:src="@drawable/bg_image_loading"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/discussion_desc" />
+            app:layout_constraintTop_toBottomOf="@+id/discussion_title" />
 
         <ProgressBar
             android:id="@+id/image_loading_bar"
@@ -114,6 +96,26 @@
             app:layout_constraintStart_toEndOf="@+id/ownerImage"
             app:layout_constraintTop_toBottomOf="@+id/ownerName"
             app:layout_constraintVertical_bias="1.0" />
+
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toBottomOf="@+id/discussionImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/discussionImage" />
+
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

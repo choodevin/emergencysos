@@ -145,7 +145,6 @@ class AllDiscussion : Fragment() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title = itemView.discussion_title
-        val description = itemView.discussion_desc
         val image = itemView.discussionImage
         val loading = itemView.image_loading_bar
         val postDate = itemView.postDate
@@ -155,7 +154,6 @@ class AllDiscussion : Fragment() {
         @SuppressLint("CheckResult")
         fun bind(discussion: Discussion) {
             title.text = discussion.title
-            description.text = discussion.description
             postDate.text = discussion.uploadtime.toDate().toString()
             ownerImage.clipToOutline = true
             FirebaseStorage.getInstance()
