@@ -19,6 +19,7 @@ import com.emergency.sosalert.R
 import com.emergency.sosalert.chat.ChatDetails
 import com.emergency.sosalert.chat.SearchFriend
 import com.emergency.sosalert.locationTracking.TrackingRequest
+import com.emergency.sosalert.main.Sos
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -63,24 +64,14 @@ class FirebaseService : FirebaseMessagingService() {
         val la = message.data["latitude"].toString().toDouble()
         val longi = message.data["longitude"].toString().toDouble()
         val picurl = message.data["image"].toString()
-        val bitmap = getBitmapfromUrl(picurl)
-        val intentMaps = Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("geo:$la,$longi?q=$la,$longi")
-        ).also {
-            FirebaseFirestore.getInstance().collection("report").document("count").get()
-                .addOnSuccessListener {
-                    var count = it.get("intentpress").toString().toInt()
-                    count += 1
-                    FirebaseFirestore.getInstance().collection("report").document("count")
-                        .update("intentpress", count)
-                }
-        }
+
 
         lateinit var notification: Notification
 
+        //Chat Notif
         if (la == 999.0 && longi == 0.0) {
             Log.e(TAG, "MESSAGE NOTIF")
+            val bitmap = getBitmapfromUrl(picurl)
             val titleArr = message.data["title"]!!.split("|")
             val chatIntent =
                 Intent(this, ChatDetails::class.java).putExtra("chatgroupid", titleArr[1])
@@ -104,8 +95,10 @@ class FirebaseService : FirebaseMessagingService() {
             if (!isAppForeground(this)) {
                 notificationManager.notify(notificationID, notification)
             }
+            //Tracking Notif
         } else if (la == 888.0 && longi == 0.0) {
             Log.e(TAG, "MESSAGE TRACK REQUEST")
+            val bitmap = getBitmapfromUrl(picurl)
             val titleArr = message.data["title"]!!.split("|")
             val permissionIntent =
                 Intent(this, TrackingRequest::class.java).putExtra("toallowid", titleArr[1])
@@ -128,8 +121,41 @@ class FirebaseService : FirebaseMessagingService() {
                 .setOngoing(false)
                 .build()
             notificationManager.notify(notificationID, notification)
-        } else {
+            //Reject Notif
+        }else if(la == 5000.0 && longi == 0.0){
+            Log.e(TAG, "Reject Notif")
+            val rejectIntent =
+                Intent(this, Sos::class.java)
+            val pendingIntent = PendingIntent.getActivity(
+                this, 0, rejectIntent,
+                PendingIntent.FLAG_ONE_SHOT
+            )
+            notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(message.data["title"])
+                .setContentText(message.data["message"])
+                .setSmallIcon(R.drawable.logo_sos)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
+                .build()
+            notificationManager.notify(notificationID, notification)
+        }
+        //SOS Notif
+        else {
             Log.e(TAG, "SOS NOTIF")
+            val bitmap = getBitmapfromUrl(picurl)
+            val intentMaps = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("geo:$la,$longi?q=$la,$longi")
+            ).also {
+                FirebaseFirestore.getInstance().collection("report").document("count").get()
+                    .addOnSuccessListener {
+                        var count = it.get("intentpress").toString().toInt()
+                        count += 1
+                        FirebaseFirestore.getInstance().collection("report").document("count")
+                            .update("intentpress", count)
+                    }
+            }
             val pendingIntent = PendingIntent.getActivity(
                 this, 0, intentMaps,
                 PendingIntent.FLAG_ONE_SHOT
@@ -154,6 +180,7 @@ class FirebaseService : FirebaseMessagingService() {
             val b = Bundle()
             b.putBoolean("reject", true) //add data like this
             b.putInt("notificationid", notificationID)
+            b.putString("senderUid",titleArr[1])
             rejectIntent.putExtras(b)
             val rejectPendingIntent =
                 PendingIntent.getBroadcast(this, 0, rejectIntent, PendingIntent.FLAG_ONE_SHOT)
