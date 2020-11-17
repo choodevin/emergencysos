@@ -46,6 +46,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.*
 
 
 class Sos : Fragment() {
@@ -132,14 +133,16 @@ class Sos : Fragment() {
                                     document["longitude"].toString().toDouble()
                                 val targetName: String = document["name"].toString()
                                 val tokenyeet = document["token"].toString()
+                                val targetDob = document["dob"].toString()
+                                val targetGender = document["gender"].toString()
+                                val targetAge = getAge(targetDob)
                                 targetlocation.latitude = tempLatitude
                                 targetlocation.longitude = tempLongitude
                                 if (userlocation.distanceTo(targetlocation) <= 500) {
-                                    val distanceboi = userlocation.distanceTo(targetlocation)
                                     PushNotification(
                                         NotificationData(
                                             "Someone is in danger!,$uid,$targetContact",
-                                            "$targetName ,$victim is in danger!",
+                                            "$victim ($targetAge|$targetGender) is in danger!",
                                             latitude,
                                             longitude,
                                             yeet
@@ -186,6 +189,14 @@ class Sos : Fragment() {
 
             }.start()
         }
+    }
+
+    private fun getAge(dob: String): String {
+        var age = 0
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        val bornYear = dob.split(" ").toTypedArray()
+        age = currentYear - bornYear[2].toInt()
+        return age.toString()
     }
 
     override fun onRequestPermissionsResult(

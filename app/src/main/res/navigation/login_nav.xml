@@ -83,8 +83,8 @@
         android:label="fragment_register_picture"
         tools:layout="@layout/fragment_register_picture">
         <action
-            android:id="@+id/action_registerPicture_to_registerGender"
-            app:destination="@id/registerGender"
+            android:id="@+id/action_registerPicture_to_registerContactDOB"
+            app:destination="@id/registerContactDOB"
             app:enterAnim="@anim/slide_from_right"
             app:exitAnim="@anim/slide_to_left"
             app:launchSingleTop="true"
@@ -101,4 +101,18 @@
         android:name="com.emergency.sosalert.login.ResetPassword"
         android:label="fragment_reset_password"
         tools:layout="@layout/fragment_reset_password" />
+    <fragment
+        android:id="@+id/registerContactDOB"
+        android:name="com.emergency.sosalert.login.RegisterContactDOB"
+        android:label="fragment_register_contact_d_o_b"
+        tools:layout="@layout/fragment_register_contact_d_o_b" >
+        <action
+            android:id="@+id/action_registerContactDOB_to_registerGender"
+            app:destination="@id/registerGender"
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_to_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_from_left"
+            app:popExitAnim="@anim/slide_to_right" />
+    </fragment>
 </navigation>

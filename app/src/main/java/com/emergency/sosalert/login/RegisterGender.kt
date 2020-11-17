@@ -22,12 +22,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_register_gender.*
 import java.io.ByteArrayOutputStream
+import java.util.*
 
 @Suppress("DEPRECATION")
 class RegisterGender : Fragment() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var dob: Date
     private var gender = ""
-    private var age = 0
     private var name = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,52 +52,30 @@ class RegisterGender : Fragment() {
             } else if (femaleBtn.isChecked) {
                 gender = "female"
             }
-            try {
-                age = inputAge.text.toString().toInt()
-            } catch (e: Exception) {
-                Snackbar.make(
-                    requireView(),
-                    "Please do not leave this empty/Only input numbers.",
-                    Snackbar.LENGTH_LONG
-                ).show()
-                inputAge.requestFocus()
-                buttonToggle(1)
-                progressBar.visibility = View.GONE
-                backBtn.visibility = View.VISIBLE
-                return@setOnClickListener
-            }
-            if (age >= 100 || age <= 0) {
-                inputAge.error = "Invalid age"
-                buttonToggle(1)
-                progressBar.visibility = View.GONE
-                backBtn.visibility = View.VISIBLE
-                return@setOnClickListener
+            if (arguments?.get("email") == null) {
+                name = auth.currentUser!!.displayName!!
+                insertDetails(auth.currentUser!!.email.toString())
+                startActivity(Intent(requireActivity(), MainActivity::class.java))
+                activity?.finish()
             } else {
-                if (arguments?.get("email") == null) {
-                    name = auth.currentUser!!.displayName!!
-                    insertDetails(auth.currentUser!!.email.toString())
-                    startActivity(Intent(requireActivity(), MainActivity::class.java))
-                    activity?.finish()
-                } else {
-                    val email = arguments?.get("email").toString()
-                    val password = arguments?.get("password").toString()
-                    name = arguments?.getString("name")!!
+                val email = arguments?.get("email").toString()
+                val password = arguments?.get("password").toString()
+                name = arguments?.getString("name")!!
 
-                    auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-                        if (!it.isSuccessful) {
-                            Snackbar.make(
-                                requireView(),
-                                "Register failed, please check if the email is registered or try again.",
-                                Snackbar.LENGTH_LONG
-                            ).show()
-                            buttonToggle(1)
-                            progressBar.visibility = View.GONE
-                            backBtn.visibility = View.VISIBLE
-                        } else {
-                            insertDetails(email)
-                            startActivity(Intent(requireActivity(), MainActivity::class.java))
-                            activity?.finish()
-                        }
+                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+                    if (!it.isSuccessful) {
+                        Snackbar.make(
+                            requireView(),
+                            "Register failed, please check if the email is registered or try again.",
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                        buttonToggle(1)
+                        progressBar.visibility = View.GONE
+                        backBtn.visibility = View.VISIBLE
+                    } else {
+                        insertDetails(email)
+                        startActivity(Intent(requireActivity(), MainActivity::class.java))
+                        activity?.finish()
                     }
                 }
             }
@@ -112,12 +91,10 @@ class RegisterGender : Fragment() {
             continueBtn.isEnabled = true
             maleBtn.isEnabled = true
             femaleBtn.isEnabled = true
-            inputAge.isEnabled = true
         } else if (mode == 0) {
             continueBtn.isEnabled = false
             maleBtn.isEnabled = false
             femaleBtn.isEnabled = false
-            inputAge.isEnabled = false
         }
     }
 
@@ -125,19 +102,20 @@ class RegisterGender : Fragment() {
         val user = User()
         user.name = name
         user.gender = gender
-        user.age = age
+        user.dob = arguments?.getString("dob")!!
+        user.contact = arguments?.getString("contact")!!
         val userId = auth.uid ?: ""
         val fireStore = FirebaseFirestore.getInstance()
         val userHashMap = hashMapOf(
             "name" to user.name,
             "gender" to user.gender,
-            "age" to user.age,
+            "dob" to user.dob,
             "email" to email,
             "allowTracking" to false,
             "isAdmin" to "no",
             "latitude" to 0,
             "longitude" to 0,
-            "contact" to ""
+            "contact" to user.contact
         )
 
         fireStore.collection("user").document(userId).set(userHashMap)

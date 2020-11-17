@@ -60,7 +60,7 @@ class MainLogin : Fragment() {
         loginbtn.setOnClickListener {
             progressBarToggle(1)
             allButtonToggle(0)
-            val email = search_by_email.text.toString()
+            val email = input_email.text.toString()
             val password = inputPass.text.toString()
             if (email.isEmpty() || password.isEmpty()) {
                 invalidLogin()

@@ -18,7 +18,7 @@ class SearchFriend : AppCompatActivity() {
             val toFind = intent.extras?.get("predetermine").toString()
             FirebaseFirestore.getInstance().collection("user").document(toFind).get()
                 .addOnSuccessListener {
-                    search_by_email.setText(it.data!!["email"].toString())
+                    input_email.setText(it.data!!["email"].toString())
                     applySearch.performClick()
                 }
         }
@@ -29,7 +29,7 @@ class SearchFriend : AppCompatActivity() {
 
         friendRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         applySearch.setOnClickListener {
-            val inputEmail = search_by_email.text.toString()
+            val inputEmail = input_email.text.toString()
             FirebaseFirestore.getInstance().collection("user").whereEqualTo("email", inputEmail)
                 .get().addOnSuccessListener {
                     val userList = ArrayList<User>()

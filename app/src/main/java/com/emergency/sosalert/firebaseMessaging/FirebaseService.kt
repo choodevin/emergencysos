@@ -189,8 +189,9 @@ class FirebaseService : FirebaseMessagingService() {
             val rejectIntent = Intent("SOSRejectService")
             rejectIntent.setClass(this, SOSRejectReceiver::class.java)
             val b = Bundle()
-            b.putBoolean("reject", true) //add data like this
+            b.putBoolean("reject", true)
             b.putInt("notificationid", notificationID)
+            b.putString("senderUid", titleArr[1])
             rejectIntent.putExtras(b)
             val rejectPendingIntent =
                 PendingIntent.getBroadcast(this, 0, rejectIntent, PendingIntent.FLAG_ONE_SHOT)

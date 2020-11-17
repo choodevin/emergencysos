@@ -9,7 +9,6 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.preference.PreferenceFragment
 import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,23 +16,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
-import com.emergency.sosalert.LoginActivity
 import com.emergency.sosalert.R
 import com.emergency.sosalert.SettingsActivity
 import com.emergency.sosalert.admin.AdminContainer
 import com.emergency.sosalert.discussion.MyPost
-import com.emergency.sosalert.locationTracking.LocationTrackingService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
-import kotlinx.android.synthetic.main.activity_my_post.*
-import kotlinx.android.synthetic.main.fragment_register_picture.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -41,10 +35,7 @@ import java.util.regex.Pattern
 
 @Suppress("DEPRECATION")
 class UserProfile : Fragment() {
-    private var auth = FirebaseAuth.getInstance()
     private lateinit var nameData: String
-    private var ageData: Int = 0
-    private lateinit var genderData: String
     private val uid = FirebaseAuth.getInstance().uid ?: ""
     private val PERM_REQUEST = 3
     private var newimage: Uri? = null
@@ -73,13 +64,11 @@ class UserProfile : Fragment() {
         postReference.collection("user").document(uid).get().addOnSuccessListener {
             if (it != null) {
                 editTextName.setText(it.data?.get("name").toString())
-                editTextAge.setText(it.data?.get("age").toString())
-                if (it.data?.get("contact") != null) {
-                    editTextContact.setText(it.data?.get("contact").toString())
-                }
-                genderData = it.data?.get("gender").toString()
+                editTextDob.setText(it.data?.get("dob").toString())
+                editTextContact.setText(it.data?.get("contact").toString())
+                editTextGender.setText(it.data?.get("gender").toString())
                 editTextName.isEnabled = false
-                editTextAge.isEnabled = false
+                editTextDob.isEnabled = false
                 editTextContact.isEnabled = false
                 displayViews()
                 if (it.data?.get("isAdmin").toString().compareTo("yes") == 0) {
@@ -120,7 +109,6 @@ class UserProfile : Fragment() {
     private fun editProfile() {
         profileTitle.text = "Edit"
         editTextName.isEnabled = true
-        editTextAge.isEnabled = true
         editTextContact.isEnabled = true
         editTextName.requestFocus()
 
@@ -140,11 +128,8 @@ class UserProfile : Fragment() {
             postReference.collection("user").document(uid).get().addOnSuccessListener {
                 if (it != null) {
                     editTextName.setText(it.data?.get("name").toString())
-                    editTextAge.setText(it.data?.get("age").toString())
                     editTextContact.setText(it.data?.get("contact").toString())
-                    genderData = it.data?.get("gender").toString()
                     editTextName.isEnabled = false
-                    editTextAge.isEnabled = false
                 }
             }
             val storageRef = FirebaseStorage.getInstance().reference
@@ -167,7 +152,7 @@ class UserProfile : Fragment() {
             cfmButton.visibility = View.GONE
             editPictureBtn.visibility = View.GONE
             editTextName.isEnabled = false
-            editTextAge.isEnabled = false
+            editTextDob.isEnabled = false
             editTextContact.isEnabled = false
         }
         editPictureBtn.setOnClickListener {
@@ -190,16 +175,6 @@ class UserProfile : Fragment() {
         val contactPattern = "^(\\+?6?01)[0-46-9]-*[0-9]{7,8}$"
         nameData = editTextName.text.toString()
         val contact = editTextContact.text.toString()
-        try {
-            ageData = Integer.parseInt(editTextAge.text.toString())
-        } catch (e: Exception) {
-            Toast.makeText(
-                requireActivity(),
-                "Please don't leave the age empty/ Only put integer value",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
         when {
             nameData.isEmpty() -> {
                 Toast.makeText(
@@ -208,15 +183,6 @@ class UserProfile : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
                 editTextName.requestFocus()
-                return
-            }
-            ageData < 1 || ageData > 101 -> {
-                Toast.makeText(
-                    requireActivity(),
-                    "Please input a correct age range",
-                    Toast.LENGTH_SHORT
-                ).show()
-                editTextAge.requestFocus()
                 return
             }
             contact.isEmpty() -> {
@@ -238,7 +204,6 @@ class UserProfile : Fragment() {
                 val ref = FirebaseFirestore.getInstance().collection("user").document(uid)
                 ref.update(
                     "name", nameData,
-                    "age", ageData,
                     "contact", contact
                 ).addOnSuccessListener {
                     Toast.makeText(
@@ -275,7 +240,7 @@ class UserProfile : Fragment() {
                 editPictureBtn.visibility = View.GONE
                 viewMyPost.visibility = View.VISIBLE
                 editTextName.isEnabled = false
-                editTextAge.isEnabled = false
+                editTextDob.isEnabled = false
                 editTextContact.isEnabled = false
                 FirebaseFirestore.getInstance().collection("user").document(uid).get()
                     .addOnSuccessListener {
@@ -343,13 +308,15 @@ class UserProfile : Fragment() {
         editProfBtn.visibility = View.VISIBLE
         goToSettings.visibility = View.VISIBLE
         profilepic.visibility = View.VISIBLE
-        ageLabel.visibility = View.VISIBLE
+        dobLabel.visibility = View.VISIBLE
         contactLabel.visibility = View.VISIBLE
         nameLabel.visibility = View.VISIBLE
         editTextName.visibility = View.VISIBLE
         editTextContact.visibility = View.VISIBLE
-        editTextAge.visibility = View.VISIBLE
+        editTextDob.visibility = View.VISIBLE
         viewMyPost.visibility = View.VISIBLE
+        genderLabel.visibility = View.VISIBLE
+        editTextGender.visibility = View.VISIBLE
         profileLoading.visibility = View.GONE
         FirebaseFirestore.getInstance().collection("user").document(uid).get()
             .addOnSuccessListener {

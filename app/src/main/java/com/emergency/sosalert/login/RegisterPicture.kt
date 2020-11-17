@@ -170,7 +170,7 @@ class RegisterPicture : Fragment() {
         if (PROFILE_SETTED == 1) {
             arguments?.putString("photo", image.toString())
         }
-        findNavController().navigate(R.id.action_registerPicture_to_registerGender, arguments)
+        findNavController().navigate(R.id.action_registerPicture_to_registerContactDOB, arguments)
     }
 
     private fun startCameraAndCrop() {

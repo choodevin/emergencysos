@@ -278,11 +278,6 @@ class Discussion : Fragment() {
                     }
                     LoadingState.LOADED -> {
                         discussionRefresh.isRefreshing = false
-                        if (itemCount == 0) {
-                            noDiscussionText.visibility = View.VISIBLE
-                        } else {
-                            noDiscussionText.visibility = View.GONE
-                        }
                     }
                     LoadingState.FINISHED -> {
                         discussionRefresh.isRefreshing = false
@@ -291,6 +286,11 @@ class Discussion : Fragment() {
             }
         }
 
+        if (firestoreAdapter.itemCount == 0) {
+            noDiscussionText.visibility = View.VISIBLE
+        } else {
+            noDiscussionText.visibility = View.GONE
+        }
         discussionRecycler.adapter = firestoreAdapter
     }
 

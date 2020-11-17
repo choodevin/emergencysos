@@ -8,6 +8,37 @@
     tools:context=".main.UserProfile">
 
     <TextView
+        android:id="@+id/genderLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Gender"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/guideline18"
+        app:layout_constraintTop_toBottomOf="@+id/editTextContact"
+        tools:ignore="HardcodedText"
+        tools:visibility="visible" />
+
+    <EditText
+        android:id="@+id/editTextGender"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:ems="10"
+        android:enabled="false"
+        android:importantForAutofill="no"
+        android:includeFontPadding="false"
+        android:inputType="textPersonName"
+        android:textColor="@color/color_profile_input"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/guideline19"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline18"
+        app:layout_constraintTop_toBottomOf="@+id/genderLabel"
+        tools:visibility="visible" />
+
+    <TextView
         android:id="@+id/profileTitle"
         style="@style/ActionBarText"
         android:layout_width="wrap_content"
@@ -46,14 +77,15 @@
         android:layout_height="92dp"
         android:layout_marginTop="7dp"
         android:background="@drawable/bg_friend_list"
+        android:contentDescription="profile picture"
         android:src="@drawable/bg_image_loading"
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
         app:layout_constraintTop_toTopOf="@+id/guideline16"
+        tools:ignore="HardcodedText"
         tools:src="@tools:sample/avatars"
-        android:contentDescription="profile picture"
-        tools:ignore="HardcodedText" />
+        tools:visibility="visible" />
 
     <EditText
         android:id="@+id/editTextName"
@@ -70,10 +102,11 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
         app:layout_constraintTop_toBottomOf="@+id/nameLabel"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        tools:visibility="visible" />
 
     <EditText
-        android:id="@+id/editTextAge"
+        android:id="@+id/editTextDob"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -85,8 +118,9 @@
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
-        app:layout_constraintTop_toBottomOf="@+id/ageLabel"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintTop_toBottomOf="@+id/dobLabel"
+        tools:ignore="HardcodedText"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/editProfBtn"
@@ -96,7 +130,8 @@
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/guideline16"
         app:layout_constraintEnd_toStartOf="@+id/goToSettings"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/cancelBtn"
@@ -139,7 +174,8 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline16"
         app:layout_constraintEnd_toStartOf="@+id/editProfBtn"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.454" />
+        app:layout_constraintVertical_bias="0.454"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/goToSettings"
@@ -150,7 +186,8 @@
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/guideline16"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/nameLabel"
@@ -161,18 +198,20 @@
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
         app:layout_constraintTop_toBottomOf="@+id/profilepic"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        tools:visibility="visible" />
 
     <TextView
-        android:id="@+id/ageLabel"
+        android:id="@+id/dobLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Age"
+        android:text="Date of birth"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
         app:layout_constraintTop_toBottomOf="@+id/editTextName"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/contactLabel"
@@ -182,14 +221,16 @@
         android:text="Contact"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
-        app:layout_constraintTop_toBottomOf="@+id/editTextAge"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextDob"
+        tools:ignore="HardcodedText"
+        tools:visibility="visible" />
 
     <EditText
         android:id="@+id/editTextContact"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:importantForAutofill="no"
         android:includeFontPadding="false"
         android:inputType="textPersonName"
         android:textColor="@color/color_profile_input"
@@ -198,7 +239,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
         app:layout_constraintTop_toBottomOf="@+id/contactLabel"
-        android:importantForAutofill="no" />
+        tools:visibility="visible" />
 
     <ProgressBar
         android:id="@+id/profileLoading"
@@ -220,10 +261,11 @@
         android:backgroundTint="@color/colorPrimaryDark"
         android:includeFontPadding="false"
         android:text="View my posts"
-        android:visibility="gone"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
-        app:layout_constraintTop_toBottomOf="@+id/editTextContact" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextGender"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
