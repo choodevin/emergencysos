@@ -21,7 +21,7 @@ class SOSRejectReceiver : BroadcastReceiver() {
         val ref = FirebaseFirestore.getInstance()
         var senderToken = ""
 
-        ref.collection("user").document(senderUID).get().addOnSuccessListener {
+        ref.collection("user").document(senderUID).get().addOnSuccessListener { it ->
             senderToken = it.data?.get("token").toString()
             PushNotification(
                 NotificationData(
@@ -32,9 +32,8 @@ class SOSRejectReceiver : BroadcastReceiver() {
                     ""
                 ),
                 senderToken
-            ).also {
-                sendNotification(it)
-                Toast.makeText(p0, "$senderToken", Toast.LENGTH_LONG).show()
+            ).also {notify ->
+                sendNotification(notify)
             }
         }
         Log.e(TAG, "reject received $data")
