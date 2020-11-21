@@ -1,19 +1,18 @@
 package com.emergency.sosalert
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
-import androidx.preference.PreferenceManager
 import com.emergency.sosalert.locationTracking.LatLong
 import com.emergency.sosalert.locationTracking.LocationTrackingService
 import com.emergency.sosalert.main.*
 import com.emergency.sosalert.main.Map
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    private var backPressedTime: Long = 0
 
     private val discussionFragment = Discussion()
     private val sosFragment = Sos()
@@ -98,6 +98,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed()
+            return;
+        } else {
+            Snackbar.make(
+                findViewById(android.R.id.content),
+                "Press back again to exit",
+                Snackbar.LENGTH_SHORT
+            )
+                .show()
+        }
+        backPressedTime = System.currentTimeMillis();
+    }
+
     private fun hideAllFragment(fm: FragmentManager) {
         fm.beginTransaction().hide(discussionFragment).commit()
         fm.beginTransaction().hide(sosFragment).commit()
@@ -127,9 +142,19 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(Intent(this, LocationTrackingService::class.java).putExtra("stop", true))
+                startForegroundService(
+                    Intent(
+                        this,
+                        LocationTrackingService::class.java
+                    ).putExtra("stop", true)
+                )
             } else {
-                startService(Intent(this, LocationTrackingService::class.java).putExtra("stop", true))
+                startService(
+                    Intent(this, LocationTrackingService::class.java).putExtra(
+                        "stop",
+                        true
+                    )
+                )
             }
         }
     }

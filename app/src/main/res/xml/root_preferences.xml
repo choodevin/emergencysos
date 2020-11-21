@@ -1,9 +1,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory app:title="Tracking">
+    <PreferenceCategory app:title="Tracking" android:icon="@drawable/ic_small_tracking">
         <SwitchPreference
             android:defaultValue="false"
-            android:icon="@drawable/ic_tracking"
             android:key="enable_tracking"
             android:title="Enable Tracking" />
         <Preference
@@ -27,7 +26,7 @@
             android:key="enable_notification_comment"
             android:title="Comment notification" />
     </PreferenceCategory>
-    <PreferenceCategory app:title="Account">
+    <PreferenceCategory app:title="Account" android:icon="@drawable/ic_small_profile">
         <Preference
             android:icon="@drawable/ic_sign_out"
             android:key="logout"
