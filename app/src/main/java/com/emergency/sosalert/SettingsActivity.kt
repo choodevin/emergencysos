@@ -12,7 +12,12 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.emergency.sosalert.locationTracking.LocationTrackingService
 import com.emergency.sosalert.locationTracking.ModifyPermission
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 
@@ -39,6 +44,7 @@ class SettingsActivity : AppCompatActivity() {
         finish()
         return super.onSupportNavigateUp()
     }
+
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -72,8 +78,20 @@ class SettingsActivity : AppCompatActivity() {
                 FirebaseFirestore.getInstance().collection("user")
                     .document(FirebaseAuth.getInstance().currentUser!!.uid)
                     .update("token", "empty")
-                FirebaseAuth.getInstance().signOut()
+
+                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build()
+                val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+                val auth = FirebaseAuth.getInstance()
+
+                auth.signOut()
+                googleSignInClient.signOut()
+
                 startActivity(Intent(context, LoginActivity::class.java))
+                activity?.finish()
+
                 return@setOnPreferenceClickListener false
             }
         }

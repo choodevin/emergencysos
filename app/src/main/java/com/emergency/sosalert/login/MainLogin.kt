@@ -22,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.crashlytics.internal.common.CommonUtils.hideKeyboard
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_main_login.*
 
 class MainLogin : Fragment() {
@@ -128,8 +129,25 @@ class MainLogin : Fragment() {
                             bundle
                         )
                     } else {
-                        startActivity(Intent(requireActivity(), MainActivity::class.java))
-                        activity?.finish()
+                        val uid = FirebaseAuth.getInstance().currentUser?.uid!!
+                        FirebaseFirestore.getInstance().collection("user").document(uid).get()
+                            .addOnSuccessListener {
+                                if (it != null) {
+                                    startActivity(
+                                        Intent(
+                                            requireActivity(),
+                                            MainActivity::class.java
+                                        )
+                                    )
+                                    activity?.finish()
+                                } else {
+                                    val bundle = Bundle()
+                                    findNavController().navigate(
+                                        R.id.action_mainLogin_to_registerPicture,
+                                        bundle
+                                    )
+                                }
+                            }
                     }
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)

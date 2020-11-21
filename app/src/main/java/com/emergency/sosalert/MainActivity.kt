@@ -12,11 +12,13 @@ import com.emergency.sosalert.locationTracking.LatLong
 import com.emergency.sosalert.locationTracking.LocationTrackingService
 import com.emergency.sosalert.main.*
 import com.emergency.sosalert.main.Map
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -35,7 +37,24 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         } else {
-            registerPreferences()
+            FirebaseFirestore.getInstance().collection("user")
+                .document(FirebaseAuth.getInstance().currentUser!!.uid).get().addOnSuccessListener {
+                    if (it != null) {
+                        registerPreferences()
+                    } else {
+                        FirebaseAuth.getInstance().signOut()
+                        
+                        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestIdToken(getString(R.string.default_web_client_id))
+                            .requestEmail()
+                            .build()
+                        val googleSignInClient = GoogleSignIn.getClient(this, gso)
+                        googleSignInClient.signOut()
+
+                        startActivity(Intent(this, LoginActivity::class.java))
+                        finish()
+                    }
+                }
         }
 
         setTheme(R.style.AppTheme)
