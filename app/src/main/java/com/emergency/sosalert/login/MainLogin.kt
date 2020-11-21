@@ -132,7 +132,7 @@ class MainLogin : Fragment() {
                         val uid = FirebaseAuth.getInstance().currentUser?.uid!!
                         FirebaseFirestore.getInstance().collection("user").document(uid).get()
                             .addOnSuccessListener {
-                                if (it != null) {
+                                if (it.exists()) {
                                     startActivity(
                                         Intent(
                                             requireActivity(),

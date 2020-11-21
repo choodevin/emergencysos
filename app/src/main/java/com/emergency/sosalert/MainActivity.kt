@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.emergency.sosalert.locationTracking.LatLong
@@ -38,12 +39,12 @@ class MainActivity : AppCompatActivity() {
             finish()
         } else {
             FirebaseFirestore.getInstance().collection("user")
-                .document(FirebaseAuth.getInstance().currentUser!!.uid).get().addOnSuccessListener {
-                    if (it != null) {
+                .document(auth.currentUser!!.uid).get().addOnSuccessListener {
+                    if (it.exists()) {
                         registerPreferences()
                     } else {
                         FirebaseAuth.getInstance().signOut()
-                        
+
                         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                             .requestIdToken(getString(R.string.default_web_client_id))
                             .requestEmail()
