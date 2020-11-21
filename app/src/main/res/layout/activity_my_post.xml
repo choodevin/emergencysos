@@ -78,4 +78,14 @@
             android:layout_height="wrap_content" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <View
+        android:id="@+id/divider19"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/guideline39"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline39" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,17 +16,17 @@ import kotlinx.coroutines.launch
 
 class SOSRejectReceiver : BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
-        val data = p1?.extras!!.get("reject").toString() //get data like this
+        val data = p1?.extras!!.get("reject").toString()
         val senderUID = p1.extras!!.get("senderUid").toString()
         val ref = FirebaseFirestore.getInstance()
-        var senderToken = ""
+        var senderToken: String
 
         ref.collection("user").document(senderUID).get().addOnSuccessListener { it ->
             senderToken = it.data?.get("token").toString()
             PushNotification(
                 NotificationData(
                     "SOS rejected",
-                    "One user rejected your SOS",
+                    "Your SOS request has been rejected!",
                     "5000.0",
                     "0.0",
                     ""
@@ -36,6 +36,13 @@ class SOSRejectReceiver : BroadcastReceiver() {
                 sendNotification(notify)
             }
         }
+
+        p0.apply {
+            this?.let {
+                NotificationManagerCompat.from(it).cancel(p1.extras!!.getInt("notificationid"))
+            }
+        }
+
         Log.e(TAG, "reject received $data")
     }
 

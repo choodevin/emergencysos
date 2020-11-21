@@ -1,17 +1,23 @@
 package com.emergency.sosalert.discussion
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ablanco.zoomy.Zoomy
 import com.bumptech.glide.Glide
 import com.emergency.sosalert.R
+import com.emergency.sosalert.firebaseMessaging.NotificationData
+import com.emergency.sosalert.firebaseMessaging.PushNotification
+import com.emergency.sosalert.firebaseMessaging.RetrofitInstance
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -21,11 +27,14 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_discussion_details.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Suppress("UNCHECKED_CAST")
 class DiscussionDetails : AppCompatActivity() {
-    private val currentId = FirebaseAuth.getInstance().currentUser!!.uid
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_discussion_details)
@@ -42,6 +51,8 @@ class DiscussionDetails : AppCompatActivity() {
             firebaseStorage.getReferenceFromUrl(disc.imageUrl).downloadUrl.addOnSuccessListener {
                 if (it != null) {
                     Glide.with(this).load(it).into(discImage)
+                    val builder = Zoomy.Builder(this).target(discImage).enableImmersiveMode(false)
+                    builder.register()
                     imageLoading.visibility = View.GONE
                 }
             }
@@ -99,9 +110,37 @@ class DiscussionDetails : AppCompatActivity() {
                                 for (dis in ds) {
                                     fs.collection("discussion").document(dis.id)
                                         .update("commentcount", FieldValue.increment(1))
+
+                                    if (disc.ownerUid != FirebaseAuth.getInstance().currentUser?.uid) {
+                                        FirebaseFirestore.getInstance().collection("user")
+                                            .document(c.owner).get()
+                                            .addOnSuccessListener { ownerData ->
+                                                FirebaseFirestore.getInstance().collection("user")
+                                                    .document(disc.ownerUid).get()
+                                                    .addOnSuccessListener { discOwner ->
+                                                        PushNotification(
+                                                            NotificationData(
+                                                                "SOSAlert|${dis.id}",
+                                                                "${
+                                                                    ownerData.get("name").toString()
+                                                                } commented on your post",
+                                                                "12344",
+                                                                "43211",
+                                                                ""
+                                                            ),
+                                                            discOwner.get("token").toString()
+                                                        ).also { notif ->
+                                                            sendNotification(notif)
+                                                        }
+
+                                                    }
+                                            }
+                                    }
                                     break
                                 }
                             }
+
+
                         }
 
                     commentInput.text.clear()
@@ -134,5 +173,19 @@ class DiscussionDetails : AppCompatActivity() {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
+
+    private fun sendNotification(notification: PushNotification) =
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = RetrofitInstance.api.postNotification(notification)
+                if (response.isSuccessful) {
+                    Log.d(ContentValues.TAG, "Response: ${Gson().toJson(response)}")
+                } else {
+                    Log.e(ContentValues.TAG, response.errorBody().toString())
+                }
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, e.toString())
+            }
+        }
 
 }

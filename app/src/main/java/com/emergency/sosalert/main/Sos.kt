@@ -1,7 +1,6 @@
 package com.emergency.sosalert.main
 
 import android.annotation.SuppressLint
-import android.app.Notification
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Context.LOCATION_SERVICE
@@ -17,14 +16,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.android.volley.RequestQueue
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.emergency.sosalert.R
-import com.emergency.sosalert.discussion.Discussion
 import com.emergency.sosalert.firebaseMessaging.FirebaseService
 import com.emergency.sosalert.firebaseMessaging.NotificationData
 import com.emergency.sosalert.firebaseMessaging.PushNotification
@@ -32,20 +25,13 @@ import com.emergency.sosalert.firebaseMessaging.RetrofitInstance
 import com.google.android.gms.location.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.Constants.MessagePayloadKeys.SENDER_ID
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.RemoteMessage
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.fragment_main_login.*
 import kotlinx.android.synthetic.main.fragment_sos.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.json.JSONException
-import org.json.JSONObject
 import java.util.*
 
 
@@ -72,8 +58,8 @@ class Sos : Fragment() {
         var yeet = ""
         FirebaseService.sharedPref =
             context?.getSharedPreferences("sharedPref", Context.MODE_PRIVATE)
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            FirebaseService.token = it.token
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            FirebaseService.token = it
         }
         FirebaseFirestore.getInstance().collection("user").document(uid)
             .update("token", FirebaseService.token)
@@ -118,6 +104,14 @@ class Sos : Fragment() {
                 var tempLatitude: Double
                 var tempLongitude: Double
                 val userlocation = Location("")
+                val victimDob = him.data?.get("dob").toString()
+                val victimAge = getAge(victimDob)
+                var victimGender = him.data?.get("gender").toString()
+                victimGender = if (victimGender == "male") {
+                    "M"
+                } else {
+                    "F"
+                }
                 userlocation.latitude = latitude.toDouble()
                 userlocation.longitude = longitude.toDouble()
                 val targetlocation = Location("")
@@ -131,18 +125,14 @@ class Sos : Fragment() {
                                     document["latitude"].toString().toDouble()
                                 tempLongitude =
                                     document["longitude"].toString().toDouble()
-                                val targetName: String = document["name"].toString()
                                 val tokenyeet = document["token"].toString()
-                                val targetDob = document["dob"].toString()
-                                val targetGender = document["gender"].toString()
-                                val targetAge = getAge(targetDob)
                                 targetlocation.latitude = tempLatitude
                                 targetlocation.longitude = tempLongitude
                                 if (userlocation.distanceTo(targetlocation) <= 500) {
                                     PushNotification(
                                         NotificationData(
                                             "Someone is in danger!,$uid,$targetContact",
-                                            "$victim ($targetAge|$targetGender) is in danger!",
+                                            "$victim ($victimAge$victimGender) is in danger!",
                                             latitude,
                                             longitude,
                                             yeet
@@ -180,7 +170,8 @@ class Sos : Fragment() {
 
                 override fun onTick(p0: Long) {
                     if (timer_title != null) {
-                        timer_title.text = "Button is disabled"
+                        val temp = "Button is disabled"
+                        timer_title.text = temp
                         sosButton.isEnabled = false
                         countdown_timer.visibility = View.VISIBLE
                         countdown_timer.text = "${p0 / 1000}"
@@ -192,7 +183,7 @@ class Sos : Fragment() {
     }
 
     private fun getAge(dob: String): String {
-        var age = 0
+        val age: Int
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
         val bornYear = dob.split(" ").toTypedArray()
         age = currentYear - bornYear[2].toInt()
@@ -238,7 +229,7 @@ class Sos : Fragment() {
     }
 
     private fun isLocationEnabled(): Boolean {
-        var locationManager: LocationManager =
+        val locationManager: LocationManager =
             this.context?.getSystemService(LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
@@ -247,7 +238,7 @@ class Sos : Fragment() {
 
     private val mLocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            var mLastLocation: Location = locationResult.lastLocation
+            val mLastLocation: Location = locationResult.lastLocation
             latitude = mLastLocation.latitude.toString()
             longitude = mLastLocation.longitude.toString()
         }
@@ -255,7 +246,7 @@ class Sos : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun requestNewLocationData() {
-        var mLocationRequest = LocationRequest()
+        val mLocationRequest = LocationRequest()
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         mLocationRequest.interval = 5000
         mLocationRequest.fastestInterval = 2500
@@ -263,7 +254,7 @@ class Sos : Fragment() {
 
         mFusedLocationClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
-        mFusedLocationClient!!.requestLocationUpdates(
+        mFusedLocationClient.requestLocationUpdates(
             mLocationRequest, mLocationCallback,
             Looper.myLooper()
         )
@@ -277,7 +268,7 @@ class Sos : Fragment() {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
                 mFusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
-                    var location: Location? = task.result
+                    val location: Location? = task.result
                     if (location == null) {
                         requestNewLocationData()
                     } else {

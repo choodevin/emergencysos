@@ -53,6 +53,7 @@ class UserProfile : Fragment() {
 
         goToSettings.setOnClickListener {
             startActivity(Intent(context, SettingsActivity::class.java))
+            activity?.finish()
         }
 
         viewMyPost.setOnClickListener {

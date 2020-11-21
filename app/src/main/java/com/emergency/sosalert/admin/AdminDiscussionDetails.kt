@@ -94,7 +94,7 @@ class AdminDiscussionDetails : AppCompatActivity() {
                         if (reasonText.text.isNotEmpty()) {
                             FirebaseFirestore.getInstance().collection("discussion")
                                 .document(disc.commentgroup)
-                                .update("status", "declined,${reasonText.text}")
+                                .update("status", "declined, ${reasonText.text}")
                             FirebaseFirestore.getInstance().collection("user")
                                 .document(disc.ownerUid).get().addOnSuccessListener {
                                     PushNotification(

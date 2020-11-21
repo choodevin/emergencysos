@@ -15,7 +15,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline31"
-        tools:srcCompat="@drawable/bg_image_loading" />
+        tools:srcCompat="@drawable/bg_image_loading"
+        android:contentDescription="profile picture"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/toallowName"
@@ -34,24 +36,33 @@
 
     <Button
         android:id="@+id/allowButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/button_approve"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#00df06"
+        android:includeFontPadding="false"
+        android:text="Accept"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/declineButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toallowName" />
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/declineButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/button_decline"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_red_dark"
+        android:includeFontPadding="false"
+        android:text="Decline"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/allowButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/allowButton"
-        app:layout_constraintTop_toTopOf="@+id/allowButton" />
+        app:layout_constraintTop_toTopOf="@+id/allowButton"
+        tools:ignore="HardcodedText" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline31"
@@ -97,30 +108,43 @@
         android:text="Tracking Request"
         app:layout_constraintBottom_toTopOf="@+id/guideline31"
         app:layout_constraintStart_toEndOf="@+id/trackRequestClose"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/textView16"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:includeFontPadding="false"
         android:singleLine="false"
         android:text="@string/tracking_note"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline38"
-        app:layout_constraintStart_toStartOf="@+id/guideline37" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline37"
+        app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
     <TextView
         android:id="@+id/textView18"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="Please take note that:"
         android:textColor="@color/colorPrimaryDarker"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/textView16"
-        app:layout_constraintStart_toStartOf="@+id/guideline37" />
+        app:layout_constraintStart_toStartOf="@+id/guideline37"
+        app:layout_constraintTop_toBottomOf="@+id/toallowName"
+        tools:ignore="HardcodedText" />
+
+    <View
+        android:id="@+id/divider23"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/guideline31"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline31" />
 </androidx.constraintlayout.widget.ConstraintLayout>

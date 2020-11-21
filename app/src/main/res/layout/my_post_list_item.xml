@@ -55,6 +55,7 @@
             android:layout_marginTop="7dp"
             android:adjustViewBounds="true"
             android:maxHeight="400dp"
+            android:contentDescription="discussion image"
             android:scaleType="fitCenter"
             android:src="@drawable/bg_image_loading"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -76,13 +77,45 @@
 
         <TextView
             android:id="@+id/statusText"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="16sp"
-            android:textStyle="italic"
+            android:layout_marginEnd="15dp"
+            android:singleLine="false"
+            android:textColor="@color/colorPrimaryDarker"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/divider31"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toTopOf="@+id/discussionImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/discussionImage" />
+
+        <View
+            android:id="@+id/divider32"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toBottomOf="@+id/discussionImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/discussionImage" />
+
+        <View
+            android:id="@+id/divider33"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

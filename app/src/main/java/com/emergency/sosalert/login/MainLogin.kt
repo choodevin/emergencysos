@@ -1,6 +1,7 @@
 package com.emergency.sosalert.login
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.emergency.sosalert.MainActivity
@@ -76,6 +78,7 @@ class MainLogin : Fragment() {
                             invalidLogin()
                             progressBarToggle(0)
                             allButtonToggle(1)
+                            closeKeyboard()
                         }
                     }
             }
@@ -162,6 +165,14 @@ class MainLogin : Fragment() {
 
     private fun invalidLogin() {
         inputPass.error = "Invalid login credentails, please try again."
+    }
+
+    private fun closeKeyboard() {
+        val view = activity?.currentFocus
+        if (view != null) {
+            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
 }

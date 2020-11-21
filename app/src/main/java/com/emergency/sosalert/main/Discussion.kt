@@ -2,6 +2,7 @@ package com.emergency.sosalert.main
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,8 +14,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,21 +31,31 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.activity_create_discussion.*
 import kotlinx.android.synthetic.main.dialog_filter.view.*
 import kotlinx.android.synthetic.main.discussion_list_item.view.*
 import kotlinx.android.synthetic.main.fragment_discussion.*
+import java.text.DateFormatSymbols
+import java.util.*
 
+@Suppress("PrivatePropertyName")
 class Discussion : Fragment() {
 
     private lateinit var firestoreAdapter: FirestorePagingAdapter<Discussion, ViewHolder>
-    private val REVERSE_COMMENTCOUNT = 6
-    private val COMMENTCOUNT = 5
-    private val REVERSE_ALPHABETIC = 4
-    private val ALPHABETIC = 3
-    private val REVERSE_DEFAULT = 2
-    private val SEARCH = 1
-    private val DEFAULT = 0
+    private val selectedStartCal = Calendar.getInstance()
+    private val selectedEndCal = Calendar.getInstance()
+    private val ENABLE = 1
+    private val DISABLE = 0
+
+    enum class ApplyMode {
+        SEARCH,
+        TODAY,
+        DEFAULT, REVERSE_DEFAULT,
+        ALPHABETIC, REVERSE_ALPHABETIC,
+        COMMENT_COUNT, REVERSE_COMMENT_COUNT,
+        MONTH, REVERSE_MONTH,
+        WEEK, REVERSE_WEEK,
+        DATE_RANGE, REVERSE_DATE_RANGE
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,7 +77,7 @@ class Discussion : Fragment() {
         discussionRecycler.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        applyData(DEFAULT)
+        applyData(ApplyMode.DEFAULT)
 
         searchButton.setOnClickListener {
             searchBox.visibility = View.VISIBLE
@@ -86,7 +95,7 @@ class Discussion : Fragment() {
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
-                    applyData(SEARCH)
+                    applyData(ApplyMode.SEARCH)
                 }
             })
         }
@@ -95,6 +104,13 @@ class Discussion : Fragment() {
             val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_filter, null)
             val sortSpinner = dialogView.sortByList
             val orderSpinner = dialogView.orderList
+            val checkToday = dialogView.checkToday
+            val checkLastMonth = dialogView.checkLastMonth
+            val checkLastWeek = dialogView.checkLastWeek
+            val orderTipsText = dialogView.orderTipsText
+            val checkCustom = dialogView.checkCustom
+            val selectDateStart = dialogView.selectDateStart
+            val selectDateEnd = dialogView.selectDateEnd
 
             ArrayAdapter.createFromResource(
                 requireContext(),
@@ -114,30 +130,200 @@ class Discussion : Fragment() {
                 orderSpinner.adapter = adapter
             }
 
+            checkToday.setOnCheckedChangeListener { _, b ->
+                if (b) {
+                    checkLastMonth.isChecked = false
+                    checkLastWeek.isChecked = false
+                    orderSpinner.isEnabled = false
+                    checkCustom.isChecked = false
+                } else {
+                    if (!checkLastMonth.isChecked && !checkLastWeek.isChecked) {
+                        orderSpinner.isEnabled = true
+                    }
+                }
+            }
+            checkLastMonth.setOnCheckedChangeListener { _, b ->
+                if (b) {
+                    checkToday.isChecked = false
+                    checkLastWeek.isChecked = false
+                    checkCustom.isChecked = false
+                    orderSpinner.isEnabled = true
+                    selectDateEnd.visibility = View.GONE
+                    selectDateStart.visibility = View.GONE
+                } else {
+                    if (!checkToday.isChecked && !checkLastWeek.isChecked) {
+                        orderSpinner.isEnabled = true
+                    }
+                }
+            }
+            checkLastWeek.setOnCheckedChangeListener { _, b ->
+                if (b) {
+                    checkLastMonth.isChecked = false
+                    checkToday.isChecked = false
+                    checkCustom.isChecked = false
+                    orderSpinner.isEnabled = true
+                    selectDateEnd.visibility = View.GONE
+                    selectDateStart.visibility = View.GONE
+                } else {
+                    if (!checkLastMonth.isChecked && !checkToday.isChecked) {
+                        orderSpinner.isEnabled = true
+                    }
+                }
+            }
+            checkCustom.setOnCheckedChangeListener { _, b ->
+                if (b) {
+                    checkLastMonth.isChecked = false
+                    checkToday.isChecked = false
+                    checkLastWeek.isChecked = false
+                    orderSpinner.isEnabled = true
+                    selectDateEnd.visibility = View.VISIBLE
+                    selectDateStart.visibility = View.VISIBLE
+                } else {
+                    selectDateStart.visibility = View.GONE
+                    selectDateEnd.visibility = View.GONE
+                    if (!checkLastMonth.isChecked && !checkToday.isChecked) {
+                        orderSpinner.isEnabled = true
+                    }
+                }
+            }
+
+            selectDateStart.setOnClickListener {
+                val c = Calendar.getInstance()
+                val year = c.get(Calendar.YEAR)
+                val month = c.get(Calendar.MONTH)
+                val day = c.get(Calendar.DAY_OF_MONTH)
+
+                val dpd = DatePickerDialog(
+                    requireContext(),
+                    R.style.DatePickerDialogTheme,
+                    { _, selectYear, selectMonth, selectDay ->
+                        selectedStartCal.set(selectYear, selectMonth, selectDay, 0, 0, 0)
+                        val tempStr =
+                            "$selectDay ${DateFormatSymbols().months[selectMonth]} $selectYear"
+                        selectDateStart.text = tempStr
+                    },
+                    year,
+                    month,
+                    day
+                )
+                dpd.show()
+            }
+
+            selectDateEnd.setOnClickListener {
+                val c = Calendar.getInstance()
+                val year = c.get(Calendar.YEAR)
+                val month = c.get(Calendar.MONTH)
+                val day = c.get(Calendar.DAY_OF_MONTH)
+
+                val dpd = DatePickerDialog(
+                    requireContext(),
+                    R.style.DatePickerDialogTheme,
+                    { _, selectYear, selectMonth, selectDay ->
+                        selectedEndCal.set(selectYear, selectMonth, selectDay, 23, 59, 59)
+                        val tempStr =
+                            "$selectDay ${DateFormatSymbols().months[selectMonth]} $selectYear"
+                        selectDateEnd.text = tempStr
+                    },
+                    year,
+                    month,
+                    day
+                )
+                dpd.show()
+            }
+
+            sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    if (p2 == 0) {
+                        dateExtra(ENABLE)
+                    } else {
+                        dateExtra(DISABLE)
+                    }
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                }
+
+                private fun dateExtra(mode: Int) {
+                    if (mode == ENABLE) {
+                        checkToday.visibility = View.VISIBLE
+                        checkLastMonth.visibility = View.VISIBLE
+                        checkLastWeek.visibility = View.VISIBLE
+                        checkCustom.visibility = View.VISIBLE
+                        orderTipsText.visibility = View.VISIBLE
+                    } else if (mode == DISABLE) {
+                        checkToday.visibility = View.GONE
+                        checkLastMonth.visibility = View.GONE
+                        checkLastWeek.visibility = View.GONE
+                        checkCustom.visibility = View.GONE
+                        orderTipsText.visibility = View.GONE
+                        selectDateStart.visibility = View.GONE
+                        selectDateEnd.visibility = View.GONE
+                    }
+                }
+            }
+
             val dialogBuilder =
                 AlertDialog.Builder(context)
                     .setView(dialogView)
                     .setPositiveButton("Search") { _, _ ->
                         when (sortSpinner.selectedItemPosition) {
                             0 -> {
-                                if (orderSpinner.selectedItemPosition == 0) {
-                                    applyData(REVERSE_DEFAULT)
+                                if (checkToday.isChecked || checkLastMonth.isChecked || checkLastWeek.isChecked || checkCustom.isChecked) {
+                                    when {
+                                        checkToday.isChecked -> {
+                                            applyData(ApplyMode.TODAY)
+                                        }
+                                        checkLastMonth.isChecked -> {
+                                            if (orderSpinner.selectedItemPosition == 0) {
+                                                applyData(ApplyMode.REVERSE_MONTH)
+                                            } else {
+                                                applyData(ApplyMode.MONTH)
+                                            }
+                                        }
+                                        checkLastWeek.isChecked -> {
+                                            if (orderSpinner.selectedItemPosition == 0) {
+                                                applyData(ApplyMode.REVERSE_WEEK)
+                                            } else {
+                                                applyData(ApplyMode.WEEK)
+                                            }
+                                        }
+                                        checkCustom.isChecked -> {
+                                            if (selectedEndCal.before(selectedStartCal)) {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    "Invalid date range",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                applyData(ApplyMode.DEFAULT)
+                                            } else {
+                                                if (orderSpinner.selectedItemPosition == 0) {
+                                                    applyData(ApplyMode.REVERSE_DATE_RANGE)
+                                                } else {
+                                                    applyData(ApplyMode.DATE_RANGE)
+                                                }
+                                            }
+                                        }
+                                    }
                                 } else {
-                                    applyData(DEFAULT)
+                                    if (orderSpinner.selectedItemPosition == 0) {
+                                        applyData(ApplyMode.REVERSE_DEFAULT)
+                                    } else {
+                                        applyData(ApplyMode.DEFAULT)
+                                    }
                                 }
                             }
                             1 -> {
                                 if (orderSpinner.selectedItemPosition == 0) {
-                                    applyData(ALPHABETIC)
+                                    applyData(ApplyMode.ALPHABETIC)
                                 } else {
-                                    applyData(REVERSE_ALPHABETIC)
+                                    applyData(ApplyMode.REVERSE_ALPHABETIC)
                                 }
                             }
                             2 -> {
                                 if (orderSpinner.selectedItemPosition == 0) {
-                                    applyData(COMMENTCOUNT)
+                                    applyData(ApplyMode.COMMENT_COUNT)
                                 } else {
-                                    applyData(REVERSE_COMMENTCOUNT)
+                                    applyData(ApplyMode.REVERSE_COMMENT_COUNT)
                                 }
                             }
                         }
@@ -171,49 +357,161 @@ class Discussion : Fragment() {
             discussionActionBarText.visibility = View.VISIBLE
             addDiscussion.visibility = View.VISIBLE
             searchButton.visibility = View.VISIBLE
-            applyData(DEFAULT)
+            applyData(ApplyMode.DEFAULT)
         }
     }
 
-    private fun applyData(mode: Int) {
+    private fun applyData(mode: ApplyMode) {
         lateinit var baseQuery: Query
         when (mode) {
-            DEFAULT -> {
+            ApplyMode.DEFAULT -> {
                 baseQuery = FirebaseFirestore.getInstance().collection("discussion")
                     .whereEqualTo("status", "approved")
                     .orderBy("uploadtime", Query.Direction.DESCENDING)
             }
-            SEARCH -> {
+            ApplyMode.SEARCH -> {
                 baseQuery = FirebaseFirestore.getInstance().collection("discussion")
                     .whereEqualTo("status", "approved")
                     .orderBy("title")
                     .startAt("${searchBox.text}")
                     .endAt("${searchBox.text}\uf8ff")
             }
-            REVERSE_DEFAULT -> {
+            ApplyMode.REVERSE_DEFAULT -> {
                 baseQuery = FirebaseFirestore.getInstance().collection("discussion")
                     .whereEqualTo("status", "approved")
                     .orderBy("uploadtime", Query.Direction.ASCENDING)
             }
-            ALPHABETIC -> {
+            ApplyMode.ALPHABETIC -> {
                 baseQuery = FirebaseFirestore.getInstance().collection("discussion")
                     .whereEqualTo("status", "approved")
                     .orderBy("title", Query.Direction.ASCENDING)
             }
-            REVERSE_ALPHABETIC -> {
+            ApplyMode.REVERSE_ALPHABETIC -> {
                 baseQuery = FirebaseFirestore.getInstance().collection("discussion")
                     .whereEqualTo("status", "approved")
                     .orderBy("title", Query.Direction.DESCENDING)
             }
-            COMMENTCOUNT -> {
+            ApplyMode.COMMENT_COUNT -> {
                 baseQuery = FirebaseFirestore.getInstance().collection("discussion")
                     .whereEqualTo("status", "approved")
                     .orderBy("commentcount", Query.Direction.ASCENDING)
             }
-            REVERSE_COMMENTCOUNT -> {
+            ApplyMode.REVERSE_COMMENT_COUNT -> {
                 baseQuery = FirebaseFirestore.getInstance().collection("discussion")
                     .whereEqualTo("status", "approved")
                     .orderBy("commentcount", Query.Direction.DESCENDING)
+            }
+            ApplyMode.TODAY -> {
+                val baseCal = Calendar.getInstance()
+                val endDate = baseCal.time
+                val tempDate = Calendar.getInstance()
+                tempDate.set(
+                    baseCal.get(Calendar.YEAR),
+                    baseCal.get(Calendar.MONTH),
+                    baseCal.get(Calendar.DAY_OF_MONTH),
+                    0,
+                    0,
+                    0
+                )
+                val startDate = tempDate.time
+                baseQuery = FirebaseFirestore.getInstance().collection("discussion")
+                    .whereEqualTo("status", "approved")
+                    .whereLessThanOrEqualTo("uploadtime", endDate)
+                    .whereGreaterThanOrEqualTo("uploadtime", startDate)
+            }
+            ApplyMode.MONTH -> {
+                val baseCal = Calendar.getInstance()
+                val endDate = baseCal.time
+                val tempDate = Calendar.getInstance()
+                tempDate.set(
+                    baseCal.get(Calendar.YEAR),
+                    baseCal.get(Calendar.MONTH),
+                    baseCal.get(Calendar.DAY_OF_MONTH),
+                    0,
+                    0,
+                    0
+                )
+                tempDate.add(Calendar.DATE, -30)
+                val startDate = tempDate.time
+                baseQuery = FirebaseFirestore.getInstance().collection("discussion")
+                    .whereEqualTo("status", "approved")
+                    .whereLessThanOrEqualTo("uploadtime", endDate)
+                    .whereGreaterThanOrEqualTo("uploadtime", startDate)
+                    .orderBy("uploadtime", Query.Direction.DESCENDING)
+            }
+            ApplyMode.REVERSE_MONTH -> {
+                val baseCal = Calendar.getInstance()
+                val endDate = baseCal.time
+                val tempDate = Calendar.getInstance()
+                tempDate.set(
+                    baseCal.get(Calendar.YEAR),
+                    baseCal.get(Calendar.MONTH),
+                    baseCal.get(Calendar.DAY_OF_MONTH),
+                    0,
+                    0,
+                    0
+                )
+                tempDate.add(Calendar.DATE, -30)
+                val startDate = tempDate.time
+                baseQuery = FirebaseFirestore.getInstance().collection("discussion")
+                    .whereEqualTo("status", "approved")
+                    .whereLessThanOrEqualTo("uploadtime", endDate)
+                    .whereGreaterThanOrEqualTo("uploadtime", startDate)
+                    .orderBy("uploadtime", Query.Direction.ASCENDING)
+            }
+            ApplyMode.WEEK -> {
+                val baseCal = Calendar.getInstance()
+                val endDate = baseCal.time
+                val tempDate = Calendar.getInstance()
+                tempDate.set(
+                    baseCal.get(Calendar.YEAR),
+                    baseCal.get(Calendar.MONTH),
+                    baseCal.get(Calendar.DAY_OF_MONTH),
+                    0,
+                    0,
+                    0
+                )
+                tempDate.add(Calendar.DATE, -7)
+                val startDate = tempDate.time
+                baseQuery = FirebaseFirestore.getInstance().collection("discussion")
+                    .whereEqualTo("status", "approved")
+                    .whereLessThanOrEqualTo("uploadtime", endDate)
+                    .whereGreaterThanOrEqualTo("uploadtime", startDate)
+                    .orderBy("uploadtime", Query.Direction.DESCENDING)
+            }
+            ApplyMode.REVERSE_WEEK -> {
+                val baseCal = Calendar.getInstance()
+                val endDate = baseCal.time
+                val tempDate = Calendar.getInstance()
+                tempDate.set(
+                    baseCal.get(Calendar.YEAR),
+                    baseCal.get(Calendar.MONTH),
+                    baseCal.get(Calendar.DAY_OF_MONTH),
+                    0,
+                    0,
+                    0
+                )
+                tempDate.add(Calendar.DATE, -7)
+                val startDate = tempDate.time
+                baseQuery = FirebaseFirestore.getInstance().collection("discussion")
+                    .whereEqualTo("status", "approved")
+                    .whereLessThanOrEqualTo("uploadtime", endDate)
+                    .whereGreaterThanOrEqualTo("uploadtime", startDate)
+                    .orderBy("uploadtime", Query.Direction.ASCENDING)
+            }
+            ApplyMode.DATE_RANGE -> {
+                baseQuery = FirebaseFirestore.getInstance().collection("discussion")
+                    .whereEqualTo("status", "approved")
+                    .whereLessThanOrEqualTo("uploadtime", selectedEndCal.time)
+                    .whereGreaterThanOrEqualTo("uploadtime", selectedStartCal.time)
+                    .orderBy("uploadtime", Query.Direction.DESCENDING)
+            }
+            ApplyMode.REVERSE_DATE_RANGE -> {
+                baseQuery = FirebaseFirestore.getInstance().collection("discussion")
+                    .whereEqualTo("status", "approved")
+                    .whereLessThanOrEqualTo("uploadtime", selectedEndCal.time)
+                    .whereGreaterThanOrEqualTo("uploadtime", selectedStartCal.time)
+                    .orderBy("uploadtime", Query.Direction.ASCENDING)
             }
         }
 

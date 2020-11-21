@@ -11,6 +11,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -146,7 +147,29 @@ class MyPost : AppCompatActivity() {
         fun bind(discussion: Discussion) {
             title.text = discussion.title
             description.text = discussion.description
-            status.text = discussion.status
+            if (discussion.status == "approved") {
+                status.setTextColor(ContextCompat.getColor(itemView.context, R.color.approveColor))
+                status.text = discussion.status
+            } else {
+                if (discussion.status != "pending") {
+                    status.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context,
+                            R.color.declinedColor
+                        )
+                    )
+                    status.text = discussion.status
+                } else {
+                    status.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context,
+                            R.color.colorPrimaryDark
+                        )
+                    )
+                    val temp = "Pending approval..."
+                    status.text = temp
+                }
+            }
             FirebaseStorage.getInstance()
                 .getReferenceFromUrl(discussion.imageUrl).downloadUrl.addOnSuccessListener {
                     if (it != null) {

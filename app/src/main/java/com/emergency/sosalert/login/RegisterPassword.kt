@@ -37,7 +37,7 @@ class RegisterPassword : Fragment() {
             }
         }
 
-        confirmPasswordInput.setOnEditorActionListener { textView, i, keyEvent ->
+        confirmPasswordInput.setOnEditorActionListener { _, i, _ ->
             if(i == EditorInfo.IME_ACTION_DONE){
                 continueBtn.performClick()
                 closeKeyboard()

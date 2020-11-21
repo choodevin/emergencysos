@@ -15,12 +15,16 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import com.emergency.sosalert.R
 import com.emergency.sosalert.admin.AdminContainer
 import com.emergency.sosalert.chat.ChatDetails
 import com.emergency.sosalert.chat.SearchFriend
+import com.emergency.sosalert.discussion.Discussion
+import com.emergency.sosalert.discussion.DiscussionDetails
 import com.emergency.sosalert.discussion.MyPost
 import com.emergency.sosalert.locationTracking.TrackingRequest
+import com.emergency.sosalert.main.Sos
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -54,6 +58,11 @@ class FirebaseService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         Log.e(TAG, "MESSAGE RECEIVED")
         super.onMessageReceived(message)
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        val notifSosAllow = pref.getBoolean("enable_notification_sos", false)
+        val notifChatAllow = pref.getBoolean("enable_notification_chat", false)
+        val notifCommentAllow = pref.getBoolean("enable_notification_comment", false)
+
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
@@ -80,7 +89,7 @@ class FirebaseService : FirebaseMessagingService() {
 
         lateinit var notification: Notification
 
-        if (la == 999.0 && longi == 0.0) {
+        if (la == 999.0 && longi == 0.0 && notifChatAllow) {
             Log.e(TAG, "MESSAGE NOTIF")
             val titleArr = message.data["title"]!!.split("|")
             val chatIntent =
@@ -164,7 +173,49 @@ class FirebaseService : FirebaseMessagingService() {
                 .setSmallIcon(R.drawable.logo_sos)
                 .build()
             notificationManager.notify(notificationID, notification)
-        } else {
+        } else if (la == 5000.0 && longi == 0.0) {
+            Log.e(TAG, "Reject Notif")
+            val rejectIntent =
+                Intent(this, Sos::class.java)
+            val pendingIntent = PendingIntent.getActivity(
+                this, 0, rejectIntent,
+                PendingIntent.FLAG_ONE_SHOT
+            )
+            notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(message.data["title"])
+                .setContentText(message.data["message"])
+                .setSmallIcon(R.drawable.logo_sos)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
+                .build()
+            notificationManager.notify(notificationID, notification)
+
+        } else if (la == 12344.0 && longi == 43211.0 && notifCommentAllow) {
+            Log.e(TAG, "COMMENT NOTIF")
+            val titleArr = message.data["title"]!!.split("|")
+
+            FirebaseFirestore.getInstance().collection("discussion").document(titleArr[1]).get()
+                .addOnSuccessListener {
+                    val discussionIntent = Intent(this, DiscussionDetails::class.java).putExtra(
+                        "discussiondetails",
+                        it.toObject(Discussion::class.java)
+                    )
+                    val discussionPending = PendingIntent.getActivity(
+                        this, 0, discussionIntent,
+                        PendingIntent.FLAG_ONE_SHOT
+                    )
+                    notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setContentTitle(titleArr[0])
+                        .setContentText(message.data["message"])
+                        .setSmallIcon(R.drawable.logo_sos)
+                        .setAutoCancel(true)
+                        .setContentIntent(discussionPending)
+                        .setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
+                        .build()
+                    notificationManager.notify(notificationID, notification)
+                }
+        } else if (notifSosAllow) {
             Log.e(TAG, "SOS NOTIF")
             val pendingIntent = PendingIntent.getActivity(
                 this, 0, intentMaps,

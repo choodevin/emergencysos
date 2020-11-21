@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.sip.SipSession
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
@@ -29,6 +30,15 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    override fun onBackPressed() {
+        onSupportNavigateUp()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+        return super.onSupportNavigateUp()
+    }
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -36,12 +46,6 @@ class SettingsActivity : AppCompatActivity() {
             val modPerm = findPreference<Preference>("modify_tracking_permission")
             val logout = findPreference<Preference>("logout")
             trackingPref?.setOnPreferenceClickListener {
-                Toast.makeText(
-                    context,
-                    "Please restart the application to make the changes",
-                    Toast.LENGTH_LONG
-                ).show()
-
                 if (trackingPref.isChecked) {
                     FirebaseFirestore.getInstance().collection("user")
                         .document(FirebaseAuth.getInstance().currentUser!!.uid)
@@ -72,8 +76,6 @@ class SettingsActivity : AppCompatActivity() {
                 startActivity(Intent(context, LoginActivity::class.java))
                 return@setOnPreferenceClickListener false
             }
-
-
         }
     }
 }

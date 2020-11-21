@@ -227,4 +227,14 @@
                 android:textStyle="bold" />
         </TableRow>
     </TableLayout>
+
+    <View
+        android:id="@+id/divider27"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/guideline16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline16" />
 </androidx.constraintlayout.widget.ConstraintLayout>

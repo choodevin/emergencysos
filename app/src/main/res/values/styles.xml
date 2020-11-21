@@ -5,8 +5,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:statusBarColor">#FAFAFA</item>
+        <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
+        <item name="android:windowBackground">@android:color/white</item>
         <item name="android:fontFamily">@font/poppins_regular</item>
     </style>
 

@@ -125,4 +125,32 @@
         app:layout_constraintStart_toStartOf="@+id/guideline35"
         app:layout_constraintTop_toTopOf="@+id/guideline34" />
 
+    <View
+        android:id="@+id/divider9"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="@+id/messagesRecycler"
+        app:layout_constraintTop_toBottomOf="@+id/messagesRecycler" />
+
+    <View
+        android:id="@+id/divider15"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/guideline34"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline34" />
+
+    <View
+        android:id="@+id/divider16"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="@+id/messagesRecycler"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messagesRecycler" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

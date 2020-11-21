@@ -1,14 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingStart="27dp"
-    android:paddingEnd="27dp"
-    android:paddingTop="20dp"
-    android:paddingBottom="20dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingStart="27dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="27dp"
+    android:paddingBottom="20dp">
+
+    <TextView
+        android:id="@+id/selectDateEnd"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_register_input"
+        android:focusable="false"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="date end"
+        android:textAlignment="center"
+        android:textColor="@color/register_input"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectDateStart"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/selectDateStart"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_register_input"
+        android:focusable="false"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="date start"
+        android:textAlignment="center"
+        android:textColor="@color/register_input"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkLastMonth"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/textView11"
@@ -27,6 +62,7 @@
         android:text="Sort by"
         android:textColor="@android:color/black"
         android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
@@ -34,8 +70,9 @@
         android:id="@+id/sortByList"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="18dp"
         android:spinnerMode="dropdown"
+        android:textAlignment="viewEnd"
         app:layout_constraintBottom_toBottomOf="@+id/textView19"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView19"
@@ -45,10 +82,11 @@
         android:id="@+id/textView20"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:text="Order"
         android:textColor="@android:color/black"
         android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
@@ -56,8 +94,68 @@
         android:id="@+id/orderList"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textAlignment="viewEnd"
         app:layout_constraintBottom_toBottomOf="@+id/textView20"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/sortByList"
         app:layout_constraintTop_toTopOf="@+id/textView20" />
+
+    <CheckBox
+        android:id="@+id/checkToday"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Today"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/checkLastWeek"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView20" />
+
+    <CheckBox
+        android:id="@+id/checkLastMonth"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Last 30 days"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/checkToday"
+        app:layout_constraintStart_toStartOf="@+id/checkToday"
+        app:layout_constraintTop_toBottomOf="@+id/checkToday" />
+
+    <CheckBox
+        android:id="@+id/checkLastWeek"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Last 7 days"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/checkToday"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/checkToday"
+        app:layout_constraintTop_toTopOf="@+id/checkToday" />
+
+    <TextView
+        android:id="@+id/orderTipsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="*Ascending order: Oldest post first\n*Descending order: Latest post first"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectDateEnd" />
+
+    <CheckBox
+        android:id="@+id/checkCustom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Custom"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/checkLastMonth"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkLastMonth"
+        app:layout_constraintTop_toTopOf="@+id/checkLastMonth"
+        app:layout_constraintVertical_bias="0.98" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
