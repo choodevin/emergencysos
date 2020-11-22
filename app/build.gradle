@@ -20,8 +20,8 @@ android {
         applicationId "com.emergency.sosalert"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 9
-        versionName "v23.11.20.c"
+        versionCode 10
+        versionName "v23.11.20.d"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
