@@ -252,7 +252,7 @@
             android:ems="10"
             android:hint="Enter your comment"
             android:includeFontPadding="false"
-            android:inputType="textPersonName"
+            android:inputType="textCapSentences"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:textSize="14sp"

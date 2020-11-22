@@ -74,18 +74,6 @@ class FirebaseService : FirebaseMessagingService() {
         val la = message.data["latitude"].toString().toDouble()
         val longi = message.data["longitude"].toString().toDouble()
         val picurl = message.data["image"].toString()
-        val intentMaps = Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("geo:$la,$longi?q=$la,$longi")
-        ).also {
-            FirebaseFirestore.getInstance().collection("report").document("count").get()
-                .addOnSuccessListener {
-                    var count = it.get("intentpress").toString().toInt()
-                    count += 1
-                    FirebaseFirestore.getInstance().collection("report").document("count")
-                        .update("intentpress", count)
-                }
-        }
 
         lateinit var notification: Notification
 
@@ -217,6 +205,20 @@ class FirebaseService : FirebaseMessagingService() {
                 }
         } else if (notifSosAllow) {
             Log.e(TAG, "SOS NOTIF")
+
+            val intentMaps = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("geo:$la,$longi?q=$la,$longi")
+            ).also {
+                FirebaseFirestore.getInstance().collection("report").document("count").get()
+                    .addOnSuccessListener {
+                        var count = it.get("intentpress").toString().toInt()
+                        count += 1
+                        FirebaseFirestore.getInstance().collection("report").document("count")
+                            .update("intentpress", count)
+                    }
+            }
+
             val pendingIntent = PendingIntent.getActivity(
                 this, 0, intentMaps,
                 PendingIntent.FLAG_ONE_SHOT

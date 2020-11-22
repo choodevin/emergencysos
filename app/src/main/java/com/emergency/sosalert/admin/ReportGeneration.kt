@@ -101,13 +101,6 @@ class ReportGeneration : Fragment() {
                         }
                     }
                 }
-                Toast.makeText(
-                    context,
-                    "temp month is ${monthInFullText(tempMonth.month)}, Month is ${
-                        monthInFullText(lastMonth - 2)
-                    }",
-                    Toast.LENGTH_SHORT
-                ).show()
                 if (monthInFullText(tempMonth.month).compareTo(monthInFullText(lastMonth - 2)) == 0) {
                     p_discussioncount += 1
                     when {

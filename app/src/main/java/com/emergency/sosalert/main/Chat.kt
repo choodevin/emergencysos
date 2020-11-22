@@ -65,6 +65,7 @@ class Chat : Fragment() {
                     tempChatList.target = targetUid
                     chatListList.add(tempChatList)
                 }
+                noFriendText.visibility = View.GONE
                 chatListLoading.visibility = View.GONE
                 chatListRecycler.adapter = ChatListAdapter(chatListList)
             } else {
