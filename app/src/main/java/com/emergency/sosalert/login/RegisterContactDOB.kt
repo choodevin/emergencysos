@@ -37,6 +37,10 @@ class RegisterContactDOB : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        backBtn.setOnClickListener {
+            activity?.onBackPressed()
+        }
+
         continueBtn.setOnClickListener {
             arguments?.putString("contact", contact)
             if (ageValid()) {

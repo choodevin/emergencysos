@@ -1,14 +1,13 @@
 package com.emergency.sosalert.chat
 
 import android.content.ContentValues
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -30,6 +29,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONException
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 @Suppress("UNCHECKED_CAST")
@@ -78,7 +79,7 @@ class ChatDetails : AppCompatActivity() {
                             val dialogBuilder = AlertDialog.Builder(this)
                             dialogBuilder
                                 .setTitle("Unable to track")
-                                .setMessage("Your tracking target seems does not have tracking enabled, please tell him/her to enable it and try again.")
+                                .setMessage("Your tracking target does not seems to have tracking enabled, please tell him/her to enable it and try again.")
                                 .setPositiveButton("Ok") { _: DialogInterface, _: Int ->
                                 }
                             val dialog = dialogBuilder.create()
@@ -221,5 +222,11 @@ class ChatDetails : AppCompatActivity() {
                         }
                     }
             }
+
+        trackingButton.isEnabled = false
+
+        Handler(Looper.myLooper()!!).postDelayed({
+            trackingButton.isEnabled = true
+        }, 5000)
     }
 }
