@@ -108,21 +108,68 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="Number of sos successfully sent to user:"
                 android:textAlignment="viewStart"
                 android:textSize="@dimen/stats_font_size"
-                android:text="Number of discussions made:"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/discussion_count"
-                android:layout_width="wrap_content"
+                android:id="@+id/help_count"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAlignment="textEnd"
                 android:text="3"
+                android:textAlignment="textEnd"
                 android:textSize="@dimen/stats_font_size"
                 android:textStyle="bold" />
+
         </TableRow>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/tableRow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:background="#FFFFFF">
+
+            <Button
+                android:id="@+id/btnPreviousMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Previous"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:includeFontPadding="false"
+                android:textColorLink="#884141"
+                app:layout_constraintBaseline_toBaselineOf="@+id/btnCurrentMonth"
+                app:layout_constraintEnd_toStartOf="@+id/btnCurrentMonth"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/btnCurrentMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:includeFontPadding="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnSummary"
+                app:layout_constraintStart_toEndOf="@+id/btnPreviousMonth" />
+
+            <Button
+                android:id="@+id/btnSummary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Summary"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:includeFontPadding="false"
+                app:layout_constraintBaseline_toBaselineOf="@+id/btnCurrentMonth"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btnCurrentMonth" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TableRow
             android:layout_width="fill_parent"
@@ -134,20 +181,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Number of discussions pending:"
+                android:text="Number of discussions made:"
                 android:textAlignment="viewStart"
                 android:textSize="@dimen/stats_font_size"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/d_pending_count"
+                android:id="@+id/discussion_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="3"
                 android:textAlignment="textEnd"
-                android:text="4"
                 android:textSize="@dimen/stats_font_size"
                 android:textStyle="bold" />
+
         </TableRow>
 
         <TableRow
@@ -211,20 +259,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Number of sos successfully sent to user:"
+                android:text="Number of discussions pending:"
                 android:textAlignment="viewStart"
                 android:textSize="@dimen/stats_font_size"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/help_count"
-                android:layout_width="200dp"
+                android:id="@+id/d_pending_count"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAlignment="textEnd"
                 android:text="7"
+                android:textAlignment="textEnd"
                 android:textSize="@dimen/stats_font_size"
                 android:textStyle="bold" />
+
         </TableRow>
     </TableLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
