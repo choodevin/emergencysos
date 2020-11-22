@@ -321,5 +321,4 @@ class FirebaseService : FirebaseMessagingService() {
         }
         return false
     }
-
 }
