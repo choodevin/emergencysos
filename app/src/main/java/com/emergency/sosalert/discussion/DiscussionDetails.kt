@@ -92,61 +92,61 @@ class DiscussionDetails : AppCompatActivity() {
 
             sendCommentBtn.setOnClickListener {
                 if (commentInput.text.isNullOrEmpty()) {
-                    Snackbar.make(it, "You did not enter any comment!", Snackbar.LENGTH_LONG).show()
-                } else {
-                    val c = Comment()
-
-                    c.content = commentInput.text.toString()
-                    c.owner = FirebaseAuth.getInstance().currentUser!!.uid
-
-                    FirebaseDatabase.getInstance().reference.child("comments")
-                        .child(disc.commentgroup).push().setValue(c)
-
-                    val fs = FirebaseFirestore.getInstance()
-                    fs.collection("discussion")
-                        .whereEqualTo("commentgroup", disc.commentgroup).get()
-                        .addOnSuccessListener { ds ->
-                            if (ds != null) {
-                                for (dis in ds) {
-                                    fs.collection("discussion").document(dis.id)
-                                        .update("commentcount", FieldValue.increment(1))
-
-                                    if (disc.ownerUid != FirebaseAuth.getInstance().currentUser?.uid) {
-                                        FirebaseFirestore.getInstance().collection("user")
-                                            .document(c.owner).get()
-                                            .addOnSuccessListener { ownerData ->
-                                                FirebaseFirestore.getInstance().collection("user")
-                                                    .document(disc.ownerUid).get()
-                                                    .addOnSuccessListener { discOwner ->
-                                                        PushNotification(
-                                                            NotificationData(
-                                                                "SOSAlert|${dis.id}",
-                                                                "${
-                                                                    ownerData.get("name").toString()
-                                                                } commented on your post",
-                                                                "12344",
-                                                                "43211",
-                                                                ""
-                                                            ),
-                                                            discOwner.get("token").toString()
-                                                        ).also { notif ->
-                                                            sendNotification(notif)
-                                                        }
-
-                                                    }
-                                            }
-                                    }
-                                    break
-                                }
-                            }
-
-
-                        }
-
-                    commentInput.text.clear()
-                    noCommentText.visibility = View.GONE
-                    closeKeyboard()
+                    return@setOnClickListener
                 }
+                if (commentInput.text.isBlank()) {
+                    return@setOnClickListener
+                }
+
+                val c = Comment()
+
+                c.content = commentInput.text.toString()
+                c.owner = FirebaseAuth.getInstance().currentUser!!.uid
+
+                FirebaseDatabase.getInstance().reference.child("comments")
+                    .child(disc.commentgroup).push().setValue(c)
+
+                val fs = FirebaseFirestore.getInstance()
+                fs.collection("discussion")
+                    .whereEqualTo("commentgroup", disc.commentgroup).get()
+                    .addOnSuccessListener { ds ->
+                        if (ds != null) {
+                            for (dis in ds) {
+                                fs.collection("discussion").document(dis.id)
+                                    .update("commentcount", FieldValue.increment(1))
+
+                                if (disc.ownerUid != FirebaseAuth.getInstance().currentUser?.uid) {
+                                    FirebaseFirestore.getInstance().collection("user")
+                                        .document(c.owner).get()
+                                        .addOnSuccessListener { ownerData ->
+                                            FirebaseFirestore.getInstance().collection("user")
+                                                .document(disc.ownerUid).get()
+                                                .addOnSuccessListener { discOwner ->
+                                                    PushNotification(
+                                                        NotificationData(
+                                                            "SOSAlert|${dis.id}",
+                                                            "${
+                                                                ownerData.get("name").toString()
+                                                            } commented on your post",
+                                                            "12344",
+                                                            "43211",
+                                                            ""
+                                                        ),
+                                                        discOwner.get("token").toString()
+                                                    ).also { notif ->
+                                                        sendNotification(notif)
+                                                    }
+
+                                                }
+                                        }
+                                }
+                                break
+                            }
+                        }
+                        commentInput.text.clear()
+                        noCommentText.visibility = View.GONE
+                        closeKeyboard()
+                    }
             }
 
             toMapBtn.setOnClickListener {

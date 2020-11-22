@@ -28,6 +28,7 @@
     <string name="disabled_button">Button is disabled</string>
     <string name="sosReady_text">Press to send help to nearby users</string>
     <string name="tracking_note">Permission granted can be removed in app settings.\nAfter providing tracking permission, allowed user can track you as long as your enable tracking feature is enabled</string>
+    <string name="contact_dob_why">Providing your real contact and age allow us to fully utilize our SOS function for you.\n1The contact allows others to have a chance to call you while you are in danger, date of birth provides more information for your helper!</string>
 
     <!-- Filter Dropdowns -->
     <string-array name="sortby">

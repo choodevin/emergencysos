@@ -119,6 +119,9 @@ class ChatDetails : AppCompatActivity() {
             if (messageContent.isEmpty()) {
                 return@setOnClickListener
             }
+            if (messageContent.isBlank()) {
+                return@setOnClickListener
+            }
 
             chat.message = messageContent
             chat.sender = currentUid
