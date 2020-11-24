@@ -48,7 +48,7 @@ class RegisterPassword : Fragment() {
         }
 
         continueBtn.setOnClickListener {
-            val passwordPattern = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$"
+            val passwordPattern = "^(?=.[@#$%^&+=])(?=.[a-z])(?=.*[A-Z]).{8,20}$"
             val pass = passwordInput.text.toString()
             val cpass = confirmPasswordInput.text.toString()
             if (pass == cpass) {

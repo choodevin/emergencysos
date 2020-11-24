@@ -203,6 +203,18 @@ class FirebaseService : FirebaseMessagingService() {
                         .build()
                     notificationManager.notify(notificationID, notification)
                 }
+        } else if (la == 5.0 && longi == 1.0) {
+            Log.e(TAG, "COMMENT NOTIF")
+            val titleArr = message.data["title"]!!.split("|")
+
+            notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(message.data["title"])
+                .setContentText(message.data["message"])
+                .setSmallIcon(R.drawable.logo_sos)
+                .setAutoCancel(true)
+                .build()
+            notificationManager.notify(notificationID, notification)
+
         } else if (notifSosAllow) {
             Log.e(TAG, "SOS NOTIF")
 

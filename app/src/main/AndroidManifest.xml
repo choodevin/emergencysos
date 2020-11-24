@@ -33,6 +33,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".discussion.DiscussionDetails"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
